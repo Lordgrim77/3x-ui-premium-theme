@@ -707,7 +707,8 @@
     }
 
     function applyTheme() {
-        document.body.className = STATE.theme === 'dark' ? 's-dark' : 's-light';
+        document.body.classList.remove('s-dark', 's-light');
+        document.body.classList.add(STATE.theme === 'dark' ? 's-dark' : 's-light');
     }
 
     function updateStatus() {
