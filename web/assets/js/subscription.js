@@ -312,7 +312,14 @@
     const footer = mkEl('div', 'custom-footer');
     footer.innerHTML = `Made with <span class="heart-pulse">❤️</span> by&nbsp;<a class="footer-link" href="https://t.me/xXxIo_oIxXx" target="_blank">𝙇𝙊𝙍𝘿 𝙂𝙍𝙄𝙈</a>`;
     app.appendChild(footer);
-    app.appendChild(mkEl('div', 'bg-fx', `<div class="orb orb-1"></div><div class="orb orb-2"></div><div class="orb orb-3"></div>`));
+    app.appendChild(mkEl('div', 'bg-fx', `
+      <div class="cyber-grid"></div>
+      <div class="data-packet pkt-1"></div>
+      <div class="data-packet pkt-2"></div>
+      <div class="data-packet pkt-3"></div>
+      <div class="tech-glow glow-top"></div>
+      <div class="tech-glow glow-bottom"></div>
+    `));
     app.appendChild(renderQRModal());
 
     const toast = mkEl('div', 'glass-panel');
