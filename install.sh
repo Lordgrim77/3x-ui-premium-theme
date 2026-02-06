@@ -16,14 +16,27 @@ if [ "$EUID" -ne 0 ]; then
   exit
 fi
 
-BASE_PATH="/usr/local/x-ui/bin/web/assets"
+# Define paths
+if [[ -d "/usr/local/x-ui" ]]; then
+    XUI_ROOT="/usr/local/x-ui"
+else
+    XUI_ROOT=$(dirname $(readlink -f $(which x-ui 2>/dev/null || echo "/usr/local/x-ui/x-ui")))
+fi
+
+BASE_PATH="$XUI_ROOT/web/assets"
 JS_PATH="$BASE_PATH/js/subscription.js"
 CSS_PATH="$BASE_PATH/css/premium.css"
 REPO_URL="https://raw.githubusercontent.com/Lordgrim77/3x-ui-premium-theme/main"
 
+# Create directories if they don't exist
+echo -e "${BLUE}📁 Ensuring theme directories exist...${NC}"
+mkdir -p "$BASE_PATH/js"
+mkdir -p "$BASE_PATH/css"
+
+# Backup existing files
 echo -e "${BLUE}📦 Backing up existing files...${NC}"
-cp "$JS_PATH" "${JS_PATH}.bak" 2>/dev/null
-cp "$CSS_PATH" "${CSS_PATH}.bak" 2>/dev/null
+[[ -f "$JS_PATH" ]] && cp "$JS_PATH" "${JS_PATH}.bak" 2>/dev/null
+[[ -f "$CSS_PATH" ]] && cp "$CSS_PATH" "${CSS_PATH}.bak" 2>/dev/null
 
 echo -e "${BLUE}🚀 Fetching premium assets...${NC}"
 curl -Ls "$REPO_URL/web/assets/js/subscription.js" -o "$JS_PATH"
