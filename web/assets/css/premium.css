@@ -4,7 +4,8 @@
 */
 
 :root {
-    --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    /* Smoother Quart-out easing */
     --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
 
     /* STATUS COLORS */
@@ -14,7 +15,7 @@
 
     /* LAYOUT */
     --grid-gap: 24px;
-    --card-radius: 24px;
+    --card-radius: 20px;
     --btn-radius: 12px;
 }
 
@@ -33,7 +34,8 @@ body.s-dark {
     --text-primary: #f8fafc;
     --text-secondary: #94a3b8;
 
-    --glass-blur: blur(12px);
+    --glass-blur: 35px;
+    /* Increased from 20px for better depth */
     --gradient-overlay: radial-gradient(circle at top right, rgba(99, 102, 241, 0.15), transparent 40%);
 
     /* Dark Mode Premium Shadows */
@@ -62,7 +64,8 @@ body.s-light {
     --text-primary: #0f172a;
     --text-secondary: #64748b;
 
-    --glass-blur: blur(12px);
+    --glass-blur: 35px;
+    /* Increased from 20px for better depth */
     --gradient-overlay: radial-gradient(circle at top right, rgba(79, 70, 229, 0.05), transparent 40%);
 
     /* Light Mode Premium Shadows */
@@ -421,7 +424,9 @@ body.s-dark .icon-btn {
 
 .lang-menu.show {
     display: flex;
-    animation: fadeUp 0.2s;
+    animation: fadeUp 0.3s var(--ease-out);
+    will-change: transform, opacity;
+    backface-visibility: hidden;
 }
 
 /* SYSTEM GRID */
@@ -952,46 +957,40 @@ body.s-dark .node-card:hover {
 }
 
 /* QR MODAL */
+/* MODALS - Verified Smooth */
 .modal-overlay {
     position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.4);
-    backdrop-filter: blur(0px);
-    /* Will animate to blur */
-    display: none;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.85);
+    /* Slightly darker for focus */
+    backdrop-filter: blur(10px);
+    display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 10000;
+    z-index: 1000;
     opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.4s ease, backdrop-filter 0.4s ease;
+    visibility: hidden;
+    transition: all 0.4s var(--ease-out);
+    will-change: opacity, visibility;
 }
 
 .modal-overlay.open {
-    display: flex;
     opacity: 1;
-    pointer-events: all;
-    backdrop-filter: blur(8px);
+    visibility: visible;
 }
 
 .qr-modal {
-    background: var(--bg-card);
-    backdrop-filter: blur(32px);
-    padding: 24px;
-    border-radius: 32px;
+    background: var(--card-bg);
     border: 1px solid var(--card-border);
-    width: 340px;
-    max-width: 90%;
-    text-align: center;
-    transform: scale(0.8) translateY(20px);
-    opacity: 0;
-    transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
-    position: relative;
-    overflow: hidden;
+    border-radius: 24px;
+    width: 90%;
+    max-width: 400px;
+    padding: 30px;
+    transform: translate3d(0, 40px, 0) scale(0.95);
+    transition: all 0.5s var(--ease-out);
+    will-change: transform, opacity;
+    backface-visibility: hidden;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
 }
 
 .modal-overlay.open .qr-modal {

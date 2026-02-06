@@ -215,7 +215,7 @@
         profile.innerHTML = `
             <div class="avatar">${dispName.substring(0, 2).toUpperCase()}</div>
             <div class="user-text-group">
-                <div class="dashboard-title">System Dashboard</div>
+                <div class="dashboard-title">User Dashboard</div>
                 <div class="user-main-row">
                     <div class="username-display">${dispName}</div>
                     <div class="status-indicator-wrap">
@@ -470,8 +470,10 @@
 
         // Update QR
         if (window.QRious) {
-            new QRious({ element: canv, value: val, size: 250 });
-            modal.classList.add('open');
+            requestAnimationFrame(() => {
+                new QRious({ element: canv, value: val, size: 250 });
+                modal.classList.add('open');
+            });
         } else {
             alert('QR Library loading...');
         }
