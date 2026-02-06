@@ -40,9 +40,7 @@
     return el;
   };
 
-  // Bulletproof Translation
   const t = (key) => {
-    // Fallback to 'en' if lang is something like 'zh-CN' which we don't have exactly mapped
     let lang = STATE.lang;
     if (!I18N[lang]) {
       if (lang.startsWith('zh')) lang = 'cn';
@@ -53,6 +51,7 @@
   };
 
   function formatBytes(bytes) {
+    bytes = Number(bytes) || 0;
     if (bytes === 0) return '0 B';
     const k = 1024, sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
@@ -73,8 +72,8 @@
   function getStatusInfo() {
     if (!STATE.raw) return { label: 'Unknown', color: '#64748b', pct: 0, used: 0, total: 0 };
     const now = Date.now();
-    const total = STATE.raw.total || 0;
-    const used = (STATE.raw.up || 0) + (STATE.raw.down || 0);
+    const total = Number(STATE.raw.total) || 0;
+    const used = (Number(STATE.raw.up) || 0) + (Number(STATE.raw.down) || 0);
     const expired = STATE.raw.expire > 0 && now > STATE.raw.expire;
     const depleted = total > 0 && used >= total;
     const active = !expired && !depleted;
@@ -95,7 +94,7 @@
     const linksEl = getEl('subscription-links');
     const links = linksEl ? linksEl.value.split('\n').filter(Boolean) : [];
 
-    if (STATE.raw && !STATE.raw.sid?.includes('@') && links.length > 0) {
+    if (STATE.raw && !String(STATE.raw.sid).includes('@') && links.length > 0) {
       if (links[0].includes('#')) dispName = cleanupName(links[0].split('#')[1]);
     }
 
@@ -157,7 +156,9 @@
   function renderInfoCard() {
     const card = mkEl('div', 'glass-panel span-4 stat-mini-grid');
     if (!STATE.raw) return card;
-    const remVal = STATE.raw.total > 0 ? formatBytes(Math.max(0, STATE.raw.total - (STATE.raw.up + STATE.raw.down))) : '∞';
+    const used = (Number(STATE.raw.up) || 0) + (Number(STATE.raw.down) || 0);
+    const total = Number(STATE.raw.total) || 0;
+    const remVal = total > 0 ? formatBytes(Math.max(0, total - used)) : '∞';
     let expVal = '∞';
     if (STATE.raw.expire > 0) {
       const diff = STATE.raw.expire - Date.now();
@@ -192,7 +193,7 @@
     links.forEach((link, i) => {
       try {
         grid.appendChild(renderNode(link, i));
-      } catch (e) { console.error('Node render error', e); }
+      } catch (e) { }
     });
     wrap.appendChild(grid);
     return wrap;
@@ -304,25 +305,25 @@
 
   function init() {
     try {
-      if (!STATE.raw) {
-        const data = getEl('subscription-data');
-        if (!data) return;
-        STATE.raw = {
-          sid: data.getAttribute('data-email') || data.getAttribute('data-sid') || 'User',
-          total: parseInt(data.getAttribute('data-totalbyte') || 0),
-          up: parseInt(data.getAttribute('data-uploadbyte') || 0),
-          down: parseInt(data.getAttribute('data-downloadbyte') || 0),
-          expire: parseInt(data.getAttribute('data-expire') || 0) * 1000,
-          subUrl: data.getAttribute('data-sub-url') || '',
-          lastOnline: parseInt(data.getAttribute('data-lastonline') || 0)
-        };
-        STATE.subUrl = STATE.raw.subUrl;
+      const data = getEl('subscription-data');
+      if (!data) {
+        throw new Error('Missing subscription-data element');
       }
+
+      STATE.raw = {
+        sid: data.getAttribute('data-sid') || 'User',
+        total: Number(data.getAttribute('data-totalbyte')) || 0,
+        up: Number(data.getAttribute('data-uploadbyte')) || 0,
+        down: Number(data.getAttribute('data-downloadbyte')) || 0,
+        expire: (Number(data.getAttribute('data-expire')) || 0) * 1000,
+        subUrl: data.getAttribute('data-sub-url') || '',
+        lastOnline: Number(data.getAttribute('data-lastonline')) || 0
+      };
+      STATE.subUrl = STATE.raw.subUrl;
 
       const app = mkEl('div', 'app-container');
       app.id = 'app-root';
 
-      // Safe rendering chain
       const components = [
         () => app.appendChild(renderHeader()),
         () => {
@@ -354,9 +355,7 @@
         }
       ];
 
-      components.forEach((fn, i) => {
-        try { fn(); } catch (err) { console.error(`Component ${i} failed`, err); }
-      });
+      components.forEach(fn => { try { fn(); } catch (e) { } });
 
       const old = getEl('app-root'); if (old) old.remove();
       document.body.appendChild(app);
@@ -369,19 +368,17 @@
             document.body.style.overflow = 'auto';
             splash.style.opacity = '0'; splash.style.visibility = 'hidden';
             const bar = getEl('prog-bar');
-            if (bar) {
-              const info = getStatusInfo();
-              bar.style.transform = `scaleX(${info.pct / 100})`;
-            }
+            if (bar) bar.style.transform = `scaleX(${getStatusInfo().pct / 100})`;
             setTimeout(() => { if (splash.parentNode) splash.remove(); }, 600);
           }, 500);
         });
       }
-    } catch (globalError) {
-      console.error('Premium UI Crash:', globalError);
-      // Failover: Try to at least show the subscription link if possible
+    } catch (e) {
+      console.error('Core UI Failure:', e);
       const fallback = getEl('app');
       if (fallback) fallback.style.setProperty('display', 'block', 'important');
+      const splash = getEl('premium-preloader');
+      if (splash) splash.remove();
     }
   }
 
