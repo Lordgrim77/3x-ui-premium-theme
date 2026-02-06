@@ -13,6 +13,11 @@
     --status-offline: #64748b;
     --status-warn: #f59e0b;
 
+    /* DYNAMIC USAGE PALETTE */
+    --usage-active: var(--accent);
+    --usage-depleted: #ef4444;
+    --usage-expired: #64748b;
+
     /* LAYOUT */
     --grid-gap: 24px;
     --card-radius: 20px;
@@ -26,6 +31,10 @@ body.s-dark {
     --bg-sec: #0f172a;
     --accent: #6366f1;
     --accent-glow: rgba(99, 102, 241, 0.5);
+
+    --usage-active: #6366f1;
+    --usage-depleted: #f87171;
+    --usage-expired: #94a3b8;
 
     --card-bg: rgba(15, 23, 42, 0.6);
     --card-border: rgba(255, 255, 255, 0.08);
@@ -56,6 +65,10 @@ body.s-light {
     --bg-sec: #ffffff;
     --accent: #4f46e5;
     --accent-glow: rgba(79, 70, 229, 0.25);
+
+    --usage-active: #4f46e5;
+    --usage-depleted: #dc2626;
+    --usage-expired: #475569;
 
     --card-bg: rgba(255, 255, 255, 0.8);
     --card-border: rgba(0, 0, 0, 0.04);
@@ -733,12 +746,10 @@ body.s-dark .span-4 {
 
 .progress-bar {
     height: 100%;
-    width: 100%;
-    /* Change fixed width to 100% and use scaleX instead */
-    border-radius: 10px;
-    background: linear-gradient(90deg, var(--accent), #a855f7);
-    transition: transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+    border-radius: inherit;
+    transition: transform 1.2s cubic-bezier(0.34, 1.56, 0.64, 1);
     transform-origin: left;
+    background-image: linear-gradient(90deg, rgba(255, 255, 255, 0.15) 0%, transparent 50%);
     transform: scaleX(0);
     /* Initial state */
     will-change: transform;
