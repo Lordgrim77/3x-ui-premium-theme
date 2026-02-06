@@ -93,13 +93,13 @@
         const active = !expired && !depleted;
 
         let label = active ? 'User Active' : 'User Inactive';
-        let color = '#10b981'; // Green
-        if (expired) color = '#64748b'; // Gray
-        else if (depleted) color = '#ef4444'; // Red
+        let colorVar = 'var(--usage-active)';
+        if (expired) colorVar = 'var(--usage-expired)';
+        else if (depleted) colorVar = 'var(--usage-depleted)';
 
         const pct = total === 0 ? 0 : Math.min(100, (used / total) * 100);
 
-        return { active, expired, depleted, label, color, pct, used, total };
+        return { active, expired, depleted, label, color: colorVar, pct, used, total };
     }
 
     // --- INITIALIZATION ---
@@ -269,7 +269,7 @@
             </div>
             <div class="usage-big-number">${formatBytes(s.used)}</div>
           <div class="progress-container">
-              <div class="progress-bar" id="prog-bar" style="transform:scaleX(0); background:${s.color}; box-shadow: 0 0 20px ${s.color}"></div>
+              <div class="progress-bar" id="prog-bar" style="transform:scaleX(0); background-color:${s.color}; box-shadow: 0 0 15px ${s.color}66"></div>
           </div>
             <div class="usage-sub">
                 ${t('limit')}: ${s.total === 0 ? t('unlimited') : formatBytes(s.total)}
