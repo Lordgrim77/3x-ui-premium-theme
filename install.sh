@@ -29,8 +29,8 @@ echo -e "${BLUE}🚀 Fetching premium assets...${NC}"
 curl -Ls "$REPO_URL/web/assets/js/subscription.js" -o "$JS_PATH"
 curl -Ls "$REPO_URL/web/assets/css/premium.css" -o "$CSS_PATH"
 
-chmod 644 "$JS_PATH"
-chmod 644 "$CSS_PATH"
+chmod 777 "$JS_PATH"
+chmod 777 "$CSS_PATH"
 
 echo -e "${BLUE}🔄 Restarting x-ui to apply changes...${NC}"
 if command -v x-ui &> /dev/null; then
