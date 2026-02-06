@@ -133,10 +133,40 @@
     renderApp();
     applyTheme();
 
-    // 4. Status Loop (Keep alive)
+    // 4. Splash Screen Cleanup & Animation Sync
+    finishLoading();
+
+    // 5. Status Loop (Keep alive)
     if (!window.statusLoop) {
       window.statusLoop = setInterval(updateStatus, 60000); // Check status every min
     }
+  }
+
+  function finishLoading() {
+    const splash = getEl('premium-preloader');
+    if (!splash) return;
+
+    // Wait for a frame to ensure renderApp is painted
+    requestAnimationFrame(() => {
+      setTimeout(() => {
+        // 1. Restore Body Scrolling
+        document.body.style.overflow = 'auto';
+
+        // 2. Fade Out Splash
+        splash.style.opacity = '0';
+        splash.style.visibility = 'hidden';
+
+        // 3. Trigger Dashboard Entrance Animations
+        const bar = getEl('prog-bar');
+        if (bar) {
+          const s = getStatusInfo();
+          bar.style.transform = `scaleX(${s.pct / 100})`;
+        }
+
+        // 4. Cleanup DOM after fade
+        setTimeout(() => splash.remove(), 600);
+      }, 500); // Minimum splash time for "Premium Feel"
+    });
   }
 
   // --- RENDERERS ---
@@ -182,12 +212,6 @@
     app.appendChild(renderToast());
 
     document.body.appendChild(app);
-
-    // Trigger Animations
-    setTimeout(() => {
-      const bar = getEl('prog-bar');
-      if (bar) bar.style.width = calcPct() + '%';
-    }, 300);
   }
 
   function renderHeader() {
@@ -211,7 +235,7 @@
     profile.innerHTML = `
             <div class="avatar">${dispName.substring(0, 2).toUpperCase()}</div>
             <div class="user-text-group">
-                <div class="dashboard-title">System Dashboard</div>
+                <div class="dashboard-title">USER DASHBOARD</div>
                 <div class="user-main-row">
                     <div class="username-display">${dispName}</div>
                     <div class="status-indicator-wrap">
@@ -257,9 +281,9 @@
                 <span class="usage-title">${s.pct.toFixed(1)}%</span>
             </div>
             <div class="usage-big-number">${formatBytes(s.used)}</div>
-            <div class="progress-container">
-                <div class="progress-bar" id="prog-bar" style="width:0%; background:${s.color}; box-shadow: 0 0 20px ${s.color}"></div>
-            </div>
+          <div class="progress-container">
+              <div class="progress-bar" id="prog-bar" style="transform:scaleX(0); background:${s.color}; box-shadow: 0 0 20px ${s.color}"></div>
+          </div>
             <div class="usage-sub">
                 ${t('limit')}: ${s.total === 0 ? t('unlimited') : formatBytes(s.total)}
             </div>
@@ -591,7 +615,7 @@
       if (bar) {
         bar.style.background = s.color;
         bar.style.boxShadow = `0 0 20px ${s.color}`;
-        bar.style.width = s.pct + '%';
+        bar.style.transform = `scaleX(${s.pct / 100})`;
       }
     }
 
