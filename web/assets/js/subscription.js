@@ -39,7 +39,18 @@
     if (html) el.innerHTML = html;
     return el;
   };
-  const t = (key) => I18N[STATE.lang][key] || key;
+
+  // Bulletproof Translation
+  const t = (key) => {
+    // Fallback to 'en' if lang is something like 'zh-CN' which we don't have exactly mapped
+    let lang = STATE.lang;
+    if (!I18N[lang]) {
+      if (lang.startsWith('zh')) lang = 'cn';
+      else if (lang.startsWith('fa')) lang = 'fa';
+      else lang = 'en';
+    }
+    return I18N[lang][key] || I18N['en'][key] || key;
+  };
 
   function formatBytes(bytes) {
     if (bytes === 0) return '0 B';
@@ -60,6 +71,7 @@
   }
 
   function getStatusInfo() {
+    if (!STATE.raw) return { label: 'Unknown', color: '#64748b', pct: 0, used: 0, total: 0 };
     const now = Date.now();
     const total = STATE.raw.total || 0;
     const used = (STATE.raw.up || 0) + (STATE.raw.down || 0);
@@ -79,11 +91,11 @@
   // --- 4. COMPONENT RENDERERS ---
   function renderHeader() {
     const h = mkEl('header', 'dashboard-header');
-    let dispName = STATE.raw.sid;
+    let dispName = STATE.raw?.sid || 'User';
     const linksEl = getEl('subscription-links');
     const links = linksEl ? linksEl.value.split('\n').filter(Boolean) : [];
 
-    if (!STATE.raw.sid.includes('@') && links.length > 0) {
+    if (STATE.raw && !STATE.raw.sid?.includes('@') && links.length > 0) {
       if (links[0].includes('#')) dispName = cleanupName(links[0].split('#')[1]);
     }
 
@@ -144,6 +156,7 @@
 
   function renderInfoCard() {
     const card = mkEl('div', 'glass-panel span-4 stat-mini-grid');
+    if (!STATE.raw) return card;
     const remVal = STATE.raw.total > 0 ? formatBytes(Math.max(0, STATE.raw.total - (STATE.raw.up + STATE.raw.down))) : '∞';
     let expVal = '∞';
     if (STATE.raw.expire > 0) {
@@ -176,7 +189,11 @@
     wrap.innerHTML = `<div class="nodes-header">${UI_ICONS.nodes} Configuration Links</div>`;
     const grid = mkEl('div', 'node-grid');
     const links = getEl('subscription-links')?.value.split('\n').filter(Boolean) || [];
-    links.forEach((link, i) => grid.appendChild(renderNode(link, i)));
+    links.forEach((link, i) => {
+      try {
+        grid.appendChild(renderNode(link, i));
+      } catch (e) { console.error('Node render error', e); }
+    });
     wrap.appendChild(grid);
     return wrap;
   }
@@ -243,13 +260,13 @@
   }
 
   function showToast(msg) {
-    const t = getEl('toast');
-    if (!t) return;
-    t.innerText = msg;
-    t.style.visibility = 'visible'; t.style.opacity = '1'; t.style.transform = 'translateX(-50%) translateY(0)';
+    const toast = getEl('toast');
+    if (!toast) return;
+    toast.innerText = msg;
+    toast.style.visibility = 'visible'; toast.style.opacity = '1'; toast.style.transform = 'translateX(-50%) translateY(0)';
     setTimeout(() => {
-      t.style.opacity = '0'; t.style.transform = 'translateX(-50%) translateY(100px)';
-      setTimeout(() => t.style.visibility = 'hidden', 300);
+      toast.style.opacity = '0'; toast.style.transform = 'translateX(-50%) translateY(100px)';
+      setTimeout(() => toast.style.visibility = 'hidden', 300);
     }, 2000);
   }
 
@@ -257,7 +274,7 @@
     const modal = getEl('qr-modal');
     if (!modal) return;
     getEl('qr-title').textContent = title || t('qr');
-    const gen = () => { new QRious({ element: getEl('qr-canv'), value: val, size: 250 }); modal.classList.add('open'); };
+    const gen = () => { if (window.QRious) new QRious({ element: getEl('qr-canv'), value: val, size: 250 }); modal.classList.add('open'); };
     if (window.QRious) gen();
     else {
       const s = document.createElement('script');
@@ -269,79 +286,102 @@
   function toggleTheme(e) {
     const next = STATE.theme === 'dark' ? 'light' : 'dark';
     const burst = mkEl('div', 'theme-burst');
-    const rect = e.currentTarget.getBoundingClientRect();
+    const bRect = e.currentTarget.getBoundingClientRect();
     burst.style.background = next === 'dark' ? '#020617' : '#f8fafc';
-    burst.style.left = (rect.left + rect.width / 2) + 'px';
-    burst.style.top = (rect.top + rect.height / 2) + 'px';
+    burst.style.left = (bRect.left + bRect.width / 2) + 'px';
+    burst.style.top = (bRect.top + bRect.height / 2) + 'px';
     document.body.appendChild(burst);
 
     setTimeout(() => {
       STATE.theme = next;
       localStorage.setItem('xui_theme', next);
       document.body.className = next === 'dark' ? 's-dark' : 's-light';
-      getEl('theme-btn').innerHTML = next === 'dark' ? UI_ICONS.sun : UI_ICONS.moon;
+      const btn = getEl('theme-btn');
+      if (btn) btn.innerHTML = next === 'dark' ? UI_ICONS.sun : UI_ICONS.moon;
     }, 500);
     setTimeout(() => burst.remove(), 1600);
   }
 
   function init() {
-    if (!STATE.raw) {
-      const data = getEl('subscription-data');
-      if (!data) return;
-      STATE.raw = {
-        sid: data.getAttribute('data-email') || data.getAttribute('data-sid') || 'User',
-        total: parseInt(data.getAttribute('data-totalbyte') || 0),
-        up: parseInt(data.getAttribute('data-uploadbyte') || 0),
-        down: parseInt(data.getAttribute('data-downloadbyte') || 0),
-        expire: parseInt(data.getAttribute('data-expire') || 0) * 1000,
-        subUrl: data.getAttribute('data-sub-url') || '',
-        lastOnline: parseInt(data.getAttribute('data-lastonline') || 0)
-      };
-      STATE.subUrl = STATE.raw.subUrl;
-    }
+    try {
+      if (!STATE.raw) {
+        const data = getEl('subscription-data');
+        if (!data) return;
+        STATE.raw = {
+          sid: data.getAttribute('data-email') || data.getAttribute('data-sid') || 'User',
+          total: parseInt(data.getAttribute('data-totalbyte') || 0),
+          up: parseInt(data.getAttribute('data-uploadbyte') || 0),
+          down: parseInt(data.getAttribute('data-downloadbyte') || 0),
+          expire: parseInt(data.getAttribute('data-expire') || 0) * 1000,
+          subUrl: data.getAttribute('data-sub-url') || '',
+          lastOnline: parseInt(data.getAttribute('data-lastonline') || 0)
+        };
+        STATE.subUrl = STATE.raw.subUrl;
+      }
 
-    const app = mkEl('div', 'app-container');
-    app.id = 'app-root';
-    app.appendChild(renderHeader());
-    const grid = mkEl('div', 'dashboard-grid');
-    grid.appendChild(renderUsageCard());
-    grid.appendChild(renderInfoCard());
-    grid.appendChild(renderNodesList());
-    app.appendChild(grid);
+      const app = mkEl('div', 'app-container');
+      app.id = 'app-root';
 
-    const footer = mkEl('div', 'custom-footer');
-    footer.innerHTML = `Made with <span class="heart-pulse">❤️</span> by&nbsp;<a class="footer-link" href="https://t.me/xXxIo_oIxXx" target="_blank">𝙇𝙊𝙍𝘿 𝙂𝙍𝙄𝙈</a>`;
-    app.appendChild(footer);
-    app.appendChild(mkEl('div', 'bg-fx', `
-      <div class="cyber-grid"></div>
-      <div class="data-packet pkt-1"></div>
-      <div class="data-packet pkt-2"></div>
-      <div class="data-packet pkt-3"></div>
-      <div class="tech-glow glow-top"></div>
-      <div class="tech-glow glow-bottom"></div>
-    `));
-    app.appendChild(renderQRModal());
+      // Safe rendering chain
+      const components = [
+        () => app.appendChild(renderHeader()),
+        () => {
+          const grid = mkEl('div', 'dashboard-grid');
+          grid.appendChild(renderUsageCard());
+          grid.appendChild(renderInfoCard());
+          grid.appendChild(renderNodesList());
+          app.appendChild(grid);
+        },
+        () => {
+          const footer = mkEl('div', 'custom-footer');
+          footer.innerHTML = `Made with <span class="heart-pulse">❤️</span> by&nbsp;<a class="footer-link" href="https://t.me/xXxIo_oIxXx" target="_blank">𝙇𝙊𝙍𝘿 𝙂𝙍𝙄𝙈</a>`;
+          app.appendChild(footer);
+        },
+        () => app.appendChild(mkEl('div', 'bg-fx', `
+          <div class="cyber-grid"></div>
+          <div class="data-packet pkt-1"></div>
+          <div class="data-packet pkt-2"></div>
+          <div class="data-packet pkt-3"></div>
+          <div class="tech-glow glow-top"></div>
+          <div class="tech-glow glow-bottom"></div>
+        `)),
+        () => app.appendChild(renderQRModal()),
+        () => {
+          const toast = mkEl('div', 'glass-panel');
+          toast.id = 'toast';
+          Object.assign(toast.style, { position: 'fixed', bottom: '20px', left: '50%', transform: 'translateX(-50%) translateY(100px)', opacity: '0', visibility: 'hidden', transition: 'all 0.3s', padding: '12px 24px', zIndex: 10001 });
+          app.appendChild(toast);
+        }
+      ];
 
-    const toast = mkEl('div', 'glass-panel');
-    toast.id = 'toast';
-    Object.assign(toast.style, { position: 'fixed', bottom: '20px', left: '50%', transform: 'translateX(-50%) translateY(100px)', opacity: '0', visibility: 'hidden', transition: 'all 0.3s', padding: '12px 24px', zIndex: 10001 });
-    app.appendChild(toast);
-
-    const old = getEl('app-root'); if (old) old.remove();
-    document.body.appendChild(app);
-    document.body.className = STATE.theme === 'dark' ? 's-dark' : 's-light';
-
-    const splash = getEl('premium-preloader');
-    if (splash) {
-      requestAnimationFrame(() => {
-        setTimeout(() => {
-          document.body.style.overflow = 'auto';
-          splash.style.opacity = '0'; splash.style.visibility = 'hidden';
-          const bar = getEl('prog-bar');
-          if (bar) bar.style.transform = `scaleX(${getStatusInfo().pct / 100})`;
-          setTimeout(() => splash.remove(), 600);
-        }, 500);
+      components.forEach((fn, i) => {
+        try { fn(); } catch (err) { console.error(`Component ${i} failed`, err); }
       });
+
+      const old = getEl('app-root'); if (old) old.remove();
+      document.body.appendChild(app);
+      document.body.className = STATE.theme === 'dark' ? 's-dark' : 's-light';
+
+      const splash = getEl('premium-preloader');
+      if (splash) {
+        requestAnimationFrame(() => {
+          setTimeout(() => {
+            document.body.style.overflow = 'auto';
+            splash.style.opacity = '0'; splash.style.visibility = 'hidden';
+            const bar = getEl('prog-bar');
+            if (bar) {
+              const info = getStatusInfo();
+              bar.style.transform = `scaleX(${info.pct / 100})`;
+            }
+            setTimeout(() => { if (splash.parentNode) splash.remove(); }, 600);
+          }, 500);
+        });
+      }
+    } catch (globalError) {
+      console.error('Premium UI Crash:', globalError);
+      // Failover: Try to at least show the subscription link if possible
+      const fallback = getEl('app');
+      if (fallback) fallback.style.setProperty('display', 'block', 'important');
     }
   }
 
