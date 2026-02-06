@@ -177,7 +177,6 @@
         app.appendChild(footer);
 
         // 3. Modals & FX
-        app.appendChild(renderBG());
         app.appendChild(renderQRModal());
         app.appendChild(renderToast());
 
@@ -422,16 +421,7 @@
         return card;
     }
 
-    function renderBG() {
-        const fx = mkEl('div', 'bg-fx');
-        const orb1 = mkEl('div', 'orb orb-1');
-        const orb2 = mkEl('div', 'orb orb-2');
-        const orb3 = mkEl('div', 'orb orb-3');
-        fx.appendChild(orb1);
-        fx.appendChild(orb2);
-        fx.appendChild(orb3);
-        return fx;
-    }
+
 
     function renderQRModal() {
         const overlay = mkEl('div', 'modal-overlay');
