@@ -104,13 +104,18 @@
 
     // --- INITIALIZATION ---
     function init() {
-        renderLoader(); // 1. Start Pre-loader
+        console.log("LG Premium: Initializing...");
+        renderLoader(); // 1. Start JS Loader
 
-        // 2. Parse Data ONLY ONCE (Safe from re-renders)
+        // 2. Parse Data Safely
+        const dataEl = getEl('subscription-data');
+        if (!dataEl) {
+            console.error("LG Premium: Data element missing!");
+            hideLoader(); // Emergency hide to avoid white screen
+            return;
+        }
+
         if (!STATE.raw) {
-            const dataEl = getEl('subscription-data');
-            if (!dataEl) return;
-
             STATE.raw = {
                 sid: dataEl.getAttribute('data-email') || dataEl.getAttribute('data-sid') || 'User',
                 total: parseInt(dataEl.getAttribute('data-totalbyte') || 0),
@@ -123,21 +128,13 @@
             STATE.subUrl = STATE.raw.subUrl;
         }
 
-        // 3. CSS Fail-safe
-        if (!document.querySelector('link[href*="premium.css"]')) {
-            const css = document.createElement('link');
-            css.rel = 'stylesheet';
-            css.href = './assets/css/premium.css';
-            document.head.appendChild(css);
-        }
-
-        // 4. Render Application
+        // 3. Render Application
         renderApp();
         applyTheme();
 
-        // 5. Status Loop (Keep alive)
+        // 4. Status Loop (Keep alive)
         if (!window.statusLoop) {
-            window.statusLoop = setInterval(updateStatus, 60000); // Check status every min
+            window.statusLoop = setInterval(updateStatus, 60000);
         }
     }
 
@@ -370,7 +367,8 @@
         wrap.innerHTML = `<div class="nodes-header">${icoLinks} Configuration Links</div>`;
 
         const grid = mkEl('div', 'node-grid');
-        const links = getEl('subscription-links')?.value.split('\n').filter(Boolean) || [];
+        const listEl = getEl('subscription-links');
+        const links = listEl ? listEl.value.split('\n').filter(Boolean) : [];
 
         links.forEach((link, i) => {
             const node = renderNode(link, i);
@@ -504,11 +502,18 @@
     }
 
     function hideLoader() {
-        const loader = getEl('app-loader');
-        if (loader) {
-            loader.style.opacity = '0';
-            setTimeout(() => loader.remove(), 800);
-        }
+        // Target both JS-created and HTML-injected loaders
+        const jsLoader = getEl('app-loader');
+        const htmlLoader = getEl('premium-preloader');
+
+        const remove = (el) => {
+            if (!el) return;
+            el.style.opacity = '0';
+            setTimeout(() => el.remove(), 800);
+        };
+
+        remove(jsLoader);
+        remove(htmlLoader);
     }
 
     function renderToast() {
