@@ -129,8 +129,11 @@ body {
     font-family: 'Inter', -apple-system, sans-serif;
     background: var(--bg-main);
     color: var(--text-primary);
-    transition: background 0.4s var(--ease-out), color 0.4s;
+    /* Minimize transition scope to avoid full-page repaints */
+    transition: background 0.3s ease, color 0.3s;
     min-height: 100vh;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
 }
 
 /* BACKGROUND FX */
@@ -150,13 +153,16 @@ body {
     position: absolute;
     border-radius: 50%;
     filter: blur(40px);
-    opacity: 0.3;
-    /* Slightly lower opacity for performance */
+    opacity: 0.25;
+    /* Lower opacity reduces blending cost */
     animation: float 20s infinite ease-in-out;
     will-change: transform;
     transform: translate3d(0, 0, 0);
     backface-visibility: hidden;
     perspective: 1000px;
+    pointer-events: none;
+    /* Composite isolation */
+    contain: strict;
 }
 
 .orb-1 {
@@ -238,10 +244,10 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 20px 0 40px;
-    animation: slideDown 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation: hdReveal 1s cubic-bezier(0.19, 1, 0.22, 1) forwards;
     gap: 16px;
     flex-wrap: wrap;
-    will-change: transform, opacity;
+    will-change: transform, opacity, filter;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
 }
@@ -253,15 +259,18 @@ body {
     }
 }
 
-@keyframes slideDown {
-    from {
+@keyframes hdReveal {
+    0% {
         opacity: 0;
-        transform: translate3d(0, -20px, 0);
+        transform: translate3d(0, -30px, 0);
+        filter: blur(10px);
+        letter-spacing: 0.5em;
     }
-
-    to {
+    100% {
         opacity: 1;
         transform: translate3d(0, 0, 0);
+        filter: blur(0);
+        letter-spacing: normal;
     }
 }
 
@@ -510,6 +519,21 @@ body.s-dark .icon-btn {
     transform: scale(1.01);
 }
 
+.node-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    padding: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.3s var(--ease-out);
+    position: relative;
+    overflow: hidden;
+    /* Isolate node cards for super-smooth list scrolling */
+    contain: layout style paint;
+}
+
 .sys-card {
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid var(--card-border);
@@ -609,8 +633,30 @@ body.s-dark .icon-btn {
     will-change: transform, opacity;
     transform: translate3d(0, 0, 0);
     backface-visibility: hidden;
-    text-rendering: optimizeSpeed;
-    /* Faster renders on entry */
+
+    /* Performance Isolation */
+    contain: layout style paint;
+}
+
+/* Fast Shadow Trick: Animate opacity, not box-shadow */
+.span-12::before,
+.span-8::before,
+.span-4::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: -1;
+    pointer-events: none;
+}
+
+.span-12:hover::before,
+.span-8:hover::before,
+.span-4:hover::before {
+    opacity: 1;
 }
 
 /* Dark mode overrides */
@@ -625,17 +671,7 @@ body.s-dark .span-4 {
 
 .span-8:hover,
 .span-4:hover {
-    transform: translateY(-2px) translateZ(0);
-    box-shadow:
-        0 4px 12px rgba(0, 0, 0, 0.15),
-        0 8px 24px rgba(0, 0, 0, 0.12);
-}
-
-body.s-dark .span-8:hover,
-body.s-dark .span-4:hover {
-    box-shadow:
-        0 4px 16px rgba(0, 0, 0, 0.5),
-        0 10px 30px rgba(0, 0, 0, 0.4);
+    transform: translate3d(0, -4px, 0);
 }
 
 .span-12 {
@@ -754,9 +790,15 @@ body.s-dark .span-4:hover {
 
 .progress-bar {
     height: 100%;
+    width: 100%;
+    /* Change fixed width to 100% and use scaleX instead */
     border-radius: 10px;
     background: linear-gradient(90deg, var(--accent), #a855f7);
-    transition: width 1.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    transition: transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+    transform-origin: left;
+    transform: scaleX(0);
+    /* Initial state */
+    will-change: transform;
     box-shadow: 0 0 20px var(--accent-glow);
     position: relative;
     overflow: hidden;
@@ -768,10 +810,10 @@ body.s-dark .span-4:hover {
     top: 0;
     left: 0;
     bottom: 0;
-    width: 100%;
+    width: 200%;
+    /* Wider to prevent gaps during scale */
     background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-    transform: translateX(-100%);
-    animation: flow 2s infinite ease-out;
+    animation: flow 2s infinite linear;
 }
 
 /* STATS MINI CARDS */
