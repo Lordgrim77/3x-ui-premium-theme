@@ -136,7 +136,7 @@ body {
     -webkit-font-smoothing: antialiased;
 }
 
-/* BACKGROUND FX */
+/* BACKGROUND FX - Static */
 .bg-fx {
     position: fixed;
     top: 0;
@@ -147,81 +147,6 @@ body {
     z-index: -2;
     pointer-events: none;
     overflow: hidden;
-}
-
-.orb {
-    position: absolute;
-    border-radius: 50%;
-    filter: blur(40px);
-    opacity: 0.25;
-    /* Lower opacity reduces blending cost */
-    animation: float 20s infinite ease-in-out;
-    will-change: transform;
-    transform: translate3d(0, 0, 0);
-    backface-visibility: hidden;
-    perspective: 1000px;
-    pointer-events: none;
-    /* Composite isolation */
-    contain: strict;
-}
-
-.orb-1 {
-    width: 400px;
-    height: 400px;
-    background: radial-gradient(circle, var(--accent), transparent 70%);
-    top: -100px;
-    right: -50px;
-    animation: float-complex 25s infinite ease-in-out;
-}
-
-.orb-2 {
-    width: 300px;
-    height: 300px;
-    background: radial-gradient(circle, var(--status-online), transparent 70%);
-    bottom: 10%;
-    left: -50px;
-    animation: float-complex 30s infinite ease-in-out;
-    animation-delay: -10s;
-    opacity: 0.25;
-}
-
-.orb-3 {
-    width: 250px;
-    height: 250px;
-    background: radial-gradient(circle, #a855f7, transparent 70%);
-    top: 40%;
-    right: 20%;
-    animation: float-complex 35s infinite ease-in-out;
-    animation-delay: -20s;
-    opacity: 0.2;
-}
-
-@keyframes float {
-
-    0%,
-    100% {
-        transform: translate3d(0, 0, 0);
-    }
-
-    50% {
-        transform: translate3d(-30px, 50px, 0);
-    }
-}
-
-@keyframes float-complex {
-
-    0%,
-    100% {
-        transform: translate3d(0, 0, 0) scale(1);
-    }
-
-    33% {
-        transform: translate3d(-30px, 20px, 0) scale(1.05);
-    }
-
-    66% {
-        transform: translate3d(20px, 40px, 0) scale(0.95);
-    }
 }
 
 /* CONTAINER & GRID */
