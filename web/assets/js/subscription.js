@@ -185,12 +185,13 @@
         // Trigger Animations with RequestAnimationFrame for sync
         requestAnimationFrame(() => {
             setTimeout(() => {
+                hideLoader(); // Fade out loader when content is ready
                 const bar = getEl('prog-bar');
                 if (bar) {
                     const s = getStatusInfo();
                     bar.style.transform = `scaleX(${s.pct / 100})`;
                 }
-            }, 300);
+            }, 500); // Slightly longer delay for premium feel
         });
     }
 
@@ -486,6 +487,49 @@
         } else {
             alert('QR Library loading...');
         }
+    }
+
+    function renderLoader() {
+        const loader = mkEl('div', 'preloader');
+        loader.id = 'app-loader';
+        loader.innerHTML = `
+            <div class="loader-content">
+                <div class="loader-spinner"></div>
+                <div class="loader-text">USER DASHBOARD</div>
+            </div>
+        `;
+        document.body.appendChild(loader);
+    }
+
+    function hideLoader() {
+        const loader = getEl('app-loader');
+        if (loader) {
+            loader.style.opacity = '0';
+            setTimeout(() => loader.remove(), 800);
+        }
+    }
+
+    function init() {
+        renderLoader();
+        STATE.theme = localStorage.getItem('xui_theme') || 'dark'; // Use xui_theme as per existing code
+        applyTheme();
+        renderApp();
+        hideLoader(); // Hide loader after app is rendered
+    }
+
+    function renderApp() {
+        const app = mkEl('div', 'app-container');
+        app.id = 'main-app';
+        // The following lines seem to be misplaced from renderToast.
+        // They are not part of the renderApp function's responsibility.
+        // t.style.position = 'fixed';
+        // t.style.bottom = '20px';
+        // t.style.left = '50%';
+        // t.style.transform = 'translateX(-50%) translateY(100px)';
+        // t.style.opacity = '0';
+        // The rest of renderApp content would go here.
+        // For now, just append it to the body.
+        document.body.appendChild(app);
     }
 
     function renderToast() {
