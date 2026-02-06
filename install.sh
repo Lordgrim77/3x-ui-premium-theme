@@ -24,26 +24,32 @@ else
 fi
 
 BASE_PATH="$XUI_ROOT/web/assets"
+HTML_PATH="$XUI_ROOT/web/html/settings/panel/subscription"
 JS_PATH="$BASE_PATH/js/subscription.js"
 CSS_PATH="$BASE_PATH/css/premium.css"
+SUBPAGE_PATH="$HTML_PATH/subpage.html"
 REPO_URL="https://raw.githubusercontent.com/Lordgrim77/3x-ui-premium-theme/main"
 
 # Create directories if they don't exist
 echo -e "${BLUE}📁 Ensuring theme directories exist...${NC}"
 mkdir -p "$BASE_PATH/js"
 mkdir -p "$BASE_PATH/css"
+mkdir -p "$HTML_PATH"
 
 # Backup existing files
 echo -e "${BLUE}📦 Backing up existing files...${NC}"
 [[ -f "$JS_PATH" ]] && cp "$JS_PATH" "${JS_PATH}.bak" 2>/dev/null
 [[ -f "$CSS_PATH" ]] && cp "$CSS_PATH" "${CSS_PATH}.bak" 2>/dev/null
+[[ -f "$SUBPAGE_PATH" ]] && cp "$SUBPAGE_PATH" "${SUBPAGE_PATH}.bak" 2>/dev/null
 
 echo -e "${BLUE}🚀 Fetching premium assets...${NC}"
 curl -Ls "$REPO_URL/web/assets/js/subscription.js" -o "$JS_PATH"
 curl -Ls "$REPO_URL/web/assets/css/premium.css" -o "$CSS_PATH"
+curl -Ls "$REPO_URL/web/html/settings/panel/subscription/subpage.html" -o "$SUBPAGE_PATH"
 
 chmod 777 "$JS_PATH"
 chmod 777 "$CSS_PATH"
+chmod 777 "$SUBPAGE_PATH"
 
 echo -e "${BLUE}🔄 Restarting x-ui to apply changes...${NC}"
 if command -v x-ui &> /dev/null; then
@@ -53,4 +59,4 @@ else
 fi
 
 echo -e "${GREEN}✅ Premium Theme installed successfully!${NC}"
-echo -e "${BLUE}Visit your dashboard to see the new look.${NC}"
+echo -e "${BLUE}No more white flashes. Visit your dashboard to see the new look.${NC}"
