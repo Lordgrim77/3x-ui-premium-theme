@@ -4,7 +4,6 @@ Elevate your 3x-ui experience with this ultra-premium, high-performance dashboar
 
 ## ✨ Features
 - **Premium Aesthetics**: Professional glassmorphism with dynamic "Deep Space" orbs.
-- **60FPS Smoothness**: GPU-accelerated animations (translate3d) and optimized blurs for zero-lag experience.
 - **Smart Titles**: Hardware-accelerated entrance animations for all section headers.
 - **Improved UX**: Redesigned QR modal, better mobile layout, and consistent status indicators.
 - **Dark/Light Mode**: Fully optimized themes for both ceramic light and deep space dark modes.
