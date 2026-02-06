@@ -104,7 +104,9 @@
 
     // --- INITIALIZATION ---
     function init() {
-        // 1. Parse Data ONLY ONCE (Safe from re-renders)
+        renderLoader(); // 1. Start Pre-loader
+
+        // 2. Parse Data ONLY ONCE (Safe from re-renders)
         if (!STATE.raw) {
             const dataEl = getEl('subscription-data');
             if (!dataEl) return;
@@ -121,7 +123,7 @@
             STATE.subUrl = STATE.raw.subUrl;
         }
 
-        // 2. CSS Fail-safe
+        // 3. CSS Fail-safe
         if (!document.querySelector('link[href*="premium.css"]')) {
             const css = document.createElement('link');
             css.rel = 'stylesheet';
@@ -129,11 +131,11 @@
             document.head.appendChild(css);
         }
 
-        // 3. Render Application
+        // 4. Render Application
         renderApp();
         applyTheme();
 
-        // 4. Status Loop (Keep alive)
+        // 5. Status Loop (Keep alive)
         if (!window.statusLoop) {
             window.statusLoop = setInterval(updateStatus, 60000); // Check status every min
         }
@@ -507,29 +509,6 @@
             loader.style.opacity = '0';
             setTimeout(() => loader.remove(), 800);
         }
-    }
-
-    function init() {
-        renderLoader();
-        STATE.theme = localStorage.getItem('xui_theme') || 'dark'; // Use xui_theme as per existing code
-        applyTheme();
-        renderApp();
-        hideLoader(); // Hide loader after app is rendered
-    }
-
-    function renderApp() {
-        const app = mkEl('div', 'app-container');
-        app.id = 'main-app';
-        // The following lines seem to be misplaced from renderToast.
-        // They are not part of the renderApp function's responsibility.
-        // t.style.position = 'fixed';
-        // t.style.bottom = '20px';
-        // t.style.left = '50%';
-        // t.style.transform = 'translateX(-50%) translateY(100px)';
-        // t.style.opacity = '0';
-        // The rest of renderApp content would go here.
-        // For now, just append it to the body.
-        document.body.appendChild(app);
     }
 
     function renderToast() {
