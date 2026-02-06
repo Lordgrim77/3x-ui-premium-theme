@@ -104,18 +104,13 @@
 
     // --- INITIALIZATION ---
     function init() {
-        console.log("LG Premium: Initializing...");
-        renderLoader(); // 1. Start JS Loader
+        renderLoader(); // 1. Start Pre-loader
 
-        // 2. Parse Data Safely
-        const dataEl = getEl('subscription-data');
-        if (!dataEl) {
-            console.error("LG Premium: Data element missing!");
-            hideLoader(); // Emergency hide to avoid white screen
-            return;
-        }
-
+        // 2. Parse Data ONLY ONCE (Safe from re-renders)
         if (!STATE.raw) {
+            const dataEl = getEl('subscription-data');
+            if (!dataEl) return;
+
             STATE.raw = {
                 sid: dataEl.getAttribute('data-email') || dataEl.getAttribute('data-sid') || 'User',
                 total: parseInt(dataEl.getAttribute('data-totalbyte') || 0),
@@ -128,13 +123,21 @@
             STATE.subUrl = STATE.raw.subUrl;
         }
 
-        // 3. Render Application
+        // 3. CSS Fail-safe
+        if (!document.querySelector('link[href*="premium.css"]')) {
+            const css = document.createElement('link');
+            css.rel = 'stylesheet';
+            css.href = './assets/css/premium.css';
+            document.head.appendChild(css);
+        }
+
+        // 4. Render Application
         renderApp();
         applyTheme();
 
-        // 4. Status Loop (Keep alive)
+        // 5. Status Loop (Keep alive)
         if (!window.statusLoop) {
-            window.statusLoop = setInterval(updateStatus, 60000);
+            window.statusLoop = setInterval(updateStatus, 60000); // Check status every min
         }
     }
 
@@ -184,13 +187,17 @@
         // Trigger Animations with RequestAnimationFrame for sync
         requestAnimationFrame(() => {
             setTimeout(() => {
-                hideLoader(); // Fade out loader when content is ready
+                document.body.classList.add('ready'); // Trigger CSS Entrance Animations
+                hideLoader();
+
                 const bar = getEl('prog-bar');
                 if (bar) {
                     const s = getStatusInfo();
-                    bar.style.transform = `scaleX(${s.pct / 100})`;
+                    setTimeout(() => {
+                        bar.style.transform = `scaleX(${s.pct / 100})`;
+                    }, 400); // Progress bar slides after card reveal
                 }
-            }, 500); // Slightly longer delay for premium feel
+            }, 600);
         });
     }
 
@@ -367,8 +374,7 @@
         wrap.innerHTML = `<div class="nodes-header">${icoLinks} Configuration Links</div>`;
 
         const grid = mkEl('div', 'node-grid');
-        const listEl = getEl('subscription-links');
-        const links = listEl ? listEl.value.split('\n').filter(Boolean) : [];
+        const links = getEl('subscription-links')?.value.split('\n').filter(Boolean) || [];
 
         links.forEach((link, i) => {
             const node = renderNode(link, i);
@@ -392,7 +398,7 @@
         } catch (e) { }
 
         const card = mkEl('div', 'node-card');
-        card.style.animationDelay = (idx * 0.05) + 's';
+        card.style.animationDelay = (0.3 + (idx * 0.04)) + 's';
 
         // Icons (Premium SVGs)
         const icoCopy = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>`;
@@ -502,18 +508,11 @@
     }
 
     function hideLoader() {
-        // Target both JS-created and HTML-injected loaders
-        const jsLoader = getEl('app-loader');
-        const htmlLoader = getEl('premium-preloader');
-
-        const remove = (el) => {
-            if (!el) return;
-            el.style.opacity = '0';
-            setTimeout(() => el.remove(), 800);
-        };
-
-        remove(jsLoader);
-        remove(htmlLoader);
+        const loader = getEl('app-loader');
+        if (loader) {
+            loader.style.opacity = '0';
+            setTimeout(() => loader.remove(), 800);
+        }
     }
 
     function renderToast() {

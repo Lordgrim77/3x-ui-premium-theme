@@ -172,12 +172,17 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 20px 0 40px;
-    animation: slideDown 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    opacity: 0;
+    /* Hidden until ready */
     gap: 16px;
     flex-wrap: wrap;
     will-change: transform, opacity;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
+}
+
+body.ready .dashboard-header {
+    animation: slideDown 0.8s var(--ease-out) forwards;
 }
 
 @media (max-width: 768px) {
@@ -529,8 +534,13 @@ body.s-dark .icon-btn {
     border: 1px solid var(--card-border);
     border-radius: var(--card-radius);
     padding: 24px;
-    animation: fadeUp 0.6s var(--ease-out) backwards;
+    opacity: 0;
+    /* Hidden until ready */
     transition: transform 0.3s, box-shadow 0.3s;
+}
+
+body.ready .glass-panel {
+    animation: fadeUp 0.6s var(--ease-out) forwards;
 }
 
 .glass-panel:hover {
@@ -556,13 +566,19 @@ body.s-dark .icon-btn {
         0 4px 12px rgba(0, 0, 0, 0.08);
 
     /* Premium entrance animation */
-    animation: cardFadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+    opacity: 0;
     will-change: transform, opacity;
     transform: translate3d(0, 0, 0);
     backface-visibility: hidden;
 
     /* Performance Isolation */
     contain: layout style paint;
+}
+
+body.ready .span-12,
+body.ready .span-8,
+body.ready .span-4 {
+    animation: cardFadeIn 0.6s var(--ease-out) forwards;
 }
 
 /* Fast Shadow Trick: Animate opacity, not box-shadow */
@@ -887,12 +903,14 @@ body.s-dark .stat-mini:hover {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    animation: cardFadeIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
-    animation-delay: 0.4s;
-
-    /* Strong visibility for light mode */
+    /* strong visibility for light mode */
     border: 1px solid rgba(0, 0, 0, 0.1);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    opacity: 0;
+}
+
+body.ready .node-card {
+    animation: cardFadeIn 0.5s var(--ease-out) forwards;
 }
 
 /* Dark mode */
@@ -1170,12 +1188,24 @@ body.s-dark .node-card:hover {
 
 @keyframes fadeUp {
     from {
-        transform: translateY(20px);
+        transform: translate3d(0, 20px, 0);
         opacity: 0;
     }
 
     to {
-        transform: translateY(0);
+        transform: translate3d(0, 0, 0);
+        opacity: 1;
+    }
+}
+
+@keyframes cardFadeIn {
+    from {
+        transform: translate3d(0, 30px, 0) scale(0.98);
+        opacity: 0;
+    }
+
+    to {
+        transform: translate3d(0, 0, 0) scale(1);
         opacity: 1;
     }
 }
