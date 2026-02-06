@@ -428,6 +428,11 @@
         overlay.id = 'qr-modal';
         overlay.onclick = (e) => { if (e.target === overlay) overlay.classList.remove('open'); };
 
+        // Inline guard to prevent initial flash before CSS loads
+        overlay.style.opacity = '0';
+        overlay.style.visibility = 'hidden';
+        overlay.style.pointerEvents = 'none';
+
         const content = mkEl('div', 'qr-modal');
         content.innerHTML = `
             <div class="qr-header">
@@ -472,6 +477,10 @@
         if (window.QRious) {
             requestAnimationFrame(() => {
                 new QRious({ element: canv, value: val, size: 250 });
+                // Remove inline guards before opening
+                modal.style.opacity = '';
+                modal.style.visibility = '';
+                modal.style.pointerEvents = '';
                 modal.classList.add('open');
             });
         } else {

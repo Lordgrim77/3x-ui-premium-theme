@@ -970,6 +970,8 @@ body.s-dark .node-card:hover {
     z-index: 1000;
     opacity: 0;
     visibility: hidden;
+    pointer-events: none;
+    /* Secondary CSS guard */
     transition: all 0.4s var(--ease-out);
     will-change: opacity, visibility;
 }
@@ -977,6 +979,7 @@ body.s-dark .node-card:hover {
 .modal-overlay.open {
     opacity: 1;
     visibility: visible;
+    pointer-events: all;
 }
 
 .qr-modal {
