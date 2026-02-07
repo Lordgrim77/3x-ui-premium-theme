@@ -1,6 +1,6 @@
-# 💎 3X-UI Subscription Theme
+# 3X-UI Subscription Theme 🎨
 
-## 🛡️ Disclaimer
+##  Disclaimer ❗
 > [!WARNING]
 > This project is for **educational purposes only**.
 > 
