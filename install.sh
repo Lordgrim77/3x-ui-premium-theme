@@ -4,7 +4,7 @@
 # Author: LORD GRIM
 # Repo: https://github.com/Lordgrim77/3x-ui-premium-theme
 # Version for cache busting
-VERSION="1.8.0"
+VERSION="2.2.1"
 
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -60,14 +60,14 @@ rm -rf "$TEMP_ZIP" "/tmp/3x-ui-extract"
 
 echo -e "${BLUE}🚀 Fetching premium assets & templates...${NC}"
 # Premium Assets (Overwriting official ones where needed)
-curl -Ls "$REPO_URL/web/assets/js/subscription.js" -o "$ASSETS_PATH/js/subscription.js"
-curl -Ls "$REPO_URL/web/assets/css/premium.css" -o "$ASSETS_PATH/css/premium.css"
+curl -Ls "$REPO_URL/web/assets/js/subscription.js?v=$VERSION" -o "$ASSETS_PATH/js/subscription.js"
+curl -Ls "$REPO_URL/web/assets/css/premium.css?v=$VERSION" -o "$ASSETS_PATH/css/premium.css"
 
 # Templates (Crucial for Persistence/Debug Mode)
 # We download the specific subpage template we modified
 SUBPAGE_PATH="$HTML_PATH/settings/panel/subscription/subpage.html"
 mkdir -p $(dirname "$SUBPAGE_PATH")
-curl -Ls "$REPO_URL/web/html/settings/panel/subscription/subpage.html" -o "$SUBPAGE_PATH"
+curl -Ls "$REPO_URL/web/html/settings/panel/subscription/subpage.html?v=$VERSION" -o "$SUBPAGE_PATH"
 
 # INFRASTRUCTURE AUTO-DETECTION (v2.0.0 - Authoritative RIPE Engine)
 echo -e "${BLUE}☁️ Detecting hosting infrastructure...${NC}"
