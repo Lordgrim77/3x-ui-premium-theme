@@ -6,21 +6,22 @@
 <script src="{{ .base_path }}assets/js/util/index.js?{{ .cur_ver }}"></script>
 <script src="{{ .base_path }}assets/qrcode/qrious2.min.js?{{ .cur_ver }}"></script>
 <link rel="stylesheet" href="{{ .base_path }}assets/css/premium.css?{{ .cur_ver }}">
+<script>document.body.classList.add('premium-theme');</script>
 <style>
-    /* EMERGENCY LOADING SHIELD */
-    body {
+    /* EMERGENCY LOADING SHIELD - Only for Premium Page */
+    body.premium-theme {
         background: #020617 !important;
         margin: 0;
         padding: 0;
         overflow: hidden;
     }
 
-    #app {
+    body.premium-theme #app {
         display: none !important;
     }
 
     /* PREMIUM PRELOADER */
-    #premium-preloader {
+    body.premium-theme #premium-preloader {
         position: fixed;
         inset: 0;
         background: #020617;
