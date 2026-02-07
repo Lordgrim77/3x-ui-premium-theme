@@ -1416,10 +1416,10 @@ body.s-dark .node-card:hover {
     display: none !important;
 }
 
-/* INFRASTRUCTURE GRID (v2.3.0) */
+/* INFRASTRUCTURE GRID (v2.5.1 - Optimized Layout) */
 .infra-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(3, 1fr);
     gap: 16px;
     margin-top: 20px;
 }
