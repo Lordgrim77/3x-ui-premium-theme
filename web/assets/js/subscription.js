@@ -526,25 +526,10 @@
     }
 
     function renderToast() {
-        const t = mkEl('div', 'glass-panel');
+        const t = mkEl('div', 'premium-toast');
         t.id = 'toast';
-        t.style.position = 'fixed';
         // Mobile Safe Area support for Notches
         t.style.top = 'max(24px, env(safe-area-inset-top) + 24px)';
-        t.style.left = '50%';
-        t.style.transform = 'translateX(-50%) translateY(-150%)'; // Start higher up
-        t.style.zIndex = '1000000'; // Ensure it's on top of EVERYTHING
-        t.style.opacity = '0';
-        t.style.visibility = 'hidden';
-        t.style.transition = 'all 0.5s cubic-bezier(0.16, 1, 0.3, 1)'; // Use premium ease
-        t.style.padding = '14px 32px';
-        t.style.minWidth = '160px';
-        t.style.textAlign = 'center';
-        t.style.fontWeight = '700';
-        t.style.letterSpacing = '0.05em';
-        t.style.fontSize = '0.9rem';
-        t.style.border = '1px solid var(--accent)'; // Signal success color border
-        t.style.backdropFilter = 'blur(40px) brightness(1.2)';
         t.innerText = 'Copied!';
         return t;
     }
@@ -570,13 +555,9 @@
         const showToast = () => {
             const t = getEl('toast');
             if (t) {
-                t.style.visibility = 'visible';
-                t.style.transform = 'translateX(-50%) translateY(0)';
-                t.style.opacity = '1';
+                t.classList.add('show');
                 setTimeout(() => {
-                    t.style.transform = 'translateX(-50%) translateY(-150%)'; // Slide back UP
-                    t.style.opacity = '0';
-                    setTimeout(() => t.style.visibility = 'hidden', 300);
+                    t.classList.remove('show');
                 }, 2000);
             }
         };
