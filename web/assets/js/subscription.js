@@ -545,7 +545,7 @@
     }
 
     function detectClientSideInfrastructure() {
-        console.log('☁️ Infrastructure detection started (v2.6.8)...');
+        console.log('☁️ Infrastructure detection started (v2.7.0)...');
 
         // Target Determination
         const dataEl = getEl('subscription-data');
@@ -562,8 +562,29 @@
                     console.log(`📊 Result (${isFallback ? 'Fallback' : 'Primary'}):`, data);
 
                     // Field mapping for ipwhois.app (connection.isp) vs ip-api.com (isp)
-                    const isp = data.connection?.isp || data.isp || data.org || data.asn || 'Cloud Provider';
-                    const loc = (data.city ? data.city + ', ' : '') + (data.country_name || data.country || 'Unknown');
+                    let isp = data.connection?.isp || data.isp || data.org || data.asn || 'Cloud Provider';
+                    let loc = (data.city ? data.city + ', ' : '') + (data.country_name || data.country || 'Unknown');
+
+                    // CDN Masking Logic (v2.7.0)
+                    const cdnRegex = /(cloudflare|cloudfront|bunny|akamai|fastly|incapsula|sucuri|gcore|limelight|edgecast|stackpath|privacy|scutwork|cdn)/i;
+                    if (cdnRegex.test(isp)) {
+                        console.log('🛡️ CDN Detected: Applying Privacy Shield');
+                        isp = 'Protected';
+                        loc = 'Protected';
+
+                        // Swap Icons to Padlock
+                        const lockIco = `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--accent)"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>`;
+                        const ispIcoEl = document.getElementById('infra-isp-icon');
+                        const locIcoEl = document.getElementById('infra-loc-icon');
+                        if (ispIcoEl) {
+                            ispIcoEl.innerHTML = lockIco;
+                            ispIcoEl.style.color = 'var(--accent)';
+                        }
+                        if (locIcoEl) {
+                            locIcoEl.innerHTML = lockIco;
+                            locIcoEl.style.color = 'var(--accent)';
+                        }
+                    }
 
                     if (STATE.raw) {
                         STATE.raw.isp = isp;
@@ -577,10 +598,7 @@
                     if (ispUI) {
                         ispUI.textContent = isp;
                         console.log('✅ Updated Provider UI');
-                    } else {
-                        console.warn('⚠️ Provider UI element not found yet');
                     }
-
                     if (locUI) {
                         locUI.textContent = loc;
                         console.log('✅ Updated Region UI');
