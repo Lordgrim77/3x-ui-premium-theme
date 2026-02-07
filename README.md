@@ -1,4 +1,4 @@
-# 💎 3x-ui Premium Dashboard Theme
+# 💎 3x-ui Subscription Theme
 
 Elevate your 3x-ui experience with this ultra-premium, high-performance dashboard theme. Features glassmorphism, hardware-accelerated animations, and a sophisticated "Deep Space" visual style.
 
