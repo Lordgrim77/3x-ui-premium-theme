@@ -14,13 +14,6 @@ Run the following command on your 3x-ui server to install or update to this prem
 ```bash
 bash <(curl -Ls https://raw.githubusercontent.com/Lordgrim77/3x-ui-premium-theme/main/install.sh)
 ```
-
-## 🛠 Manual Installation
-1. Download `subscription.js` and `premium.css` from the `web/assets` directory.
-2. Upload them to your server:
-   - `subscription.js` -> `/usr/local/x-ui/bin/web/assets/js/subscription.js`
-   - `premium.css` -> `/usr/local/x-ui/bin/web/assets/css/premium.css`
-3. Restart x-ui: `x-ui restart`
     
 ## 🛡️ Technical Note & Security
 To inject this premium theme without requiring a complete recompilation of the `x-ui` binary, the installer enables `XUI_DEBUG=true` in your system service.
