@@ -169,7 +169,11 @@
 
 
         // Nodes List (Span 12)
+        // Nodes List (Span 12)
         grid.appendChild(renderNodesList());
+
+        // Infrastructure Section (v1.8.0)
+        grid.appendChild(renderInfrastructureSection());
 
         app.appendChild(grid);
 
