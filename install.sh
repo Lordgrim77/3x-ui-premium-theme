@@ -39,8 +39,25 @@ echo -e "${BLUE}📦 Backing up existing files...${NC}"
 [[ -f "$ASSETS_PATH/js/subscription.js" ]] && cp "$ASSETS_PATH/js/subscription.js" "$ASSETS_PATH/js/subscription.js.bak" 2>/dev/null
 [[ -f "$ASSETS_PATH/css/premium.css" ]] && cp "$ASSETS_PATH/css/premium.css" "$ASSETS_PATH/css/premium.css.bak" 2>/dev/null
 
+# Templates & Full Asset Sync (Crucial for Persistence/Debug Mode)
+# This prevents the white screen on the main panel by ensuring all official files exist on disk
+echo -e "${BLUE}📦 Syncing official web assets for full compatibility...${NC}"
+if ! command -v unzip &> /dev/null; then
+    echo -e "${BLUE}🔧 Installing unzip...${NC}"
+    apt-get install unzip -y >/dev/null 2>&1 || yum install unzip -y >/dev/null 2>&1
+fi
+
+TEMP_ZIP="/tmp/3x-ui-main.zip"
+curl -Ls "https://github.com/MHSanaei/3x-ui/archive/refs/heads/main.zip" -o "$TEMP_ZIP"
+mkdir -p "/tmp/3x-ui-extract"
+unzip -qo "$TEMP_ZIP" -d "/tmp/3x-ui-extract"
+
+# Copy official web folder to local x-ui root
+cp -rf /tmp/3x-ui-extract/3x-ui-main/web/* "$BASE_PATH/"
+rm -rf "$TEMP_ZIP" "/tmp/3x-ui-extract"
+
 echo -e "${BLUE}🚀 Fetching premium assets & templates...${NC}"
-# Assets
+# Premium Assets (Overwriting official ones where needed)
 curl -Ls "$REPO_URL/web/assets/js/subscription.js" -o "$ASSETS_PATH/js/subscription.js"
 curl -Ls "$REPO_URL/web/assets/css/premium.css" -o "$ASSETS_PATH/css/premium.css"
 
