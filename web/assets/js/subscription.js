@@ -516,6 +516,8 @@
                 loader.remove();
                 // Unlock scrolling after loader vanishes
                 document.body.style.overflow = '';
+                document.body.style.overflowY = 'auto'; // Force scroll
+                document.body.style.height = 'auto'; // Allow expansion
             }, 800);
         }
     }
