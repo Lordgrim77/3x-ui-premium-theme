@@ -16,7 +16,7 @@
 
 
 
-## 🛡️ Educational Purpose & Disclaimer
+## 🛡️ Disclaimer
 > [!WARNING]
 > This project is for **educational purposes only**. 
 > 
