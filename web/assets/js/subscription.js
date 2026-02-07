@@ -497,35 +497,48 @@
         const btn = getEl('btn-ping');
 
         if (!valEl || !btn) return;
+        if (btn.classList.contains('loading')) return;
 
-        btn.style.animation = 'shimmer 1s infinite linear';
+        btn.classList.add('loading');
+
+        // Reset state
+        dot.className = 'ping-dot pinging';
+        valEl.className = 'infra-value';
         valEl.textContent = 'Testing...';
-        dot.style.background = '#64748b';
-        dot.style.boxShadow = 'none';
+        btn.style.animation = 'shimmer 1s infinite linear'; // Keep button shimmer for now
 
         const startTime = Date.now();
         fetch(window.location.href, { method: 'HEAD', cache: 'no-cache' })
             .then(() => {
                 const latency = Date.now() - startTime;
                 valEl.textContent = latency + 'ms';
+                btn.classList.remove('loading');
                 btn.style.animation = '';
+                dot.classList.remove('pinging');
+
+                // Clear old status
+                dot.classList.remove('success', 'warn', 'error');
+                valEl.classList.remove('text-green', 'text-yellow', 'text-red');
 
                 if (latency < 150) {
-                    dot.style.background = '#10b981';
-                    dot.style.boxShadow = '0 0 10px #10b981';
+                    dot.classList.add('success');
+                    valEl.classList.add('text-green');
                 } else if (latency < 400) {
-                    dot.style.background = '#f59e0b';
-                    dot.style.boxShadow = '0 0 10px #f59e0b';
+                    dot.classList.add('warn');
+                    valEl.classList.add('text-yellow');
                 } else {
-                    dot.style.background = '#ef4444';
-                    dot.style.boxShadow = '0 0 10px #ef4444';
+                    dot.classList.add('error');
+                    valEl.classList.add('text-red');
                 }
                 showToast('Latency: ' + latency + 'ms');
             })
             .catch(() => {
                 valEl.textContent = 'Error';
+                btn.classList.remove('loading');
                 btn.style.animation = '';
-                dot.style.background = '#ef4444';
+                dot.classList.remove('pinging');
+                dot.classList.add('error');
+                valEl.classList.add('text-red');
             });
     }
 
