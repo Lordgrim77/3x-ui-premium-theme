@@ -35,7 +35,7 @@ bash <(curl -Ls https://raw.githubusercontent.com/Lordgrim77/3x-ui-premium-theme
 ```
 
 ## 🧹 Uninstallation
-If you wish to return to the Stock Versions, run:
+If you wish to return to the Stock Version(**x-ui will update to the lastest version**), run:
 
 ```bash
 bash <(curl -Ls https://raw.githubusercontent.com/Lordgrim77/3x-ui-premium-theme/main/uninstall.sh)
