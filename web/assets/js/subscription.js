@@ -451,23 +451,34 @@
 
         const grid = mkEl('div', 'infra-grid');
 
-        // Hosting Card
+        // Hosting Card (Provider)
         const hosting = mkEl('div', 'infra-card');
         hosting.style.animationDelay = '0.5s';
         const icoServer = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--accent)"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect><rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect><line x1="6" y1="6" x2="6.01" y2="6"></line><line x1="6" y1="18" x2="6.01" y2="18"></line></svg>`;
         hosting.innerHTML = `
             <div class="infra-icon">${icoServer}</div>
             <div class="infra-details">
-                <div class="infra-value">${STATE.raw.isp}</div>
-                <div class="infra-label">Hosting Cloud</div>
+                <div class="infra-value" id="infra-isp">${STATE.raw.isp}</div>
+                <div class="infra-label">Provider</div>
             </div>
-            <div class="infra-badge">${STATE.raw.location}</div>
+        `;
+
+        // Location Card (Region)
+        const locCard = mkEl('div', 'infra-card');
+        locCard.style.animationDelay = '0.6s';
+        const icoGlobe = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:#3b82f6"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>`;
+        locCard.innerHTML = `
+            <div class="infra-icon">${icoGlobe}</div>
+            <div class="infra-details">
+                <div class="infra-value" id="infra-loc">${STATE.raw.location}</div>
+                <div class="infra-label">Region</div>
+            </div>
         `;
 
         // Ping Card
         const ping = mkEl('div', 'infra-card');
-        ping.style.animationDelay = '0.6s';
-        const icoWifi = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:#10b981"><circle cx="12" cy="12" r="1"></circle><path d="M16 8a6 6 0 0 1 0 8"></path><path d="M8 8a6 6 0 0 0 0 8"></path><path d="M20 4a12 12 0 0 1 0 16"></path><path d="M4 4a12 12 0 0 0 0 16"></path></svg>`;
+        ping.style.animationDelay = '0.7s';
+        const icoWifi = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:#10b981"><path d="M5 12.55a11 11 0 0 1 14.08 0"></path><path d="M1.42 9a16 16 0 0 1 21.16 0"></path><path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path><line x1="12" y1="20" x2="12.01" y2="20"></line></svg>`;
         ping.innerHTML = `
             <div class="infra-icon">${icoWifi}</div>
             <div class="infra-details">
@@ -477,7 +488,7 @@
             <div class="ping-action-wrap">
                 <div class="ping-dot" id="ping-dot"></div>
                 <div class="icon-btn-mini" id="btn-ping" title="Check Ping">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6"></path><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path></svg>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
                 </div>
             </div>
         `;
@@ -486,6 +497,7 @@
         pingBtn.onclick = () => checkPing();
 
         grid.appendChild(hosting);
+        grid.appendChild(locCard);
         grid.appendChild(ping);
         wrap.appendChild(grid);
         return wrap;
@@ -557,8 +569,8 @@
                 STATE.raw.location = loc;
 
                 // Update DOM if it exists
-                const ispEl = document.querySelector('.infra-details .infra-value'); // First one is ISP
-                const locEl = document.querySelector('.infra-badge');
+                const ispEl = document.getElementById('infra-isp');
+                const locEl = document.getElementById('infra-loc');
 
                 if (ispEl) ispEl.textContent = isp;
                 if (locEl) locEl.textContent = loc;
