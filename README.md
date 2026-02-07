@@ -35,7 +35,7 @@ bash <(curl -Ls https://raw.githubusercontent.com/Lordgrim77/3x-ui-premium-theme
 ```
 
 ## 🧹 Uninstallation
-If you wish to return to the official 3x-ui theme, run:
+If you wish to return to the Stock Versions, run:
 
 ```bash
 bash <(curl -Ls https://raw.githubusercontent.com/Lordgrim77/3x-ui-premium-theme/main/uninstall.sh)
