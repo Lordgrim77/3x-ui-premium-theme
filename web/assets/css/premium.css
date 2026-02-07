@@ -1201,13 +1201,15 @@ body.s-dark .node-card:hover {
 }
 
 .qr-footer {
-    margin-top: 20px;
-    font-size: 0.75rem;
+    margin-top: 24px;
+    font-size: 0.8rem;
     color: var(--text-secondary);
-    opacity: 0.7;
+    opacity: 0.9;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.05em;
+    text-align: center;
+    width: 100%;
 }
 
 .qr-scan-line {
