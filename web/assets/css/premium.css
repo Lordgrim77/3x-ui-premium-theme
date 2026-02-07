@@ -27,13 +27,14 @@
 /* NUCLEAR SCROLL FIX: Override external library locks */
 html.premium-theme,
 body.premium-theme {
-    overflow-y: auto !important;
+    overflow: auto !important;
+    /* Allow scroll in all directions if needed */
     height: auto !important;
     min-height: 100vh !important;
-    overscroll-behavior-y: contain;
-    /* Prevent pull-to-refresh interfering */
     -webkit-overflow-scrolling: touch;
     /* Smooth iOS scrolling */
+    touch-action: manipulation;
+    /* Enable touch scrolling, disable double-tap zoom */
 }
 
 /* THEME: DEEP SPACE (Default) */
