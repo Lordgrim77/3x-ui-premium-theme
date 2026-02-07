@@ -1,4 +1,8 @@
 {{ template "page/head_start" .}}
+<div id="premium-preloader">
+    <div class="loader-logo">LG</div>
+    <div class="loader-text">Initializing Premium UI</div>
+</div>
 <script src="{{ .base_path }}assets/moment/moment.min.js"></script>
 <script src="{{ .base_path }}assets/moment/moment-jalali.min.js?{{ .cur_ver }}"></script>
 <script src="{{ .base_path }}assets/vue/vue.min.js?{{ .cur_ver }}"></script>
@@ -13,7 +17,7 @@
         background: #020617 !important;
         margin: 0;
         padding: 0;
-        overflow: hidden;
+        /* overflow: hidden; REMOVED to fix mobile scrolling */
     }
 
     body.premium-theme #app {
@@ -105,12 +109,22 @@
         color: #fff;
     }
 
-    /* Rest of original styles... */
+    .dark.subscription-page .subscription-link-box:hover {
+        background: rgba(0, 0, 0, 0.3);
+        border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .light.subscription-page .subscription-link-box {
+        background: rgba(0, 0, 0, 0.03);
+        border: 1px solid rgba(0, 0, 0, 0.08);
+        color: rgba(0, 0, 0, 0.85);
+    }
+
+    .light.subscription-page .subscription-link-box:hover {
+        background: rgba(0, 0, 0, 0.05);
+        border-color: rgba(0, 0, 0, 0.14);
+    }
 </style>
-<div id="premium-preloader">
-    <div class="loader-logo">LG</div>
-    <div class="loader-text">Initializing Premium UI</div>
-</div>
 {{ template "page/head_end" .}}
 
 {{ template "page/body_start" .}}
@@ -250,6 +264,7 @@
                         </div>
                     </div>
 
+                    </div>
                     <br />
 
                     <a-form layout="vertical">
