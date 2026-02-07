@@ -126,6 +126,11 @@
                 location: dataEl.getAttribute('data-location') || 'Unknown Region'
             };
             STATE.subUrl = STATE.raw.subUrl;
+
+            // FALLBACK: If server-side injection failed (still "Detecting..."), try client-side
+            if (STATE.raw.isp === 'Detecting...') {
+                detectClientSideInfrastructure();
+            }
         }
 
         // 3. CSS Fail-safe
@@ -522,6 +527,28 @@
                 btn.style.animation = '';
                 dot.style.background = '#ef4444';
             });
+    }
+
+    function detectClientSideInfrastructure() {
+        console.log('☁️ Server-side injection failed. Attempting client-side detection...');
+        fetch('https://ipapi.co/json/')
+            .then(res => res.json())
+            .then(data => {
+                const isp = data.org || data.asn || 'Cloud Provider';
+                const loc = (data.city ? data.city + ', ' : '') + (data.country_name || 'Unknown');
+
+                // Update State
+                STATE.raw.isp = isp;
+                STATE.raw.location = loc;
+
+                // Update DOM if it exists
+                const ispEl = document.querySelector('.infra-details .infra-value'); // First one is ISP
+                const locEl = document.querySelector('.infra-badge');
+
+                if (ispEl) ispEl.textContent = isp;
+                if (locEl) locEl.textContent = loc;
+            })
+            .catch(e => console.error('Client-side infra detection failed', e));
     }
 
     function renderQRModal() {

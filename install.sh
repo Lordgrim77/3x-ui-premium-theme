@@ -112,21 +112,26 @@ else
     echo -e "${GREEN}✅ Server Location: $LOCATION${NC}"
 fi
 
-# --- ATOMIC INJECTION STRATEGY ---
-# We target existing data attributes to be safe. "data-total" is usually present.
-# We REMOVE any old data-isp/data-location attributes first to avoid duplicates.
-sed -i 's/ data-isp="[^"]*"//g' "$SUBPAGE_PATH"
-sed -i 's/ data-location="[^"]*"//g' "$SUBPAGE_PATH"
+# --- SIMPLE REPLACEMENT STRATEGY (v2.1.0) ---
+# The template now has default values: data-isp="Detecting..." data-location="Unknown Region"
+# We simply replace them.
 
-# Inject new data. We replace `data-total="` with `data-isp="$ISP" data-location="$LOCATION" data-total="`
-# This puts our attributes right in the middle of the tag, which is very safe.
-sed -i "s|data-total=\"|data-isp=\"$ISP\" data-location=\"$LOCATION\" data-total=\"|g" "$SUBPAGE_PATH"
+if [[ -n "$ISP" ]]; then
+    # Escape special characters for sed
+    SAFE_ISP=$(echo "$ISP" | sed -e 's/[]\/$*.^[]/\\&/g')
+    SAFE_LOCATION=$(echo "$LOCATION" | sed -e 's/[]\/$*.^[]/\\&/g')
 
-# Verification
-if grep -q "data-isp" "$SUBPAGE_PATH"; then
-    echo -e "${GREEN}✅ Infrastructure data injected successfully (Atomic Method)!${NC}"
+    sed -i "s|data-isp=\"Detecting...\"|data-isp=\"$SAFE_ISP\"|g" "$SUBPAGE_PATH"
+    sed -i "s|data-location=\"Unknown Region\"|data-location=\"$SAFE_LOCATION\"|g" "$SUBPAGE_PATH"
+
+    # Verification
+    if grep -q "$SAFE_ISP" "$SUBPAGE_PATH"; then
+        echo -e "${GREEN}✅ Infrastructure data injected successfully (v2.1.0)!${NC}"
+    else
+        echo -e "${RED}❌ Injection failed. Could not find placeholder text in template.${NC}"
+    fi
 else
-    echo -e "${RED}❌ Injection failed. Template structure mismatch.${NC}"
+    echo -e "${RED}❌ No ISP detected to inject.${NC}"
 fi
 
 chmod -R 777 "$BASE_PATH"
