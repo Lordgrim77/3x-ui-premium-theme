@@ -545,9 +545,7 @@
     }
 
     function detectClientSideInfrastructure() {
-        console.log('☁️ Infrastructure detection started (v2.6.7)...');
-        const ispEl = document.getElementById('infra-isp');
-        const locEl = document.getElementById('infra-loc');
+        console.log('☁️ Infrastructure detection started (v2.6.8)...');
 
         // Target Determination
         const dataEl = getEl('subscription-data');
@@ -562,7 +560,9 @@
                 .then(res => res.json())
                 .then(data => {
                     console.log(`📊 Result (${isFallback ? 'Fallback' : 'Primary'}):`, data);
-                    const isp = data.isp || data.org || data.asn || 'Cloud Provider';
+
+                    // Field mapping for ipwhois.app (connection.isp) vs ip-api.com (isp)
+                    const isp = data.connection?.isp || data.isp || data.org || data.asn || 'Cloud Provider';
                     const loc = (data.city ? data.city + ', ' : '') + (data.country_name || data.country || 'Unknown');
 
                     if (STATE.raw) {
@@ -570,8 +570,21 @@
                         STATE.raw.location = loc;
                     }
 
-                    if (ispEl) ispEl.textContent = isp;
-                    if (locEl) locEl.textContent = loc;
+                    // Get elements ONLY when data is ready to avoid race condition
+                    const ispUI = document.getElementById('infra-isp');
+                    const locUI = document.getElementById('infra-loc');
+
+                    if (ispUI) {
+                        ispUI.textContent = isp;
+                        console.log('✅ Updated Provider UI');
+                    } else {
+                        console.warn('⚠️ Provider UI element not found yet');
+                    }
+
+                    if (locUI) {
+                        locUI.textContent = loc;
+                        console.log('✅ Updated Region UI');
+                    }
                 })
                 .catch(err => {
                     console.error('❌ Lookup failed:', err);
