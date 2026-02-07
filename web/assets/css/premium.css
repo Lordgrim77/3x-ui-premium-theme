@@ -1107,8 +1107,9 @@ body.s-dark .node-card:hover {
 }
 
 .qr-modal {
-    background: var(--card-bg);
-    border: 1px solid var(--card-border);
+    background: var(--bg-card);
+    backdrop-filter: blur(var(--glass-blur));
+    border: var(--border-medium);
     border-radius: 24px;
     width: 90%;
     max-width: 400px;
@@ -1117,7 +1118,7 @@ body.s-dark .node-card:hover {
     transition: all 0.5s var(--ease-out);
     will-change: transform, opacity;
     backface-visibility: hidden;
-    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+    box-shadow: var(--shadow-xl);
 }
 
 .modal-overlay.open .qr-modal {
@@ -1161,14 +1162,14 @@ body.s-dark .node-card:hover {
     width: 40px;
     height: 40px;
     border-radius: 14px;
-    background: rgba(255, 255, 255, 0.05);
+    background: var(--card-bg);
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     transition: all 0.2s var(--ease-out);
     color: var(--text-secondary);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    border: var(--border-subtle);
 }
 
 .qr-close:hover {
@@ -1256,13 +1257,12 @@ body.s-dark .node-card:hover {
     letter-spacing: 0.05em;
     font-size: 0.9rem;
     border: 1px solid var(--accent) !important;
-    backdrop-filter: blur(40px) brightness(1.2) !important;
+    backdrop-filter: blur(var(--glass-blur)) brightness(1.1) !important;
     border-radius: 100px !important;
     /* Pill shape for premium feel */
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 20px var(--accent-glow) !important;
-    background: rgba(15, 23, 42, 0.85) !important;
-    color: white !important;
-    pointer-events: none;
+    box-shadow: var(--shadow-xl);
+    background: var(--bg-card) !important;
+    color: var(--text-primary) !important;
     pointer-events: none;
     animation: none !important;
     /* KILL ALL INHERITED ANIMATIONS */
