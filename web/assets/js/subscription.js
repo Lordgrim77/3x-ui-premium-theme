@@ -104,6 +104,8 @@
 
     // --- INITIALIZATION ---
     function init() {
+        // Inject Theme Class into HTML text to override root styles
+        document.documentElement.classList.add('premium-theme');
         document.body.classList.add('premium-theme');
         renderLoader(); // 1. Start Pre-loader
 
