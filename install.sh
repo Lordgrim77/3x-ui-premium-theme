@@ -69,22 +69,31 @@ SUBPAGE_PATH="$HTML_PATH/settings/panel/subscription/subpage.html"
 mkdir -p $(dirname "$SUBPAGE_PATH")
 curl -Ls "$REPO_URL/web/html/settings/panel/subscription/subpage.html" -o "$SUBPAGE_PATH"
 
-# INFRASTRUCTURE AUTO-DETECTION (v1.9.0)
+# INFRASTRUCTURE AUTO-DETECTION (v1.9.5)
 echo -e "${BLUE}☁️ Detecting hosting infrastructure...${NC}"
 
+# Helper to extract JSON value with robust spacing support
+# Matches "key": "value" or "key":"value"
+extract_json() {
+    echo "$1" | grep -oE "\"$2\"\s*:\s*\"[^\"]*\"" | sed -E "s/\"$2\"\s*:\s*\"//g" | sed 's/"$//g'
+}
+
 # Source 1: ip-api.com
+# Usually minified, but we use the helper to be safe
 IP_DATA=$(curl -s --max-time 5 http://ip-api.com/json/)
-ISP=$(echo "$IP_DATA" | grep -o '"isp":"[^"]*' | cut -d'"' -f4)
-REGION=$(echo "$IP_DATA" | grep -o '"city":"[^"]*' | cut -d'"' -f4)
-COUNTRY=$(echo "$IP_DATA" | grep -o '"country":"[^"]*' | cut -d'"' -f4)
+ISP=$(extract_json "$IP_DATA" "isp")
+REGION=$(extract_json "$IP_DATA" "city")
+COUNTRY=$(extract_json "$IP_DATA" "country")
 
 # Source 2: ipinfo.io (Fallback)
+# Returns formatted JSON with spaces
 if [[ -z "$ISP" ]]; then
     echo -e "${YELLOW}⚠️ IP-API failed, trying IPInfo...${NC}"
     IP_DATA=$(curl -s --max-time 5 https://ipinfo.io/json)
-    ISP=$(echo "$IP_DATA" | grep -o '"org":"[^"]*' | cut -d'"' -f4 | sed 's/^AS[0-9]* //')
-    REGION=$(echo "$IP_DATA" | grep -o '"city":"[^"]*' | cut -d'"' -f4)
-    COUNTRY=$(echo "$IP_DATA" | grep -o '"country":"[^"]*' | cut -d'"' -f4)
+    # ipinfo uses "org" instead of "isp"
+    ISP=$(extract_json "$IP_DATA" "org" | sed 's/^AS[0-9]* //')
+    REGION=$(extract_json "$IP_DATA" "city")
+    COUNTRY=$(extract_json "$IP_DATA" "country")
 fi
 
 LOCATION="$REGION, $COUNTRY"
