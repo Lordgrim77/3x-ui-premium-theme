@@ -4,7 +4,7 @@
 # Author: LORD GRIM
 # Repo: https://github.com/Lordgrim77/3x-ui-premium-theme
 # Version for cache busting
-VERSION="2.6.1"
+VERSION="2.6.2"
 
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -121,8 +121,9 @@ fi
 # We simply replace them.
 
 if [[ -n "$ISP" ]]; then
-    # Capture Real IP for client-side fallback (v2.6.1)
-    REAL_IP=$(curl -s --max-time 3 ifconfig.me || curl -s --max-time 3 api.ipify.org)
+    # Capture Real IP for client-side fallback (v2.6.2)
+    # Try multiple sources to ensure we get it even if one is geoblocked
+    REAL_IP=$(curl -s --max-time 3 ifconfig.me || curl -s --max-time 3 api.ipify.org || curl -s --max-time 3 icanhazip.com || curl -s --max-time 3 ident.me)
 
     # Escape special characters for sed
     SAFE_ISP=$(echo "$ISP" | sed -e 's/[]\/$*.^[]/\\&/g')
@@ -132,6 +133,7 @@ if [[ -n "$ISP" ]]; then
     sed -i "s|data-location=\"Unknown Region\"|data-location=\"$SAFE_LOCATION\"|g" "$SUBPAGE_PATH"
     
     if [[ -n "$REAL_IP" ]]; then
+        # Ensure we don't have double quotes issues
         sed -i "s|data-ip=\"Self\"|data-ip=\"$REAL_IP\"|g" "$SUBPAGE_PATH"
         echo -e "${GREEN}Server IP ($REAL_IP) injected for fail-safe detection${NC}"
     fi
