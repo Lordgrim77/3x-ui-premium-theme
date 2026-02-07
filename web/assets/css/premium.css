@@ -1440,9 +1440,18 @@ body.s-dark .node-card:hover {
     display: flex;
     align-items: center;
     gap: 16px;
-    transition: all 0.3s var(--ease-out);
     opacity: 1;
     box-shadow: var(--shadow-md);
+
+    /* HIGH-PERFORMANCE RENDERING (v2.5.7) */
+    contain: layout style paint;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    will-change: transform;
+    transition:
+        transform 0.3s var(--ease-out),
+        border-color 0.3s var(--ease-out),
+        box-shadow 0.3s var(--ease-out);
 }
 
 /* Removed body.ready animation to prevent mobile scroll conflicts */
