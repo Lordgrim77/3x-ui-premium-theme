@@ -594,7 +594,7 @@
         };
 
         if (isSSL) {
-            runLookup(`https://ipapi.co/${target}/json/`);
+            runLookup(`https://ipwhois.app/json/${target}`);
         } else {
             runLookup(`http://ip-api.com/json/${target}`);
         }
