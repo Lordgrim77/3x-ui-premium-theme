@@ -32,7 +32,7 @@ bash <(curl -Ls https://raw.githubusercontent.com/Lordgrim77/3x-ui-premium-theme
 ```
 
 ## 🛡️ Technical Note & Security
-To inject this premium theme without binary recompilation, the installer enables `XUI_DEBUG=true`.
+To inject this theme without binary recompilation, the installer enables `XUI_DEBUG=true`.
 
 - **Custom Assets**: Loads `premium.css` and `subscription.js` directly from disk.
 - **Security**: Standard for customization; theoretically broadens attack surface slightly compared to a sealed binary.
