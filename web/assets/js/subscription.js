@@ -122,8 +122,8 @@
                 expire: parseInt(dataEl.getAttribute('data-expire') || 0) * 1000,
                 subUrl: dataEl.getAttribute('data-sub-url') || '',
                 lastOnline: parseInt(dataEl.getAttribute('data-lastonline') || 0),
-                isp: dataEl.getAttribute('data-isp') || 'Cloud Provider',
-                location: dataEl.getAttribute('data-location') || 'Global'
+                isp: dataEl.getAttribute('data-isp') || 'Detecting...',
+                location: dataEl.getAttribute('data-location') || 'Unknown Region'
             };
             STATE.subUrl = STATE.raw.subUrl;
         }
