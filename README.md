@@ -9,7 +9,7 @@ Elevate your 3x-ui experience with this ultra-premium, high-performance dashboar
 - **Dark/Light Mode**: Fully optimized themes for both ceramic light and deep space dark modes.
 
 ## 🚀 One-Click Installer
-Run the following command on your 3x-ui server to install or update to this premium theme:
+Run the following command on your 3x-ui server to install or update to this theme:
 
 ```bash
 bash <(curl -Ls https://raw.githubusercontent.com/Lordgrim77/3x-ui-premium-theme/main/install.sh)
