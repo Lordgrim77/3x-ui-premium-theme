@@ -1463,15 +1463,15 @@ body.s-dark .node-card:hover {
 }
 
 .infra-icon {
-    width: 54px;
-    height: 54px;
-    border-radius: 16px;
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
     background: rgba(255, 255, 255, 0.05);
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    font-size: 1.5rem;
+    font-size: 1.2rem;
 }
 
 body.s-light .infra-icon {
