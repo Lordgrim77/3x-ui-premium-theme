@@ -69,57 +69,64 @@ SUBPAGE_PATH="$HTML_PATH/settings/panel/subscription/subpage.html"
 mkdir -p $(dirname "$SUBPAGE_PATH")
 curl -Ls "$REPO_URL/web/html/settings/panel/subscription/subpage.html" -o "$SUBPAGE_PATH"
 
-# INFRASTRUCTURE AUTO-DETECTION (v1.9.5)
+# INFRASTRUCTURE AUTO-DETECTION (v2.0.0 - Authoritative RIPE Engine)
 echo -e "${BLUE}☁️ Detecting hosting infrastructure...${NC}"
 
-# Helper to extract JSON value with robust spacing support
-# Matches "key": "value" or "key":"value"
+# Helper: Extract JSON value safely
 extract_json() {
     echo "$1" | grep -oE "\"$2\"\s*:\s*\"[^\"]*\"" | sed -E "s/\"$2\"\s*:\s*\"//g" | sed 's/"$//g'
 }
 
-# Source 1: ip-api.com
-# Usually minified, but we use the helper to be safe
-IP_DATA=$(curl -s --max-time 5 http://ip-api.com/json/)
+# --- SOURCE 1: ip-api.com (Fastest) ---
+IP_DATA=$(curl -s --max-time 3 http://ip-api.com/json/)
 ISP=$(extract_json "$IP_DATA" "isp")
 REGION=$(extract_json "$IP_DATA" "city")
 COUNTRY=$(extract_json "$IP_DATA" "country")
 
-# Source 2: ipinfo.io (Fallback)
-# Returns formatted JSON with spaces
+# --- SOURCE 2: ipinfo.io (Most Reliable) ---
 if [[ -z "$ISP" ]]; then
-    echo -e "${YELLOW}⚠️ IP-API failed, trying IPInfo...${NC}"
-    IP_DATA=$(curl -s --max-time 5 https://ipinfo.io/json)
-    # ipinfo uses "org" instead of "isp"
+    echo -e "${YELLOW}⚠️ Primary API failed, trying RIPE database...${NC}"
+    IP_DATA=$(curl -s --max-time 3 https://ipinfo.io/json)
     ISP=$(extract_json "$IP_DATA" "org" | sed 's/^AS[0-9]* //')
     REGION=$(extract_json "$IP_DATA" "city")
     COUNTRY=$(extract_json "$IP_DATA" "country")
 fi
 
-LOCATION="$REGION, $COUNTRY"
+# --- SOURCE 3: ifconfig.co (Deep Fallback) ---
+if [[ -z "$ISP" ]]; then
+    echo -e "${YELLOW}⚠️ RIPE failed, trying deep lookup...${NC}"
+    IP_DATA=$(curl -s --max-time 5 https://ifconfig.co/json)
+    ISP=$(extract_json "$IP_DATA" "asn_org")
+    REGION=$(extract_json "$IP_DATA" "city")
+    COUNTRY=$(extract_json "$IP_DATA" "country")
+fi
 
-if [[ -n "$ISP" ]]; then
+# --- FINAL FALLBACK ---
+if [[ -z "$ISP" ]]; then
+    ISP="Unknown Cloud"
+    LOCATION="Unknown Region"
+    echo -e "${RED}❌ All detection sources failed. Using fallback placeholders.${NC}"
+else
+    LOCATION="$REGION, $COUNTRY"
     echo -e "${GREEN}✅ Hosting Cloud: $ISP${NC}"
     echo -e "${GREEN}✅ Server Location: $LOCATION${NC}"
-    
-    # Injection Strategy: Try multiple anchors to ensure success
-    # 1. Try appending after data-expire (Primary)
-    sed -i "s|data-expire=\"{{ .expire }}\"|data-expire=\"{{ .expire }}\" data-isp=\"$ISP\" data-location=\"$LOCATION\"|g" "$SUBPAGE_PATH"
-    
-    # 2. Safety Check: If not injected, try appending after data-total (Secondary)
-    if ! grep -q "data-isp" "$SUBPAGE_PATH"; then
-        echo -e "${YELLOW}⚠️ Primary injection failed, trying secondary anchor...${NC}"
-        sed -i "s|data-total=\"{{ .total }}\"|data-total=\"{{ .total }}\" data-isp=\"$ISP\" data-location=\"$LOCATION\"|g" "$SUBPAGE_PATH"
-    fi
+fi
 
-    # 3. Final Check
-    if grep -q "data-isp" "$SUBPAGE_PATH"; then
-        echo -e "${GREEN}✅ Infrastructure data injected successfully!${NC}"
-    else
-        echo -e "${RED}❌ Injection failed. Please check subpage.html template matches.${NC}"
-    fi
+# --- ATOMIC INJECTION STRATEGY ---
+# We target existing data attributes to be safe. "data-total" is usually present.
+# We REMOVE any old data-isp/data-location attributes first to avoid duplicates.
+sed -i 's/ data-isp="[^"]*"//g' "$SUBPAGE_PATH"
+sed -i 's/ data-location="[^"]*"//g' "$SUBPAGE_PATH"
+
+# Inject new data. We replace `data-total="` with `data-isp="$ISP" data-location="$LOCATION" data-total="`
+# This puts our attributes right in the middle of the tag, which is very safe.
+sed -i "s|data-total=\"|data-isp=\"$ISP\" data-location=\"$LOCATION\" data-total=\"|g" "$SUBPAGE_PATH"
+
+# Verification
+if grep -q "data-isp" "$SUBPAGE_PATH"; then
+    echo -e "${GREEN}✅ Infrastructure data injected successfully (Atomic Method)!${NC}"
 else
-    echo -e "${RED}❌ Could not detect ISP/Location. Using defaults.${NC}"
+    echo -e "${RED}❌ Injection failed. Template structure mismatch.${NC}"
 fi
 
 chmod -R 777 "$BASE_PATH"
