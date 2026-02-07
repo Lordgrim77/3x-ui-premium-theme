@@ -14,9 +14,9 @@
     --status-warn: #f59e0b;
 
     /* DYNAMIC USAGE PALETTE */
-    --usage-active: var(--accent);
-    --usage-depleted: #ef4444;
-    --usage-expired: #64748b;
+    --usage-active: #10b981;
+    --usage-depleted: #10b981;
+    --usage-expired: #f59e0b;
 
     /* LAYOUT */
     --grid-gap: 24px;
@@ -32,9 +32,9 @@ body.s-dark {
     --accent: #6366f1;
     --accent-glow: rgba(99, 102, 241, 0.5);
 
-    --usage-active: #6366f1;
-    --usage-depleted: #f87171;
-    --usage-expired: #94a3b8;
+    --usage-active: #10b981;
+    --usage-depleted: #10b981;
+    --usage-expired: #f59e0b;
 
     --card-bg: rgba(15, 23, 42, 0.6);
     --card-border: rgba(255, 255, 255, 0.08);
@@ -66,9 +66,9 @@ body.s-light {
     --accent: #4f46e5;
     --accent-glow: rgba(79, 70, 229, 0.25);
 
-    --usage-active: #4f46e5;
-    --usage-depleted: #dc2626;
-    --usage-expired: #475569;
+    --usage-active: #059669;
+    --usage-depleted: #059669;
+    --usage-expired: #d97706;
 
     --card-bg: rgba(255, 255, 255, 0.8);
     --card-border: rgba(0, 0, 0, 0.04);
