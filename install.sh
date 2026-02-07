@@ -69,20 +69,48 @@ SUBPAGE_PATH="$HTML_PATH/settings/panel/subscription/subpage.html"
 mkdir -p $(dirname "$SUBPAGE_PATH")
 curl -Ls "$REPO_URL/web/html/settings/panel/subscription/subpage.html" -o "$SUBPAGE_PATH"
 
-# INFRASTRUCTURE AUTO-DETECTION (v1.8.0)
+# INFRASTRUCTURE AUTO-DETECTION (v1.9.0)
 echo -e "${BLUE}☁️ Detecting hosting infrastructure...${NC}"
-IP_DATA=$(curl -s http://ip-api.com/json/)
+
+# Source 1: ip-api.com
+IP_DATA=$(curl -s --max-time 5 http://ip-api.com/json/)
 ISP=$(echo "$IP_DATA" | grep -o '"isp":"[^"]*' | cut -d'"' -f4)
 REGION=$(echo "$IP_DATA" | grep -o '"city":"[^"]*' | cut -d'"' -f4)
 COUNTRY=$(echo "$IP_DATA" | grep -o '"country":"[^"]*' | cut -d'"' -f4)
+
+# Source 2: ipinfo.io (Fallback)
+if [[ -z "$ISP" ]]; then
+    echo -e "${YELLOW}⚠️ IP-API failed, trying IPInfo...${NC}"
+    IP_DATA=$(curl -s --max-time 5 https://ipinfo.io/json)
+    ISP=$(echo "$IP_DATA" | grep -o '"org":"[^"]*' | cut -d'"' -f4 | sed 's/^AS[0-9]* //')
+    REGION=$(echo "$IP_DATA" | grep -o '"city":"[^"]*' | cut -d'"' -f4)
+    COUNTRY=$(echo "$IP_DATA" | grep -o '"country":"[^"]*' | cut -d'"' -f4)
+fi
+
 LOCATION="$REGION, $COUNTRY"
 
 if [[ -n "$ISP" ]]; then
     echo -e "${GREEN}✅ Hosting Cloud: $ISP${NC}"
     echo -e "${GREEN}✅ Server Location: $LOCATION${NC}"
-    # Inject into the data element as attributes using sed
-    # We target the data-expire attribute to append our new data attributes after it
+    
+    # Injection Strategy: Try multiple anchors to ensure success
+    # 1. Try appending after data-expire (Primary)
     sed -i "s|data-expire=\"{{ .expire }}\"|data-expire=\"{{ .expire }}\" data-isp=\"$ISP\" data-location=\"$LOCATION\"|g" "$SUBPAGE_PATH"
+    
+    # 2. Safety Check: If not injected, try appending after data-total (Secondary)
+    if ! grep -q "data-isp" "$SUBPAGE_PATH"; then
+        echo -e "${YELLOW}⚠️ Primary injection failed, trying secondary anchor...${NC}"
+        sed -i "s|data-total=\"{{ .total }}\"|data-total=\"{{ .total }}\" data-isp=\"$ISP\" data-location=\"$LOCATION\"|g" "$SUBPAGE_PATH"
+    fi
+
+    # 3. Final Check
+    if grep -q "data-isp" "$SUBPAGE_PATH"; then
+        echo -e "${GREEN}✅ Infrastructure data injected successfully!${NC}"
+    else
+        echo -e "${RED}❌ Injection failed. Please check subpage.html template matches.${NC}"
+    fi
+else
+    echo -e "${RED}❌ Could not detect ISP/Location. Using defaults.${NC}"
 fi
 
 chmod -R 777 "$BASE_PATH"
