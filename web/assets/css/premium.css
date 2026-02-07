@@ -24,6 +24,18 @@
     --btn-radius: 12px;
 }
 
+/* NUCLEAR SCROLL FIX: Override external library locks */
+html.premium-theme,
+body.premium-theme {
+    overflow-y: auto !important;
+    height: auto !important;
+    min-height: 100vh !important;
+    overscroll-behavior-y: contain;
+    /* Prevent pull-to-refresh interfering */
+    -webkit-overflow-scrolling: touch;
+    /* Smooth iOS scrolling */
+}
+
 /* THEME: DEEP SPACE (Default) */
 body.premium-theme.s-dark {
     --bg-main: #020617;
@@ -191,6 +203,10 @@ body.premium-theme::before {
     max-width: 1200px;
     margin: 0 auto;
     padding: 20px;
+    /* Ensure container doesn't trap scroll */
+    min-height: 100vh;
+    height: auto !important;
+    overflow: visible !important;
 }
 
 /* Mobile optimization */
