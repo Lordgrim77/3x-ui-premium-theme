@@ -448,7 +448,7 @@
         const hosting = mkEl('div', 'infra-card');
         const icoServer = `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--accent)"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect><rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect><line x1="6" y1="6" x2="6.01" y2="6"></line><line x1="6" y1="18" x2="6.01" y2="18"></line></svg>`;
         hosting.innerHTML = `
-            <div class="infra-icon">${icoServer}</div>
+            <div class="infra-icon" id="infra-isp-icon">${icoServer}</div>
             <div class="infra-details">
                 <div class="infra-value" id="infra-isp">${STATE.raw.isp}</div>
                 <div class="infra-label">Provider</div>
@@ -459,7 +459,7 @@
         const locCard = mkEl('div', 'infra-card');
         const icoGlobe = `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color:#3b82f6"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>`;
         locCard.innerHTML = `
-            <div class="infra-icon">${icoGlobe}</div>
+            <div class="infra-icon" id="infra-loc-icon">${icoGlobe}</div>
             <div class="infra-details">
                 <div class="infra-value" id="infra-loc">${STATE.raw.location}</div>
                 <div class="infra-label">Region</div>
