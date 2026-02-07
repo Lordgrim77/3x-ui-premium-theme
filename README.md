@@ -21,11 +21,6 @@
 - **Layout Containment**: Cards use `contain: layout style paint` to isolate rendering and speed up repaints.
 - **Compositor Sync**: All animation triggers are synchronized via `requestAnimationFrame`.
 
-
-
-
-
-
 ## 🚀 Installation
 1. Make sure to take a backup of the system before doing anything.
 2. Run the following command on your 3x-ui server to install or update:
@@ -35,11 +30,14 @@ bash <(curl -Ls https://raw.githubusercontent.com/Lordgrim77/3x-ui-premium-theme
 ```
 
 ## 🧹 Uninstallation
-If you wish to return to the Stock Version(**x-ui will update to the lastest version**), run:
+If you wish to return to the Stock Version, run:
 
 ```bash
 bash <(curl -Ls https://raw.githubusercontent.com/Lordgrim77/3x-ui-premium-theme/main/uninstall.sh)
 ```
+> [!WARNING]
+> This will update your x-ui panel to the latest version
+> 
 
 ## 🛡️ Technical Note & Security
 To inject this theme without binary recompilation, the installer enables `XUI_DEBUG=true`.
