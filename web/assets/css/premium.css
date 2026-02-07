@@ -1416,12 +1416,13 @@ body.s-dark .node-card:hover {
     display: none !important;
 }
 
-/* INFRASTRUCTURE GRID (v2.5.1 - Optimized Layout) */
+/* INFRASTRUCTURE GRID (v2.5.2 - Refined Alignment) */
 .infra-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 16px;
     margin-top: 20px;
+    align-items: stretch;
 }
 
 @media (max-width: 768px) {
@@ -1580,7 +1581,7 @@ body.s-light .infra-icon {
     cursor: pointer;
     transition: all 0.2s ease;
     background: rgba(255, 255, 255, 0.15);
-    color: var(--text-secondary);
+    color: rgba(255, 255, 255, 0.7);
     border: 1px solid rgba(255, 255, 255, 0.2);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
@@ -1600,7 +1601,7 @@ body.s-light .infra-icon {
 /* Light Mode Overrides */
 body.s-light .icon-btn-mini {
     background: rgba(0, 0, 0, 0.1);
-    color: var(--text-secondary);
+    color: rgba(0, 0, 0, 0.6);
     border: 1px solid rgba(0, 0, 0, 0.35);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
