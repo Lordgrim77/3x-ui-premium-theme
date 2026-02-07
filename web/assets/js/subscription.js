@@ -126,7 +126,8 @@
                 subUrl: dataEl.getAttribute('data-sub-url') || '',
                 lastOnline: parseInt(dataEl.getAttribute('data-lastonline') || 0),
                 isp: dataEl.getAttribute('data-isp') || 'Detecting...',
-                location: dataEl.getAttribute('data-location') || 'Unknown Region'
+                location: dataEl.getAttribute('data-location') || 'Unknown Region',
+                serverIp: dataEl.getAttribute('data-ip') || 'Self'
             };
             STATE.subUrl = STATE.raw.subUrl;
 
@@ -556,8 +557,12 @@
 
     function detectClientSideInfrastructure() {
         console.log('☁️ Server-side injection failed. Attempting client-side detection...');
-        // Query the SERVER'S hostname/IP, not the client's
-        const target = window.location.hostname;
+
+        // 1. Prioritize Injected IP (v2.6.1)
+        const target = (STATE.raw && STATE.raw.serverIp && STATE.raw.serverIp !== 'Self')
+            ? STATE.raw.serverIp
+            : window.location.hostname;
+
         fetch(`https://ipapi.co/${target}/json/`)
             .then(res => res.json())
             .then(data => {
