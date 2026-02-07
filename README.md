@@ -6,6 +6,7 @@
 > **Standard of Use**: The author is NOT responsible for any misuse or damages caused by this software. Use at your own risk.
 > 
 > - **Self-Responsibility**: By using this script/theme, you agree that you are solely responsible for any consequences, including but not limited to system instability, data loss, or security risks.
+>   
 ## ✨ Design Specifications
 - **Glassmorphism 2.0**: Sophisticated depth using high-blur `backdrop-filter` and multi-layered shadows.
 - **Micro-Animations**: Elastic hover effects, heart-pulse footers, and staggered entrance transitions.
