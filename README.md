@@ -1,4 +1,4 @@
-# 💎 3x-ui Premium Dashboard Theme (v1.7.0)
+# 💎 3x-ui Premium Dashboard Theme
 
 Elevate your 3x-ui experience with an ultra-premium, reference-quality dashboard. This theme isn't just a skin—it's a high-performance visual engine designed for professional-grade networking interfaces.
 
