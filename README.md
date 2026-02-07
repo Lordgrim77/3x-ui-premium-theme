@@ -41,5 +41,8 @@ To inject this theme without binary recompilation, the installer enables `XUI_DE
 - **Security**: Standard for customization; theoretically broadens attack surface slightly compared to a sealed binary.
 - **Recommendation**: Safe for 99% of users. For extreme high-security environments, consider manual source-code integration.
 
+## Notes
+- IF CDNs are used in Subscription, The Infrastructure Stats Will shows it's "Protected" for security reasons.
+  
 ## 👨‍💻 Author
 Made with ❤️ by 𝙇𝙊𝙍𝘿𝙂𝙍𝙄𝙈
