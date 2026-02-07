@@ -40,11 +40,7 @@ bash <(curl -Ls https://raw.githubusercontent.com/Lordgrim77/3x-ui-premium-theme
 > 
 
 ## 🛡️ Technical Note & Security
-To inject this theme without binary recompilation, the installer enables `XUI_DEBUG=true`.
-
-- **Custom Assets**: Loads `premium.css` and `subscription.js` directly from disk.
-- **Security**: Standard for customization; theoretically broadens attack surface slightly compared to a sealed binary.
-- **Recommendation**: Safe for 99% of users. For extreme high-security environments, consider manual source-code integration.
+- **Recommendation**: For extreme high-security environments, consider manual source-code integration.
 
 ## Notes
 - IF CDNs are used in Subscription, Some Infrastructure Stats may shows "Protected" for security reasons.
