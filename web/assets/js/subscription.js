@@ -567,6 +567,8 @@
         const isSSL = window.location.protocol === 'https:';
 
         console.log(`🔍 Lookup Target: ${target} (${injectedIp ? 'Injected IP' : 'Hostname'}) | SSL: ${isSSL}`);
+        const ispEl = document.getElementById('infra-isp');
+        const locEl = document.getElementById('infra-loc');
 
         // 2. Lookup Logic (Bypass Mixed Content)
         const runLookup = (url, isFallback = false) => {
