@@ -1,8 +1,8 @@
 # 💎 3X-UI Subscription Theme
 
 ## ✨ Design Specifications
-- **Glassmorphism 2.0**: Sophisticated depth using high-blur `backdrop-filter` (35px) and multi-layered shadows.
-- **Micro-Animations**: Elastic hover effects, heart-pulse footers, and staggered entrance transitions (300ms–800ms).
+- **Glassmorphism 2.0**: Sophisticated depth using high-blur `backdrop-filter` and multi-layered shadows.
+- **Micro-Animations**: Elastic hover effects, heart-pulse footers, and staggered entrance transitions.
 - **Theme-Aware System**: 
   - **🌌 Obsidian (Dark Mode)**: Deep space palette with glowing indigo accents.
   - **❄️ Ceramic (Light Mode)**: Professional frost-white aesthetic with high-contrast slate typography.
