@@ -1414,4 +1414,118 @@ body.s-dark .node-card:hover {
 /* UTILS */
 .hidden {
     display: none !important;
+}/* INFRASTRUCTURE GRID (v1.8.0) */
+.infra-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+    margin-top: 12px;
+}
+
+.infra-card {
+    background: var(--bg-card);
+    backdrop-filter: blur(var(--glass-blur));
+    border: var(--border-subtle);
+    border-radius: 20px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    transition: all 0.3s var(--ease-out);
+    opacity: 0;
+    box-shadow: var(--shadow-md);
+}
+
+body.ready .infra-card {
+    animation: cardFadeIn 0.6s var(--ease-out) forwards;
+}
+
+.infra-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--accent);
+    box-shadow: var(--shadow-lg);
+}
+
+.infra-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+body.s-light .infra-icon {
+    background: rgba(0, 0, 0, 0.03);
+}
+
+.infra-details {
+    flex-grow: 1;
+    min-width: 0;
+}
+
+.infra-value {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.infra-label {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 600;
+    opacity: 0.8;
+}
+
+.infra-badge {
+    padding: 4px 10px;
+    border-radius: 100px;
+    background: var(--accent-glow);
+    color: var(--accent);
+    font-size: 0.7rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.ping-action-wrap {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.ping-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #64748b;
+    transition: all 0.3s var(--ease-out);
+}
+
+@keyframes pulse-dot {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    50% {
+        transform: scale(1.5);
+        opacity: 0.5;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.ping-dot-active {
+    animation: pulse-dot 1.5s infinite ease-in-out;
 }
