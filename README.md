@@ -34,6 +34,13 @@
 bash <(curl -Ls https://raw.githubusercontent.com/Lordgrim77/3x-ui-premium-theme/main/install.sh)
 ```
 
+## 🧹 Uninstallation
+If you wish to return to the official 3x-ui theme, run:
+
+```bash
+bash <(curl -Ls https://raw.githubusercontent.com/Lordgrim77/3x-ui-premium-theme/main/uninstall.sh)
+```
+
 ## 🛡️ Technical Note & Security
 To inject this theme without binary recompilation, the installer enables `XUI_DEBUG=true`.
 
