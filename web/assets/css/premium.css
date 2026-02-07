@@ -19,22 +19,23 @@
     --usage-expired: #f59e0b;
 
     /* LAYOUT */
-    --grid-gap: 24px;
+    --grid-gap: 20px;
+    /* Reduced from 24px for tighter feel */
     --card-radius: 20px;
     --btn-radius: 12px;
 }
 
-/* NUCLEAR SCROLL FIX: Override external library locks */
-html.premium-theme,
-body.premium-theme {
-    overflow: auto !important;
-    /* Allow scroll in all directions if needed */
-    height: auto !important;
-    min-height: 100vh !important;
-    -webkit-overflow-scrolling: touch;
-    /* Smooth iOS scrolling */
-    touch-action: manipulation;
-    /* Enable touch scrolling, disable double-tap zoom */
+/* MOBILE OVERRIDES: Only for small screens */
+@media (max-width: 768px) {
+
+    html.premium-theme,
+    body.premium-theme {
+        overflow: auto !important;
+        height: auto !important;
+        min-height: 100vh !important;
+        -webkit-overflow-scrolling: touch;
+        touch-action: manipulation;
+    }
 }
 
 /* THEME: DEEP SPACE (Default) */
@@ -607,7 +608,8 @@ body.premium-theme .span-4 {
     /* Card styling for visibility */
     background: var(--bg-card, var(--card-bg));
     border-radius: 24px;
-    padding: 28px;
+    padding: 24px;
+    /* Reduced from 28px */
     transition: all 0.3s var(--ease-out);
 
     /* Strong borders and shadows for light mode */
@@ -947,7 +949,6 @@ body.premium-theme .node-card {
     background: var(--card-bg);
     border-radius: 16px;
     padding: 16px;
-    cursor: pointer;
     transition: all 0.2s;
     display: flex;
     align-items: center;
@@ -1128,36 +1129,41 @@ body.s-dark .node-card:hover {
 }
 
 .qr-header {
-    display: flex;
-    justify-content: flex-end;
-    /* Push close btn to right */
+    display: grid;
+    grid-template-columns: 40px 1fr 40px;
+    /* Spacer | Title | Close Btn */
     align-items: center;
-    margin-bottom: 20px;
-    padding: 0 8px;
+    margin-bottom: 24px;
+    padding: 0;
     position: relative;
-    /* For absolute title centering */
+    width: 100%;
+}
+
+.qr-spacer {
+    grid-column: 1;
+    width: 40px;
 }
 
 #qr-title {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
+    grid-column: 2;
     margin: 0;
-    font-size: 0.85rem;
-    font-weight: 700;
+    font-size: 1rem;
+    font-weight: 800;
     text-transform: uppercase;
-    letter-spacing: 0.15em;
+    letter-spacing: 0.1em;
     color: var(--text-primary);
-    width: 100%;
     text-align: center;
-    pointer-events: none;
-    /* Let clicks pass through if overlaps */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .qr-close {
-    width: 32px;
-    height: 32px;
-    border-radius: 10px;
+    grid-column: 3;
+    justify-self: end;
+    width: 36px;
+    height: 36px;
+    border-radius: 12px;
     background: rgba(255, 255, 255, 0.05);
     display: flex;
     align-items: center;
