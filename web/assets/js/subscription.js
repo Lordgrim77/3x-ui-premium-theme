@@ -104,6 +104,7 @@
 
     // --- INITIALIZATION ---
     function init() {
+        document.body.classList.add('premium-theme');
         renderLoader(); // 1. Start Pre-loader
 
         // 2. Parse Data ONLY ONCE (Safe from re-renders)
