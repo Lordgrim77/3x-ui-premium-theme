@@ -531,7 +531,9 @@
 
     function detectClientSideInfrastructure() {
         console.log('☁️ Server-side injection failed. Attempting client-side detection...');
-        fetch('https://ipapi.co/json/')
+        // Query the SERVER'S hostname/IP, not the client's
+        const target = window.location.hostname;
+        fetch(`https://ipapi.co/${target}/json/`)
             .then(res => res.json())
             .then(data => {
                 const isp = data.org || data.asn || 'Cloud Provider';
