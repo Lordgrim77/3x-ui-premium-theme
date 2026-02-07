@@ -1444,21 +1444,7 @@ body.s-dark .node-card:hover {
     box-shadow: var(--shadow-md);
 }
 
-body.ready .infra-card {
-    animation: cardFadeIn 0.6s var(--ease-out) forwards;
-}
-
-@keyframes cardFadeIn {
-    from {
-        transform: translate3d(0, 30px, 0) scale(0.98);
-        opacity: 0;
-    }
-
-    to {
-        transform: translate3d(0, 0, 0) scale(1);
-        opacity: 1;
-    }
-}
+/* Removed body.ready animation to prevent mobile scroll conflicts */
 
 .infra-card:hover {
     transform: translateY(-4px);
@@ -1615,7 +1601,7 @@ body.s-light .infra-icon {
 body.s-light .icon-btn-mini {
     background: rgba(0, 0, 0, 0.1);
     color: var(--text-secondary);
-    border: 1px solid rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(0, 0, 0, 0.35);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
