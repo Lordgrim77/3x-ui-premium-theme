@@ -178,7 +178,6 @@
 
 
         // Nodes List (Span 12)
-        // Nodes List (Span 12)
         grid.appendChild(renderNodesList());
 
         // Infrastructure Section (v1.8.0)
@@ -235,7 +234,6 @@
 
         const s = getStatusInfo();
 
-        // New Layout: User Dashboard (Top) -> Info Row (Bottom)
         const profile = mkEl('div', 'user-profile');
         profile.innerHTML = `
             <div class="avatar">${dispName.substring(0, 2).toUpperCase()}</div>
@@ -298,8 +296,6 @@
 
     function renderInfoCard() {
         const card = mkEl('div', 'glass-panel span-4 stat-mini-grid');
-        // Info Card -> Simplified (Removed Global QR/Copy Buttons)
-        // "Optimized if multiple configurations..." -> We focus on the Global Subscription Link here.
 
         // Remaining usage...
         let remText = '∞';
@@ -309,7 +305,6 @@
         }
 
         const rem = mkEl('div', 'stat-mini');
-        // SVG Icon for Remaining Data (Pie Chart / Data)
         const icoRem = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--accent)"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path><path d="M22 12A10 10 0 0 0 12 2v10z"></path></svg>`;
 
         rem.innerHTML = `
@@ -327,7 +322,6 @@
         }
 
         const exp = mkEl('div', 'stat-mini');
-        // SVG Icon for Expiration (Calendar/Clock)
         const icoExp = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--status-warn)"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>`;
 
         exp.innerHTML = `
@@ -433,20 +427,15 @@
             </div>
         `;
 
-        // Bind Events (Separate from click to avoid conflicts if we add card expansion later)
+        // Bind Events
         const copyB = card.querySelector(`#btn-copy-${idx}`);
         copyB.onclick = (e) => { e.stopPropagation(); copy(link); };
 
         const qrB = card.querySelector(`#btn-qr-${idx}`);
         qrB.onclick = (e) => { e.stopPropagation(); showQR(link, name); };
 
-        // Card main click also copies for convenience? Or removing to prevent accidental copies vs actions.
-        // User asked to move buttons to grid. having discrete buttons is better.
-        // Removed card.onclick = () => copy(link);
         return card;
     }
-
-
 
     function renderInfrastructureSection() {
         const wrap = mkEl('div', 'span-12');
@@ -518,7 +507,7 @@
         dot.className = 'ping-dot pinging';
         valEl.className = 'infra-value';
         valEl.textContent = 'Testing...';
-        btn.style.animation = 'shimmer 1s infinite linear'; // Keep button shimmer for now
+        btn.style.animation = 'shimmer 1s infinite linear';
 
         const startTime = Date.now();
         fetch(window.location.href, { method: 'HEAD', cache: 'no-cache' })
@@ -556,20 +545,18 @@
     }
 
     function detectClientSideInfrastructure() {
-        console.log('☁️ Infrastructure detection started (v2.6.5)...');
-
+        console.log('☁️ Infrastructure detection started (v2.6.7)...');
         const ispEl = document.getElementById('infra-isp');
         const locEl = document.getElementById('infra-loc');
 
-        // 1. Target Determination
-        const injectedIp = STATE.raw && STATE.raw.serverIp && STATE.raw.serverIp !== 'Self' ? STATE.raw.serverIp : null;
-        const target = injectedIp || window.location.hostname;
+        // Target Determination
+        const dataEl = getEl('subscription-data');
+        const injectedIp = dataEl ? dataEl.getAttribute('data-ip') : null;
+        const target = (injectedIp && injectedIp !== 'Self') ? injectedIp : window.location.hostname;
         const isSSL = window.location.protocol === 'https:';
 
         console.log(`🔍 Lookup Target: ${target} (${injectedIp ? 'Injected IP' : 'Hostname'}) | SSL: ${isSSL}`);
 
-
-        // 2. Lookup Logic (Bypass Mixed Content)
         const runLookup = (url, isFallback = false) => {
             fetch(url)
                 .then(res => res.json())
@@ -629,7 +616,6 @@
 
         overlay.appendChild(content);
 
-        // RELIABLE CDN
         setTimeout(() => {
             const loadQR = () => new QRious({ element: getEl('qr-canv'), value: STATE.subUrl, size: 250 });
             if (window.QRious) loadQR();
@@ -644,7 +630,6 @@
         return overlay;
     }
 
-    // New Helper for Dynamic QR
     function showQR(val, title) {
         const modal = getEl('qr-modal');
         const canv = getEl('qr-canv');
@@ -656,7 +641,6 @@
         if (window.QRious) {
             requestAnimationFrame(() => {
                 new QRious({ element: canv, value: val, size: 250 });
-                // Remove inline guards before opening
                 modal.style.opacity = '';
                 modal.style.visibility = '';
                 modal.style.pointerEvents = '';
@@ -685,10 +669,9 @@
             loader.style.opacity = '0';
             setTimeout(() => {
                 loader.remove();
-                // Unlock scrolling after loader vanishes
                 document.body.style.overflow = '';
-                document.body.style.overflowY = 'auto'; // Force scroll
-                document.body.style.height = 'auto'; // Allow expansion
+                document.body.style.overflowY = 'auto';
+                document.body.style.height = 'auto';
             }, 800);
         }
     }
@@ -696,17 +679,9 @@
     function renderToast() {
         const toastEl = mkEl('div', 'premium-toast');
         toastEl.id = 'toast';
-        // Mobile Safe Area support for Notches
         toastEl.style.top = 'max(24px, env(safe-area-inset-top) + 24px)';
         toastEl.innerText = t('copied');
         return toastEl;
-    }
-
-    // --- LOGIC ---
-    function calcPct() {
-        if (STATE.raw.total === 0) return 0;
-        const used = STATE.raw.up + STATE.raw.down;
-        return Math.min(100, (used / STATE.raw.total) * 100);
     }
 
     function formatBytes(bytes) {
@@ -744,108 +719,35 @@
         document.body.removeChild(textArea);
     }
 
-    // STATS REFRESH (No Page Reload)
-    function refreshStats() {
-        const dataEl = getEl('subscription-data');
-        if (!dataEl) return;
-
-        STATE.raw.total = parseInt(dataEl.getAttribute('data-totalbyte') || 0);
-        STATE.raw.up = parseInt(dataEl.getAttribute('data-uploadbyte') || 0);
-        STATE.raw.down = parseInt(dataEl.getAttribute('data-downloadbyte') || 0);
-        STATE.raw.expire = parseInt(dataEl.getAttribute('data-expire') || 0) * 1000;
-
-        const s = getStatusInfo();
-
-        // Update Indicators
-        const statusTextInline = document.querySelector('.status-text-inline');
-        if (statusTextInline) {
-            statusTextInline.textContent = s.label;
-            statusTextInline.style.color = s.color;
-        }
-
-        const statusDot = document.querySelector('.status-dot-inline');
-        if (statusDot) {
-            statusDot.style.background = s.color;
-            statusDot.style.boxShadow = `0 0 10px ${s.color}`;
-        }
-
-        // Update Usage Card
-        const usageCard = document.querySelector('.usage-overview');
-        if (usageCard) {
-            usageCard.querySelector('.usage-big-number').textContent = formatBytes(s.used);
-            const headers = usageCard.querySelectorAll('.usage-header .usage-title');
-            if (headers.length > 1) headers[1].textContent = s.pct.toFixed(1) + '%';
-            usageCard.querySelector('.usage-sub').innerHTML = `${t('limit')}: ${s.total === 0 ? t('unlimited') : formatBytes(s.total)}`;
-
-            const bar = getEl('prog-bar');
-            if (bar) {
-                bar.style.background = s.color;
-                bar.style.boxShadow = `0 0 20px ${s.color}`;
-                bar.style.transform = `scaleX(${s.pct / 100})`;
-            }
-        }
-
-        // Update Info Card Stats
-        const statValues = document.querySelectorAll('.stat-mini .stat-value');
-        if (statValues.length >= 5) {
-            statValues[0].textContent = formatBytes(STATE.raw.up);
-            statValues[1].textContent = formatBytes(STATE.raw.down);
-
-            let remText = '∞';
-            if (STATE.raw.total > 0) {
-                const left = STATE.raw.total - (STATE.raw.up + STATE.raw.down);
-                remText = formatBytes(left < 0 ? 0 : left);
-            }
-            statValues[2].textContent = remText;
-
-            let expText = '∞';
-            if (STATE.raw.expire > 0) {
-                const diff = STATE.raw.expire - Date.now();
-                expText = diff < 0 ? 'Expired' : Math.ceil(diff / (1000 * 60 * 60 * 24)) + 'd';
-            }
-            statValues[3].textContent = expText;
-        }
-
-        showToast('Stats Refreshed!');
+    function applyTheme() {
+        document.body.classList.remove('s-dark', 's-light');
+        document.body.classList.add(STATE.theme === 'dark' ? 's-dark' : 's-light');
     }
 
     function toggleTheme(e) {
-        // 1. Calculate next theme colors for burst
         const nextTheme = STATE.theme === 'dark' ? 'light' : 'dark';
-        const burstColor = nextTheme === 'dark' ? '#020617' : '#f8fafc'; // Match bg-main of target theme
-
-        // 2. Spawn Aura Burst
+        const burstColor = nextTheme === 'dark' ? '#020617' : '#f8fafc';
         const btn = e.currentTarget;
         const rect = btn.getBoundingClientRect();
         const burst = mkEl('div', 'theme-burst');
 
-        // Position at button center
         burst.style.background = burstColor;
         burst.style.left = (rect.left + rect.width / 2) + 'px';
         burst.style.top = (rect.top + rect.height / 2) + 'px';
-
         document.body.appendChild(burst);
 
-        // 3. Switch state MID-ANIMATION (at 40% of 1.5s = 600ms. Let's do 500ms to be safe inside coverage)
         setTimeout(() => {
             STATE.theme = nextTheme;
             localStorage.setItem('xui_theme', STATE.theme);
             applyTheme();
-
-            // Update button icon
             const btnIcon = getEl('theme-btn');
-            // Simple Icon Logic
             const newSVG = STATE.theme === 'dark' ?
                 `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>` :
                 `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>`;
             if (btnIcon) btnIcon.innerHTML = newSVG;
-
         }, 500);
 
-        // 4. Cleanup after animation (1.5s)
-        setTimeout(() => {
-            burst.remove();
-        }, 1600);
+        setTimeout(() => burst.remove(), 1600);
     }
 
     function showToast(msg) {
@@ -854,20 +756,11 @@
             toastEl.innerText = msg;
             toastEl.classList.add('show');
             if (toastEl._timeout) clearTimeout(toastEl._timeout);
-            toastEl._timeout = setTimeout(() => {
-                toastEl.classList.remove('show');
-            }, 2000);
+            toastEl._timeout = setTimeout(() => toastEl.classList.remove('show'), 2000);
         }
     }
 
-    function applyTheme() {
-        document.body.classList.remove('s-dark', 's-light');
-        document.body.classList.add(STATE.theme === 'dark' ? 's-dark' : 's-light');
-    }
-
-    function updateStatus() {
-        // Mock status logic - keep simple
-    }
+    function updateStatus() { }
 
     // --- BOOT ---
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
