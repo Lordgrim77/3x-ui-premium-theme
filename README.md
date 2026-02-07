@@ -23,8 +23,9 @@
 > - **Self-Responsibility**: By using this script/theme, you agree that you are solely responsible for any consequences, including but not limited to system instability, data loss, or security risks.
 > - **Standard of Use**: The author is NOT responsible for any misuse or damages caused by this software. Use at your own risk.
 
-## 🚀 One-Click Installer
-Run the following command on your 3x-ui server to install or update:
+## 🚀 Installation
+1. Make sure to take a backup of the system before doing anything.
+2. Run the following command on your 3x-ui server to install or update:
 
 ```bash
 bash <(curl -Ls https://raw.githubusercontent.com/Lordgrim77/3x-ui-premium-theme/main/install.sh)
