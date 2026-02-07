@@ -528,12 +528,14 @@
         const t = mkEl('div', 'glass-panel');
         t.id = 'toast';
         t.style.position = 'fixed';
-        t.style.top = '20px'; // Moving to TOP
+        // Mobile Safe Area support for Notches
+        t.style.top = 'max(20px, env(safe-area-inset-top) + 20px)';
         t.style.left = '50%';
-        t.style.transform = 'translateX(-50%) translateY(-100px)'; // Hidden above
+        t.style.transform = 'translateX(-50%) translateY(-150%)'; // Start higher up
+        t.style.zIndex = '100000'; // Ensure it's on top of EVERYTHING
         t.style.opacity = '0';
         t.style.visibility = 'hidden';
-        t.style.transition = 'all 0.3s';
+        t.style.transition = 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)'; // Use premium ease
         t.style.padding = '12px 24px';
         t.innerText = 'Copied!';
         return t;
@@ -564,7 +566,7 @@
                 t.style.transform = 'translateX(-50%) translateY(0)';
                 t.style.opacity = '1';
                 setTimeout(() => {
-                    t.style.transform = 'translateX(-50%) translateY(-100px)'; // Slide back UP
+                    t.style.transform = 'translateX(-50%) translateY(-150%)'; // Slide back UP
                     t.style.opacity = '0';
                     setTimeout(() => t.style.visibility = 'hidden', 300);
                 }, 2000);
