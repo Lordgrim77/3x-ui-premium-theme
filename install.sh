@@ -3,6 +3,8 @@
 # 3x-ui Premium Theme Installer
 # Author: LORD GRIM
 # Repo: https://github.com/Lordgrim77/3x-ui-premium-theme
+# Version for cache busting
+VERSION="1.2.0"
 
 RED='\033[0;31m'
 GREEN='\033[0;32m'
