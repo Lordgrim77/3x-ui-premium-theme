@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# 3x-ui Premium Theme Installer
+# 3x-ui Subscription Theme Installer
 # Author: LORD GRIM
 # Repo: https://github.com/Lordgrim77/3x-ui-premium-theme
 # Version for cache busting
@@ -11,7 +11,7 @@ GREEN='\033[0;32m'
 BLUE='\033[0;34m'
 NC='\033[0m'
 
-echo -e "${BLUE}💎 Starting 3x-ui Premium Theme Installation...${NC}"
+echo -e "${BLUE}💎 Starting 3x-ui Subscription Theme Installation...${NC}"
 echo -e "${RED}⚠️  NOTICE: This project is for EDUCATIONAL PURPOSES ONLY.${NC}"
 echo -e "${RED}⚠️  The user is solely responsible for any consequences or damages.${NC}"
 echo -e "${RED}⚠️  USE AT YOUR OWN RISK.${NC}"
