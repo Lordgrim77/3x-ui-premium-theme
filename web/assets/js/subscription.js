@@ -528,9 +528,9 @@
         const t = mkEl('div', 'glass-panel');
         t.id = 'toast';
         t.style.position = 'fixed';
-        t.style.bottom = '20px';
+        t.style.top = '20px'; // Moving to TOP
         t.style.left = '50%';
-        t.style.transform = 'translateX(-50%) translateY(100px)';
+        t.style.transform = 'translateX(-50%) translateY(-100px)'; // Hidden above
         t.style.opacity = '0';
         t.style.visibility = 'hidden';
         t.style.transition = 'all 0.3s';
@@ -564,7 +564,7 @@
                 t.style.transform = 'translateX(-50%) translateY(0)';
                 t.style.opacity = '1';
                 setTimeout(() => {
-                    t.style.transform = 'translateX(-50%) translateY(100px)';
+                    t.style.transform = 'translateX(-50%) translateY(-100px)'; // Slide back UP
                     t.style.opacity = '0';
                     setTimeout(() => t.style.visibility = 'hidden', 300);
                 }, 2000);

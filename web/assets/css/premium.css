@@ -1129,19 +1129,29 @@ body.s-dark .node-card:hover {
 
 .qr-header {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
+    /* Push close btn to right */
     align-items: center;
     margin-bottom: 20px;
     padding: 0 8px;
+    position: relative;
+    /* For absolute title centering */
 }
 
 #qr-title {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
     margin: 0;
     font-size: 0.85rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.15em;
     color: var(--text-primary);
+    width: 100%;
+    text-align: center;
+    pointer-events: none;
+    /* Let clicks pass through if overlaps */
 }
 
 .qr-close {
