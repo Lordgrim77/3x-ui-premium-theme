@@ -25,17 +25,14 @@
     --btn-radius: 12px;
 }
 
-/* MOBILE OVERRIDES: Only for small screens */
-@media (max-width: 768px) {
-
-    html.premium-theme,
-    body.premium-theme {
-        overflow: auto !important;
-        height: auto !important;
-        min-height: 100vh !important;
-        -webkit-overflow-scrolling: touch;
-        touch-action: manipulation;
-    }
+/* NUCLEAR SCROLL FIX: Global Unlock */
+html.premium-theme,
+body.premium-theme {
+    overflow: auto !important;
+    height: auto !important;
+    min-height: 100vh !important;
+    -webkit-overflow-scrolling: touch;
+    touch-action: manipulation;
 }
 
 /* THEME: DEEP SPACE (Default) */
@@ -1241,6 +1238,40 @@ body.s-dark .node-card:hover {
         top: calc(100% - 15px);
         opacity: 1;
     }
+}
+
+/* UNIVERSAL TOAST ISOLATION */
+.premium-toast {
+    position: fixed !important;
+    left: 50% !important;
+    transform: translateX(-50%) translateY(-150%) !important;
+    z-index: 1000000 !important;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    padding: 14px 32px;
+    min-width: 180px;
+    text-align: center;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    font-size: 0.9rem;
+    border: 1px solid var(--accent) !important;
+    backdrop-filter: blur(40px) brightness(1.2) !important;
+    border-radius: 100px !important;
+    /* Pill shape for premium feel */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 20px var(--accent-glow) !important;
+    background: rgba(15, 23, 42, 0.85) !important;
+    color: white !important;
+    pointer-events: none;
+    pointer-events: none;
+    animation: none !important;
+    /* KILL ALL INHERITED ANIMATIONS */
+}
+
+.premium-toast.show {
+    visibility: visible !important;
+    opacity: 1 !important;
+    transform: translateX(-50%) translateY(0) !important;
 }
 
 /* ANIMATIONS */
