@@ -21,7 +21,6 @@ To inject this premium theme without requiring a complete recompilation of the `
 ### What this means:
 - **Custom Assets**: It allows the server to load `premium.css` and `subscription.js` directly from your disk.
 - **Security Trade-off**: Enabling debug mode is standard for customization but theoretically broadens the attack surface slightly compared to a sealed production binary.
-- **Performance**: There is a negligible increase in Disk I/O as assets are read from disk rather than RAM.
 - **Recommendation**: For 99% of users, this is perfectly safe and the standard way to apply themes. If you run a high-traffic production environment with specific security mandates, consider "baking" the assets into the source code manually.
 
 ## 👨‍💻 Author
