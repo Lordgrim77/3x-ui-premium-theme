@@ -23,7 +23,8 @@
             unlimited: 'Unlimited',
             refresh: 'Refresh Status',
             upload: 'Upload',
-            download: 'Download'
+            download: 'Download',
+            copied: 'Copied!'
         },
         cn: {
             title: '我的订阅',
@@ -39,7 +40,8 @@
             unlimited: '不限流量',
             refresh: '刷新状态',
             upload: '上传',
-            download: '下载'
+            download: '下载',
+            copied: '已复制!'
         },
         fa: {
             title: 'اشتراک من',
@@ -55,7 +57,8 @@
             unlimited: 'نامحدود',
             refresh: 'بروزرسانی وضعیت',
             upload: 'آپلود',
-            download: 'دانلود'
+            download: 'دانلود',
+            copied: 'کپی شد!'
         },
     };
 
@@ -668,12 +671,12 @@
     }
 
     function renderToast() {
-        const t = mkEl('div', 'premium-toast');
-        t.id = 'toast';
+        const toastEl = mkEl('div', 'premium-toast');
+        toastEl.id = 'toast';
         // Mobile Safe Area support for Notches
-        t.style.top = 'max(24px, env(safe-area-inset-top) + 24px)';
-        t.innerText = 'Copied!';
-        return t;
+        toastEl.style.top = 'max(24px, env(safe-area-inset-top) + 24px)';
+        toastEl.innerText = t('copied');
+        return toastEl;
     }
 
     // --- LOGIC ---
@@ -693,24 +696,13 @@
     function copy(txt) {
         if (!txt) return;
 
-        // Robust Copy: Try API -> Fallback to execCommand
-        const showToast = () => {
-            const t = getEl('toast');
-            if (t) {
-                t.classList.add('show');
-                setTimeout(() => {
-                    t.classList.remove('show');
-                }, 2000);
-            }
-        };
-
         if (navigator.clipboard && window.isSecureContext) {
-            navigator.clipboard.writeText(txt).then(showToast).catch(err => {
+            navigator.clipboard.writeText(txt).then(() => showToast(t('copied'))).catch(err => {
                 console.error('Clipboard API failed', err);
-                fallbackCopy(txt, showToast);
+                fallbackCopy(txt, () => showToast(t('copied')));
             });
         } else {
-            fallbackCopy(txt, showToast);
+            fallbackCopy(txt, () => showToast(t('copied')));
         }
     }
 
@@ -834,17 +826,14 @@
     }
 
     function showToast(msg) {
-        const t = getEl('toast');
-        if (t) {
-            t.innerText = msg;
-            t.style.visibility = 'visible';
-            t.style.transform = 'translateX(-50%) translateY(0)';
-            t.style.opacity = '1';
-            setTimeout(() => {
-                t.style.transform = 'translateX(-50%) translateY(100px)';
-                t.style.opacity = '0';
-                setTimeout(() => t.style.visibility = 'hidden', 300);
-            }, 1500);
+        const toastEl = getEl('toast');
+        if (toastEl) {
+            toastEl.innerText = msg;
+            toastEl.classList.add('show');
+            if (toastEl._timeout) clearTimeout(toastEl._timeout);
+            toastEl._timeout = setTimeout(() => {
+                toastEl.classList.remove('show');
+            }, 2000);
         }
     }
 
