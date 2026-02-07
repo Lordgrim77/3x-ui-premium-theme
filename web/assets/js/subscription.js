@@ -556,18 +556,26 @@
     }
 
     function detectClientSideInfrastructure() {
-        console.log('☁️ Server-side injection failed. Attempting client-side detection...');
+        console.log('☁️ Infrastructure detection started...');
 
-        // 1. Prioritize Injected IP (v2.6.1)
-        const target = (STATE.raw && STATE.raw.serverIp && STATE.raw.serverIp !== 'Self')
-            ? STATE.raw.serverIp
-            : window.location.hostname;
+        // 1. Target Determination (v2.6.2)
+        const injectedIp = STATE.raw && STATE.raw.serverIp && STATE.raw.serverIp !== 'Self' ? STATE.raw.serverIp : null;
+        const target = injectedIp || window.location.hostname;
 
-        fetch(`https://ipapi.co/${target}/json/`)
+        console.log(`🔍 Lookup Target: ${target} (${injectedIp ? 'Injected IP' : 'Hostname'})`);
+
+        // Use ip-api.com (Supports both IP and Hostname lookup better)
+        fetch(`http://ip-api.com/json/${target}`)
             .then(res => res.json())
             .then(data => {
-                const isp = data.org || data.asn || 'Cloud Provider';
-                const loc = (data.city ? data.city + ', ' : '') + (data.country_name || 'Unknown');
+                console.log('📊 Lookup Result:', data);
+                if (data.status !== 'success') {
+                    console.warn('❌ Lookup API returned failure status');
+                    return;
+                }
+
+                const isp = data.isp || data.org || data.as || 'Cloud Provider';
+                const loc = (data.city ? data.city + ', ' : '') + (data.country || 'Unknown');
 
                 // Update State
                 STATE.raw.isp = isp;
@@ -579,8 +587,23 @@
 
                 if (ispEl) ispEl.textContent = isp;
                 if (locEl) locEl.textContent = loc;
+                console.log('✅ UI Updated with detected infra');
             })
-            .catch(e => console.error('Client-side infra detection failed', e));
+            .catch(e => {
+                console.error('❌ Client-side infra detection failed', e);
+                // Try fallback to ipapi.co if ip-api.com (HTTP) is blocked by Mixed Content
+                if (window.location.protocol === 'https:') {
+                    console.log('🔄 Retrying with SSL-compatible source (ipapi.co)...');
+                    fetch(`https://ipapi.co/${target}/json/`)
+                        .then(r => r.json())
+                        .then(d => {
+                            const isp = d.org || d.asn || 'Cloud Provider';
+                            const loc = (d.city ? d.city + ', ' : '') + (d.country_name || 'Unknown');
+                            if (ispEl) ispEl.textContent = isp;
+                            if (locEl) locEl.textContent = loc;
+                        }).catch(err => console.error('Final fallback failed', err));
+                }
+            });
     }
 
     function renderQRModal() {
