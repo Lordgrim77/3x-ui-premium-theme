@@ -16,6 +16,13 @@
 
 
 
+## 🛡️ Educational Purpose & Disclaimer
+> [!WARNING]
+> This project is for **educational purposes only**. The complexity and methods used (such as UI injection) are intended for learning about web design and system modification.
+> 
+> - **Self-Responsibility**: By using this script/theme, you agree that you are solely responsible for any consequences, including but not limited to system instability, data loss, or security risks.
+> - **Standard of Use**: The author is NOT responsible for any misuse or damages caused by this software. Use at your own risk.
+
 ## 🚀 One-Click Installer
 Run the following command on your 3x-ui server to install or update:
 

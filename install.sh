@@ -4,7 +4,7 @@
 # Author: LORD GRIM
 # Repo: https://github.com/Lordgrim77/3x-ui-premium-theme
 # Version for cache busting
-VERSION="2.5.9"
+VERSION="2.6.0"
 
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -12,6 +12,10 @@ BLUE='\033[0;34m'
 NC='\033[0m'
 
 echo -e "${BLUE}💎 Starting 3x-ui Premium Theme Installation...${NC}"
+echo -e "${RED}⚠️  NOTICE: This project is for EDUCATIONAL PURPOSES ONLY.${NC}"
+echo -e "${RED}⚠️  The user is solely responsible for any consequences or damages.${NC}"
+echo -e "${RED}⚠️  USE AT YOUR OWN RISK.${NC}"
+sleep 2
 
 if [ "$EUID" -ne 0 ]; then
   echo -e "${RED}Please run as root (sudo bash install.sh)${NC}"
