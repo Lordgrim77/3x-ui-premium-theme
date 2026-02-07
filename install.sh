@@ -4,7 +4,7 @@
 # Author: LORD GRIM
 # Repo: https://github.com/Lordgrim77/3x-ui-premium-theme
 # Version for cache busting
-VERSION="1.5.5"
+VERSION="1.8.0"
 
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -68,6 +68,22 @@ curl -Ls "$REPO_URL/web/assets/css/premium.css" -o "$ASSETS_PATH/css/premium.css
 SUBPAGE_PATH="$HTML_PATH/settings/panel/subscription/subpage.html"
 mkdir -p $(dirname "$SUBPAGE_PATH")
 curl -Ls "$REPO_URL/web/html/settings/panel/subscription/subpage.html" -o "$SUBPAGE_PATH"
+
+# INFRASTRUCTURE AUTO-DETECTION (v1.8.0)
+echo -e "${BLUE}☁️ Detecting hosting infrastructure...${NC}"
+IP_DATA=$(curl -s http://ip-api.com/json/)
+ISP=$(echo "$IP_DATA" | grep -o '"isp":"[^"]*' | cut -d'"' -f4)
+REGION=$(echo "$IP_DATA" | grep -o '"city":"[^"]*' | cut -d'"' -f4)
+COUNTRY=$(echo "$IP_DATA" | grep -o '"country":"[^"]*' | cut -d'"' -f4)
+LOCATION="$REGION, $COUNTRY"
+
+if [[ -n "$ISP" ]]; then
+    echo -e "${GREEN}✅ Hosting Cloud: $ISP${NC}"
+    echo -e "${GREEN}✅ Server Location: $LOCATION${NC}"
+    # Inject into the data element as attributes using sed
+    # We target the data-expire attribute to append our new data attributes after it
+    sed -i "s|data-expire=\"{{ .expire }}\"|data-expire=\"{{ .expire }}\" data-isp=\"$ISP\" data-location=\"$LOCATION\"|g" "$SUBPAGE_PATH"
+fi
 
 chmod -R 777 "$BASE_PATH"
 

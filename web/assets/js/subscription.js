@@ -121,7 +121,9 @@
                 down: parseInt(dataEl.getAttribute('data-downloadbyte') || 0),
                 expire: parseInt(dataEl.getAttribute('data-expire') || 0) * 1000,
                 subUrl: dataEl.getAttribute('data-sub-url') || '',
-                lastOnline: parseInt(dataEl.getAttribute('data-lastonline') || 0)
+                lastOnline: parseInt(dataEl.getAttribute('data-lastonline') || 0),
+                isp: dataEl.getAttribute('data-isp') || 'Cloud Provider',
+                location: dataEl.getAttribute('data-location') || 'Global'
             };
             STATE.subUrl = STATE.raw.subUrl;
         }
@@ -432,6 +434,91 @@
     }
 
 
+
+    function renderInfrastructureSection() {
+        const wrap = mkEl('div', 'span-12');
+        const icoCloud = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.5 19L19 19C20.1046 19 21 18.1046 21 17C21 15.8954 20.1046 15 19 15L18.1 15C17.55 12.15 15.05 10 12 10C9.6 10 7.55 11.35 6.55 13.35C4.55 13.7 3 15.45 3 17.5C3 19.433 4.567 21 6.5 21L7.5 21"></path></svg>`;
+        wrap.innerHTML = `<div class="nodes-header" style="margin-top:20px;">${icoCloud} Infrastructure Insights</div>`;
+
+        const grid = mkEl('div', 'infra-grid');
+
+        // Hosting Card
+        const hosting = mkEl('div', 'infra-card');
+        hosting.style.animationDelay = '0.5s';
+        const icoServer = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--accent)"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect><rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect><line x1="6" y1="6" x2="6.01" y2="6"></line><line x1="6" y1="18" x2="6.01" y2="18"></line></svg>`;
+        hosting.innerHTML = `
+            <div class="infra-icon">${icoServer}</div>
+            <div class="infra-details">
+                <div class="infra-value">${STATE.raw.isp}</div>
+                <div class="infra-label">Hosting Cloud</div>
+            </div>
+            <div class="infra-badge">${STATE.raw.location}</div>
+        `;
+
+        // Ping Card
+        const ping = mkEl('div', 'infra-card');
+        ping.style.animationDelay = '0.6s';
+        const icoWifi = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:#10b981"><circle cx="12" cy="12" r="1"></circle><path d="M16 8a6 6 0 0 1 0 8"></path><path d="M8 8a6 6 0 0 0 0 8"></path><path d="M20 4a12 12 0 0 1 0 16"></path><path d="M4 4a12 12 0 0 0 0 16"></path></svg>`;
+        ping.innerHTML = `
+            <div class="infra-icon">${icoWifi}</div>
+            <div class="infra-details">
+                <div class="infra-value" id="ping-value">Check Latency</div>
+                <div class="infra-label">Client to Server</div>
+            </div>
+            <div class="ping-action-wrap">
+                <div class="ping-dot" id="ping-dot"></div>
+                <div class="icon-btn-mini" id="btn-ping" title="Check Ping">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6"></path><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path></svg>
+                </div>
+            </div>
+        `;
+
+        const pingBtn = ping.querySelector('#btn-ping');
+        pingBtn.onclick = () => checkPing();
+
+        grid.appendChild(hosting);
+        grid.appendChild(ping);
+        wrap.appendChild(grid);
+        return wrap;
+    }
+
+    function checkPing() {
+        const valEl = getEl('ping-value');
+        const dot = getEl('ping-dot');
+        const btn = getEl('btn-ping');
+
+        if (!valEl || !btn) return;
+
+        btn.style.animation = 'shimmer 1s infinite linear';
+        valEl.textContent = 'Testing...';
+        dot.style.background = '#64748b';
+        dot.style.boxShadow = 'none';
+
+        const startTime = Date.now();
+        fetch(window.location.href, { method: 'HEAD', cache: 'no-cache' })
+            .then(() => {
+                const latency = Date.now() - startTime;
+                valEl.textContent = latency + 'ms';
+                btn.style.animation = '';
+
+                if (latency < 150) {
+                    dot.style.background = '#10b981';
+                    dot.style.boxShadow = '0 0 10px #10b981';
+                } else if (latency < 400) {
+                    dot.style.background = '#f59e0b';
+                    dot.style.boxShadow = '0 0 10px #f59e0b';
+                } else {
+                    dot.style.background = '#ef4444';
+                    dot.style.boxShadow = '0 0 10px #ef4444';
+                }
+                showToast('Latency: ' + latency + 'ms');
+            })
+            .catch(() => {
+                valEl.textContent = 'Error';
+                btn.style.animation = '';
+                dot.style.background = '#ef4444';
+            });
+    }
 
     function renderQRModal() {
         const overlay = mkEl('div', 'modal-overlay');
