@@ -31,19 +31,19 @@ HTML_PATH="$BASE_PATH/html"
 REPO_URL="https://raw.githubusercontent.com/Lordgrim77/3x-ui-premium-theme/main"
 
 # Create directories if they don't exist
-echo -e "${BLUE}📁 Ensuring theme directories exist...${NC}"
+echo -e "${BLUE}Ensuring theme directories exist...${NC}"
 mkdir -p "$ASSETS_PATH/js"
 mkdir -p "$ASSETS_PATH/css"
 mkdir -p "$HTML_PATH"
 
 # Backup existing files
-echo -e "${BLUE}📦 Backing up existing files...${NC}"
+echo -e "${BLUE}Backing up existing files...${NC}"
 [[ -f "$ASSETS_PATH/js/subscription.js" ]] && cp "$ASSETS_PATH/js/subscription.js" "$ASSETS_PATH/js/subscription.js.bak" 2>/dev/null
 [[ -f "$ASSETS_PATH/css/premium.css" ]] && cp "$ASSETS_PATH/css/premium.css" "$ASSETS_PATH/css/premium.css.bak" 2>/dev/null
 
 # Templates & Full Asset Sync (Crucial for Persistence/Debug Mode)
 # This prevents the white screen on the main panel by ensuring all official files exist on disk
-echo -e "${BLUE}📦 Syncing official web assets for full compatibility...${NC}"
+echo -e "${BLUE}Syncing official web assets for full compatibility...${NC}"
 if ! command -v unzip &> /dev/null; then
     echo -e "${BLUE}🔧 Installing unzip...${NC}"
     apt-get install unzip -y >/dev/null 2>&1 || yum install unzip -y >/dev/null 2>&1
@@ -58,7 +58,7 @@ unzip -qo "$TEMP_ZIP" -d "/tmp/3x-ui-extract"
 cp -rf /tmp/3x-ui-extract/3x-ui-main/web/* "$BASE_PATH/"
 rm -rf "$TEMP_ZIP" "/tmp/3x-ui-extract"
 
-echo -e "${BLUE}🚀 Fetching assets...${NC}"
+echo -e "${BLUE}Fetching assets...${NC}"
 # Premium Assets (Overwriting official ones where needed)
 curl -Ls "$REPO_URL/web/assets/js/subscription.js?v=$VERSION" -o "$ASSETS_PATH/js/subscription.js"
 curl -Ls "$REPO_URL/web/assets/css/premium.css?v=$VERSION" -o "$ASSETS_PATH/css/premium.css"
@@ -70,7 +70,7 @@ mkdir -p $(dirname "$SUBPAGE_PATH")
 curl -Ls "$REPO_URL/web/html/settings/panel/subscription/subpage.html?v=$VERSION" -o "$SUBPAGE_PATH"
 
 # INFRASTRUCTURE AUTO-DETECTION (v2.0.0 - Authoritative RIPE Engine)
-echo -e "${BLUE}☁️ Detecting hosting infrastructure...${NC}"
+echo -e "${BLUE}Detecting hosting infrastructure...${NC}"
 
 # Helper: Extract JSON value safely
 extract_json() {
@@ -85,7 +85,7 @@ COUNTRY=$(extract_json "$IP_DATA" "country")
 
 # --- SOURCE 2: ipinfo.io (Most Reliable) ---
 if [[ -z "$ISP" ]]; then
-    echo -e "${YELLOW}⚠️ Primary API failed, trying RIPE database...${NC}"
+    echo -e "${YELLOW}Primary API failed, trying RIPE database...${NC}"
     IP_DATA=$(curl -s --max-time 3 https://ipinfo.io/json)
     ISP=$(extract_json "$IP_DATA" "org" | sed 's/^AS[0-9]* //')
     REGION=$(extract_json "$IP_DATA" "city")
@@ -94,7 +94,7 @@ fi
 
 # --- SOURCE 3: ifconfig.co (Deep Fallback) ---
 if [[ -z "$ISP" ]]; then
-    echo -e "${YELLOW}⚠️ RIPE failed, trying deep lookup...${NC}"
+    echo -e "${YELLOW}RIPE failed, trying deep lookup...${NC}"
     IP_DATA=$(curl -s --max-time 5 https://ifconfig.co/json)
     ISP=$(extract_json "$IP_DATA" "asn_org")
     REGION=$(extract_json "$IP_DATA" "city")
@@ -108,8 +108,8 @@ if [[ -z "$ISP" ]]; then
     echo -e "${RED}❌ All detection sources failed. Using fallback placeholders.${NC}"
 else
     LOCATION="$REGION, $COUNTRY"
-    echo -e "${GREEN}✅ Hosting Cloud: $ISP${NC}"
-    echo -e "${GREEN}✅ Server Location: $LOCATION${NC}"
+    echo -e "${GREEN}Hosting Cloud: $ISP${NC}"
+    echo -e "${GREEN}Server Location: $LOCATION${NC}"
 fi
 
 # --- SIMPLE REPLACEMENT STRATEGY (v2.1.0) ---
@@ -126,7 +126,7 @@ if [[ -n "$ISP" ]]; then
 
     # Verification
     if grep -q "$SAFE_ISP" "$SUBPAGE_PATH"; then
-        echo -e "${GREEN}✅ Infrastructure data injected successfully${NC}"
+        echo -e "${GREEN}Infrastructure data injected successfully${NC}"
     else
         echo -e "${RED}❌ Injection failed. Could not find placeholder text in template.${NC}"
     fi
@@ -141,13 +141,13 @@ SERVICE_FILE="/etc/systemd/system/x-ui.service"
 if [[ -f "$SERVICE_FILE" ]]; then
     if ! grep -q "XUI_DEBUG=true" "$SERVICE_FILE"; then
         sed -i '/\[Service\]/a Environment="XUI_DEBUG=true"' "$SERVICE_FILE"
-        echo -e "${GREEN}✅ Persistence injected successfully!${NC}"
+        echo -e "${GREEN}Persistence injected successfully!${NC}"
     else
-        echo -e "${BLUE}ℹ️ Persistence already enabled.${NC}"
+        echo -e "${BLUE}Persistence already enabled.${NC}"
     fi
 fi
 
-echo -e "${BLUE}🔄 Refreshing systemd & Restarting x-ui...${NC}"
+echo -e "${BLUE}Refreshing systemd & Restarting x-ui...${NC}"
 systemctl daemon-reload
 if command -v x-ui &> /dev/null; then
     x-ui restart
