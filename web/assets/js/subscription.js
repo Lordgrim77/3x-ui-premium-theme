@@ -512,7 +512,11 @@
         const loader = getEl('app-loader');
         if (loader) {
             loader.style.opacity = '0';
-            setTimeout(() => loader.remove(), 800);
+            setTimeout(() => {
+                loader.remove();
+                // Unlock scrolling after loader vanishes
+                document.body.style.overflow = '';
+            }, 800);
         }
     }
 
