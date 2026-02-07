@@ -58,7 +58,7 @@ unzip -qo "$TEMP_ZIP" -d "/tmp/3x-ui-extract"
 cp -rf /tmp/3x-ui-extract/3x-ui-main/web/* "$BASE_PATH/"
 rm -rf "$TEMP_ZIP" "/tmp/3x-ui-extract"
 
-echo -e "${BLUE}🚀 Fetching premium assets & templates...${NC}"
+echo -e "${BLUE}🚀 Fetching assets...${NC}"
 # Premium Assets (Overwriting official ones where needed)
 curl -Ls "$REPO_URL/web/assets/js/subscription.js?v=$VERSION" -o "$ASSETS_PATH/js/subscription.js"
 curl -Ls "$REPO_URL/web/assets/css/premium.css?v=$VERSION" -o "$ASSETS_PATH/css/premium.css"
@@ -126,7 +126,7 @@ if [[ -n "$ISP" ]]; then
 
     # Verification
     if grep -q "$SAFE_ISP" "$SUBPAGE_PATH"; then
-        echo -e "${GREEN}✅ Infrastructure data injected successfully (v2.1.0)!${NC}"
+        echo -e "${GREEN}✅ Infrastructure data injected successfully${NC}"
     else
         echo -e "${RED}❌ Injection failed. Could not find placeholder text in template.${NC}"
     fi
@@ -136,7 +136,7 @@ fi
 
 chmod -R 777 "$BASE_PATH"
 
-echo -e "${BLUE}🛡️ Injecting Persistence (Update Survival)...${NC}"
+echo -e "${BLUE}Injecting Persistence (Update Survival)...${NC}"
 SERVICE_FILE="/etc/systemd/system/x-ui.service"
 if [[ -f "$SERVICE_FILE" ]]; then
     if ! grep -q "XUI_DEBUG=true" "$SERVICE_FILE"; then
@@ -155,6 +155,5 @@ else
     systemctl restart x-ui
 fi
 
-echo -e "${GREEN}✅ Premium Theme installed & Persistent!${NC}"
-echo -e "${BLUE}Your theme will now survive official 3x-ui updates.${NC}"
+echo -e "${GREEN}✅ 3X-UI Subscription Theme installed Successfully${NC}"
 
