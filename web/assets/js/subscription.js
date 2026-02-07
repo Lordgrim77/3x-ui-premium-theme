@@ -556,54 +556,48 @@
     }
 
     function detectClientSideInfrastructure() {
-        console.log('☁️ Infrastructure detection started...');
+        console.log('☁️ Infrastructure detection started (v2.6.3)...');
 
-        // 1. Target Determination (v2.6.2)
+        const ispEl = document.getElementById('infra-isp');
+        const locEl = document.getElementById('infra-loc');
+
+        // 1. Target Determination
         const injectedIp = STATE.raw && STATE.raw.serverIp && STATE.raw.serverIp !== 'Self' ? STATE.raw.serverIp : null;
         const target = injectedIp || window.location.hostname;
+        const isSSL = window.location.protocol === 'https:';
 
-        console.log(`🔍 Lookup Target: ${target} (${injectedIp ? 'Injected IP' : 'Hostname'})`);
+        console.log(`🔍 Lookup Target: ${target} (${injectedIp ? 'Injected IP' : 'Hostname'}) | SSL: ${isSSL}`);
 
-        // Use ip-api.com (Supports both IP and Hostname lookup better)
-        fetch(`http://ip-api.com/json/${target}`)
-            .then(res => res.json())
-            .then(data => {
-                console.log('📊 Lookup Result:', data);
-                if (data.status !== 'success') {
-                    console.warn('❌ Lookup API returned failure status');
-                    return;
-                }
+        // 2. Lookup Logic (Bypass Mixed Content)
+        const runLookup = (url, isFallback = false) => {
+            fetch(url)
+                .then(res => res.json())
+                .then(data => {
+                    console.log(`📊 Result (${isFallback ? 'Fallback' : 'Primary'}):`, data);
+                    const isp = data.isp || data.org || data.asn || 'Cloud Provider';
+                    const loc = (data.city ? data.city + ', ' : '') + (data.country_name || data.country || 'Unknown');
 
-                const isp = data.isp || data.org || data.as || 'Cloud Provider';
-                const loc = (data.city ? data.city + ', ' : '') + (data.country || 'Unknown');
+                    if (STATE.raw) {
+                        STATE.raw.isp = isp;
+                        STATE.raw.location = loc;
+                    }
 
-                // Update State
-                STATE.raw.isp = isp;
-                STATE.raw.location = loc;
+                    if (ispEl) ispEl.textContent = isp;
+                    if (locEl) locEl.textContent = loc;
+                })
+                .catch(err => {
+                    console.error('❌ Lookup failed:', err);
+                    if (!isFallback && !isSSL) {
+                        runLookup(`https://ipapi.co/${target}/json/`, true);
+                    }
+                });
+        };
 
-                // Update DOM if it exists
-                const ispEl = document.getElementById('infra-isp');
-                const locEl = document.getElementById('infra-loc');
-
-                if (ispEl) ispEl.textContent = isp;
-                if (locEl) locEl.textContent = loc;
-                console.log('✅ UI Updated with detected infra');
-            })
-            .catch(e => {
-                console.error('❌ Client-side infra detection failed', e);
-                // Try fallback to ipapi.co if ip-api.com (HTTP) is blocked by Mixed Content
-                if (window.location.protocol === 'https:') {
-                    console.log('🔄 Retrying with SSL-compatible source (ipapi.co)...');
-                    fetch(`https://ipapi.co/${target}/json/`)
-                        .then(r => r.json())
-                        .then(d => {
-                            const isp = d.org || d.asn || 'Cloud Provider';
-                            const loc = (d.city ? d.city + ', ' : '') + (d.country_name || 'Unknown');
-                            if (ispEl) ispEl.textContent = isp;
-                            if (locEl) locEl.textContent = loc;
-                        }).catch(err => console.error('Final fallback failed', err));
-                }
-            });
+        if (isSSL) {
+            runLookup(`https://ipapi.co/${target}/json/`);
+        } else {
+            runLookup(`http://ip-api.com/json/${target}`);
+        }
     }
 
     function renderQRModal() {
