@@ -1,7 +1,7 @@
 # 3X-UI Subscription Theme 🎨
 
 ##  Disclaimer ❗
-> ⚠️ **WARNING**
+
 > [!WARNING]
 > This project is for educational purposes only.  
 > This project is free to use.  
