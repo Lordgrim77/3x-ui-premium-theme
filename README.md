@@ -40,6 +40,6 @@ This project is licensed under the **Attribution-NonCommercial-ShareAlike 4.0 In
 [![License: CC BY-NC-SA 4.0](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 - **Attribution**: You must give appropriate credit.
-- **NonCommercial**: You may **not** use the material for commercial purposes (selling this theme is strictly prohibited).
+- **NonCommercial**: You may **not** use the material for commercial purposes.
 - **ShareAlike**: If you remix, transform, or build upon the material, you must distribute your contributions under the same license.
 
