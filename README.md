@@ -29,7 +29,7 @@ bash <(curl -Ls https://raw.githubusercontent.com/Lordgrim77/3x-ui-premium-theme
 - **Recommendation**: For extreme high-security environments, consider manual source-code integration.
 
 ## Notes
-- IF CDNs are used in Subscription, Some Infrastructure Stats may shows "Protected" for security reasons.
+- IF CDNs are used in Subscription, Some Infrastructure Insights may shows "Protected" for security reasons.
   
 ## 👨‍💻 Author
 Made with ❤️ by 𝙇𝙊𝙍𝘿𝙂𝙍𝙄𝙈
