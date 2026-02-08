@@ -79,8 +79,9 @@
             let name = decodeURIComponent(raw);
             // 1. Remove "⛔️N/A-" or similar prefixes
             name = name.replace(/^[⛔️N\/A\s-]+/i, '');
-            // 2. Remove usage stats like "-2.87GB" at the end
-            name = name.replace(/-\s*\d+(\.\d+)?[GMKT]B.*$/i, '');
+            // 2. Remove usage stats and time indicators at the end (e.g., -5GB, -7d, -24h)
+            // This catches patterns like -10.5GB, -500MB, -7d, -24h, -1mo, etc.
+            name = name.replace(/-\s*\d+(\.\d+)?\s*([GMKT]B|[dhmy]|min|mo).*$/i, '');
             // 3. Remove trailing emojis or stats symbols
             name = name.replace(/[\u{1F300}-\u{1F6FF}\u{1F900}-\u{1F9FF}\u{2700}-\u{27BF}\u{1F680}-\u{1F6FF}\u{24C2}-\u{1F251}].*$/u, '');
             return name.trim() || 'User';
@@ -228,9 +229,10 @@
 
         if (!STATE.raw.sid.includes('@') && links.length > 0) {
             if (links[0].includes('#')) {
-                dispName = cleanupName(links[0].split('#')[1]);
+                dispName = links[0].split('#')[1];
             }
         }
+        dispName = cleanupName(dispName);
 
         const s = getStatusInfo();
 
