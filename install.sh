@@ -129,7 +129,6 @@ if [[ -n "$ISP" ]]; then
     
     if [[ -n "$REAL_IP" ]]; then
         sed -i "s|data-ip=\"Self\"|data-ip=\"$REAL_IP\"|g" "$SUBPAGE_PATH"
-        echo -e "${GREEN}Server IP ($REAL_IP) injected for fail-safe detection${NC}"
     fi
 
     # Verification
