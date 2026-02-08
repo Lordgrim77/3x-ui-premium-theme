@@ -67,7 +67,6 @@ curl -Ls "$REPO_URL/web/assets/js/subscription.js?v=$VERSION" -o "$ASSETS_PATH/j
 curl -Ls "$REPO_URL/web/assets/css/premium.css?v=$VERSION" -o "$ASSETS_PATH/css/premium.css"
 
 # Templates (Crucial for Persistence/Debug Mode)
-# We download the specific subpage template we modified
 SUBPAGE_PATH="$HTML_PATH/settings/panel/subscription/subpage.html"
 mkdir -p $(dirname "$SUBPAGE_PATH")
 curl -Ls "$REPO_URL/web/html/settings/panel/subscription/subpage.html?v=$VERSION" -o "$SUBPAGE_PATH"
