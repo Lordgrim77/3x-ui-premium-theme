@@ -4,6 +4,8 @@
 > [!WARNING]
 > This project is for **educational purposes only**.
 > 
+> This project is free to use.
+> 
 > **Standard of Use**: The author is NOT responsible for any misuse or damages caused by this software. Use at your own risk.
 > 
 > **Self-Responsibility**: By using this script/theme, you agree that you are solely responsible for any consequences, including but not limited to system instability, data loss, or security risks.
@@ -47,4 +49,3 @@ bash <(curl -Ls https://raw.githubusercontent.com/Lordgrim77/3x-ui-premium-theme
 ## 👨‍💻 Author
 Made with ❤️ by 𝙇𝙊𝙍𝘿𝙂𝙍𝙄𝙈
 
-## ⚠️ Free to Use — Not for Sale
