@@ -1,11 +1,12 @@
 # 3X-UI Subscription Theme 🎨
 
 ##  Disclaimer ❗
-## ⚠️ [!Warning]
-> - Educational purposes only. Free to use.
+> ⚠️ **WARNING**
 >
-> - Use at your own risk — the author is not responsible for misuse or damages.
->   
+> This project is for educational purposes only.  
+> This project is free to use.  
+> The author is **not responsible** for any misuse, damage, or loss caused by this software.  
+> Use at your own risk.
 
 ## ✨ Design Specifications
 - **Glassmorphism**: Sophisticated depth using high-blur `backdrop-filter` and multi-layered shadows.
