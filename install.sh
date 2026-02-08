@@ -170,4 +170,5 @@ else
 fi
 
 echo -e "${GREEN}✅ 3X-UI Subscription Theme installed Successfully${NC}"
+echo -e "${GREEN}🔧 Turn on the Inbuilt Subscription System (If not enabled)${NC}"
 
