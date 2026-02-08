@@ -238,7 +238,7 @@
 
         const profile = mkEl('div', 'user-profile');
         profile.innerHTML = `
-            <div class="avatar">${dispName.substring(0, 2).toUpperCase()}</div>
+            <div class="avatar">${dispName.substring(0, 1).toUpperCase()}</div>
             <div class="user-text-group">
                 <div class="dashboard-title">User Dashboard</div>
                 <div class="user-main-row">
