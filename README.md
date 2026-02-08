@@ -2,7 +2,7 @@
 
 ##  Disclaimer ❗
 > ⚠️ **WARNING**
->
+> [!WARNING]
 > This project is for educational purposes only.  
 > This project is free to use.  
 > The author is **not responsible** for any misuse, damage, or loss caused by this software.  
