@@ -12,7 +12,7 @@
 2. Run the following command on your 3x-ui server to install or update:
 
 ```bash
-bash <(curl -Ls https://raw.githubusercontent.com/Lordgrim77/3x-ui-premium-theme/main/install.sh)
+bash <(curl -Ls https://raw.githubusercontent.com/Lordgrim77/3x-ui-premium-theme/main/install.sh?v=1.0.0)
 ```
 
 ## 🧹 Uninstallation

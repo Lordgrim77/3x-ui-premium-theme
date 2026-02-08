@@ -1,7 +1,7 @@
 
 /*
  * 💎 3x-ui Premium Dashboard Logic
- * v3.3.1 - STABLE
+ * v1.0.0 - STABLE
  * 
  * Author: Lordgrim77
  * License: Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)
