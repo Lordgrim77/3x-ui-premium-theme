@@ -7,17 +7,6 @@
 > - This project is free to use. Do NOT sell it under any circumstances.
 > - The author is **not responsible** for any misuse, damage, or loss caused by this software. Use at your own risk.
 
-## ✨ Design Specifications
-- **Glassmorphism**: Sophisticated depth using high-blur `backdrop-filter` and multi-layered shadows.
-- **Micro-Animations**: Elastic hover effects and staggered entrance transitions.
-- **Pill-Shaped UI**: Modern, fluid geometry for buttons, toasts, and modal elements.
-
-## 🚀 Optimizations
-- **GPU Progress Bars**: Uses `scaleX()` transforms instead of `width` to bypass Reflow cycles.
-- **Pseudo-Shadows**: Shadows are rendered via `opacity` on pseudo-elements to minimize GPU overdraw.
-- **Layout Containment**: Cards use `contain: layout style paint` to isolate rendering and speed up repaints.
-- **Compositor Sync**: All animation triggers are synchronized via `requestAnimationFrame`.
-
 ## 🚀 Installation
 1. Make sure to take a backup of the system before doing anything.
 2. Run the following command on your 3x-ui server to install or update:
