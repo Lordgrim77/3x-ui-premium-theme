@@ -1,4 +1,7 @@
-#!/bin/bash
+# 3x-ui Subscription Theme Installer
+# Author: Lordgrim77
+# License: CC BY-NC-SA 4.0
+# Version for cache busting
 
 # 3x-ui Subscription Theme Installer
 # Author: LORD GRIM

@@ -34,3 +34,12 @@ bash <(curl -Ls https://raw.githubusercontent.com/Lordgrim77/3x-ui-premium-theme
 ## 👨‍💻 Author
 Made with ❤️ by 𝙇𝙊𝙍𝘿𝙂𝙍𝙄𝙈
 
+## 📄 License
+This project is licensed under the **Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)**.
+
+[![License: CC BY-NC-SA 4.0](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc-sa/4.0/)
+
+- **Attribution**: You must give appropriate credit.
+- **NonCommercial**: You may **not** use the material for commercial purposes (selling this theme is strictly prohibited).
+- **ShareAlike**: If you remix, transform, or build upon the material, you must distribute your contributions under the same license.
+

@@ -1,4 +1,7 @@
 #!/bin/bash
+# 3x-ui Subscription Theme Uninstaller
+# Author: Lordgrim77
+# License: CC BY-NC-SA 4.0
 
 # 3x-ui Subscription Theme Uninstaller (v3.2.0 - Nuke & Reinstall)
 # Author: LORD GRIM
