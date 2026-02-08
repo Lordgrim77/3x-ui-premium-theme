@@ -4,7 +4,7 @@
 # Author: LORD GRIM
 # Repo: https://github.com/Lordgrim77/3x-ui-premium-theme
 # Version for cache busting
-VERSION="3.0.0"
+VERSION="3.0.1"
 
 RED='\033[0;31m'
 GREEN='\033[0;32m'
