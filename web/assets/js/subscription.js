@@ -296,7 +296,10 @@
             </div>
             <div class="usage-big-number">${formatBytes(s.used)}</div>
           <div class="progress-container">
-              <div class="progress-bar" id="prog-bar" style="transform:scaleX(0); background-color:${s.color}; box-shadow: 0 0 15px ${s.color}66"></div>
+              <div class="progress-bar ${s.total === 0 ? 'unlimited-bar' : ''}" 
+                   id="prog-bar" 
+                   style="transform:scaleX(${s.total === 0 ? 1 : 0}); background-color:${s.color}; box-shadow: 0 0 15px ${s.color}66">
+              </div>
           </div>
             <div class="usage-sub">
                 ${t('limit')}: ${s.total === 0 ? t('unlimited') : formatBytes(s.total)}

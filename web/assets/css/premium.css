@@ -850,6 +850,31 @@ body.s-light .progress-container {
     animation: refraction-shift 6s infinite alternate ease-in-out;
 }
 
+/* Unlimited Data Special Appearance */
+.progress-bar.unlimited-bar {
+    transform: scaleX(1) !important;
+    background: linear-gradient(90deg,
+            #00d2ff 0%,
+            #3a7bd5 25%,
+            #00d2ff 50%,
+            #3a7bd5 75%,
+            #00d2ff 100%);
+    background-size: 200% 100%;
+    animation: infinity-flow 3s infinite linear,
+        liquid-pulse 4s infinite ease-in-out;
+    box-shadow: 0 0 20px rgba(0, 210, 255, 0.4);
+}
+
+@keyframes infinity-flow {
+    0% {
+        background-position: 100% 0%;
+    }
+
+    100% {
+        background-position: -100% 0%;
+    }
+}
+
 @keyframes liquid-pulse {
 
     0%,
