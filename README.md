@@ -1,4 +1,4 @@
-# 3X-UI Subscription Theme 🎨
+# 3X-UI Subscription Theme 🎨(v2.0)
 
 ##  Disclaimer ❗
 
