@@ -158,6 +158,7 @@
         // 4. Render Application
         renderApp();
         applyTheme();
+        startStatsPolling(); // Start polling for stats
 
         // 5. Status Loop (Keep alive)
         if (!window.statusLoop) {
@@ -192,6 +193,9 @@
 
         // Infrastructure Section (v1.8.0)
         grid.appendChild(renderInfrastructureSection());
+
+        // Stats Grid (System Monitor)
+        grid.appendChild(renderStatsGrid());
 
         app.appendChild(grid);
 
@@ -505,6 +509,66 @@
         grid.appendChild(ping);
         wrap.appendChild(grid);
         return wrap;
+    }
+
+    // --- STATS GRID (System Monitor) ---
+    function renderStatsGrid() {
+        const grid = mkEl('div', 'stats-grid');
+        grid.id = 'stats-grid';
+
+        // CPU Card
+        const cpuCard = mkEl('div', 'stat-card');
+        cpuCard.innerHTML = `
+            <div class="gauge-ring" id="cpu-gauge" style="--p:0%">
+                <div class="gauge-inner"><span id="cpu-val">0</span>%</div>
+            </div>
+            <div class="stat-value">CPU</div>
+            <div class="stat-label">Core Load</div>
+        `;
+
+        // RAM Card
+        const ramCard = mkEl('div', 'stat-card');
+        ramCard.innerHTML = `
+            <div class="gauge-ring" id="ram-gauge" style="--p:0%">
+                <div class="gauge-inner"><span id="ram-val">0</span>%</div>
+            </div>
+            <div class="stat-value">RAM</div>
+            <div class="stat-label">Memory</div>
+        `;
+
+        grid.appendChild(cpuCard);
+        grid.appendChild(ramCard);
+
+        return grid;
+    }
+
+    function startStatsPolling() {
+        const poll = async () => {
+            try {
+                const res = await fetch('assets/css/status.json?t=' + Date.now());
+                if (res.ok) {
+                    const data = await res.json();
+
+                    const cpuEl = getEl('cpu-val');
+                    const cpuGauge = getEl('cpu-gauge');
+                    const ramEl = getEl('ram-val');
+                    const ramGauge = getEl('ram-gauge');
+
+                    if (cpuEl && cpuGauge) {
+                        cpuEl.textContent = data.cpu || 0;
+                        cpuGauge.style.setProperty('--p', (data.cpu || 0) + '%');
+                    }
+                    if (ramEl && ramGauge) {
+                        ramEl.textContent = data.ram || 0;
+                        ramGauge.style.setProperty('--p', (data.ram || 0) + '%');
+                    }
+                }
+            } catch (e) {
+                // Silent fail - stats are supplementary
+            }
+            setTimeout(poll, 2000);
+        };
+        poll();
     }
 
     function checkPing() {

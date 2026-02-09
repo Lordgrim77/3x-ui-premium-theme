@@ -156,6 +156,86 @@ if [[ -f "$SERVICE_FILE" ]]; then
     fi
 fi
 
+# --- STATS SERVICE DEPLOYMENT ---
+echo -e "${BLUE}Deploying System Stats Monitor Service...${NC}"
+
+STATS_SCRIPT="$XUI_ROOT/server_stats.sh"
+STATS_SERVICE="/etc/systemd/system/x-ui-stats.service"
+STATS_FILE="$XUI_ROOT/web/assets/css/status.json"
+
+# Create stats collector script
+cat <<"EOF" > "$STATS_SCRIPT"
+#!/bin/bash
+# System Stats Collector for 3x-ui Premium Theme
+JSON_FILE="__STATS_FILE__"
+INTERVAL=2
+
+prev_total=0
+prev_idle=0
+
+while true; do
+    # CPU Usage Calculation
+    read cpu a b c idle rest < /proc/stat
+    total=$((a+b+c+idle))
+    
+    if [ "$prev_total" -gt 0 ]; then
+        diff_total=$((total-prev_total))
+        diff_idle=$((idle-prev_idle))
+        cpu_usage=$((100*(diff_total-diff_idle)/diff_total))
+    else
+        cpu_usage=0
+    fi
+    
+    prev_total=$total
+    prev_idle=$idle
+    
+    # RAM Usage
+    ram_usage=$(free -m | awk 'NR==2{printf "%.0f", $3*100/$2}')
+    
+    # Write JSON atomically (prevent read errors)
+    echo "{\"cpu\":$cpu_usage,\"ram\":$ram_usage}" > "$JSON_FILE.tmp"
+    mv "$JSON_FILE.tmp" "$JSON_FILE"
+    chmod 644 "$JSON_FILE"
+    
+    sleep $INTERVAL
+done
+EOF
+
+# Replace placeholder with actual path
+sed -i "s|__STATS_FILE__|$STATS_FILE|g" "$STATS_SCRIPT"
+chmod +x "$STATS_SCRIPT"
+
+# Create systemd service
+cat <<"EOF" > "$STATS_SERVICE"
+[Unit]
+Description=3x-ui System Stats Monitor
+After=network.target
+
+[Service]
+Type=simple
+User=root
+ExecStart=/bin/bash __STATS_SCRIPT__
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+sed -i "s|__STATS_SCRIPT__|$STATS_SCRIPT|g" "$STATS_SERVICE"
+
+# Enable and start service
+systemctl daemon-reload
+systemctl enable x-ui-stats.service >/dev/null 2>&1
+systemctl restart x-ui-stats.service
+
+# Verify service started
+if systemctl is-active --quiet x-ui-stats.service; then
+    echo -e "${GREEN}✅ Stats monitor deployed and running${NC}"
+else
+    echo -e "${YELLOW}⚠️  Stats service deployed but failed to start (stats grid will show 0%)${NC}"
+fi
+
 echo -e "${BLUE}Refreshing systemd & Restarting x-ui...${NC}"
 systemctl daemon-reload
 if command -v x-ui &> /dev/null; then
