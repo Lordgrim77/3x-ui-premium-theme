@@ -32,7 +32,7 @@ If you wish to return to the Stock Version, run:
 bash <(curl -Ls https://raw.githubusercontent.com/Lordgrim77/3x-ui-premium-theme/main/uninstall.sh)
 ```
 > [!WARNING]
-> This will update your x-ui panel to the latest version
+> This will update your x-ui panel to the latest version(no data loss)
 > 
 
 ## 🛡️ Technical Note & Security
