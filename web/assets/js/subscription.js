@@ -513,6 +513,7 @@
 
     // --- STATS GRID (System Monitor) ---
     function renderStatsGrid() {
+        const wrap = mkEl('div', 'span-12');
         const grid = mkEl('div', 'stats-grid');
         grid.id = 'stats-grid';
 
@@ -539,7 +540,8 @@
         grid.appendChild(cpuCard);
         grid.appendChild(ramCard);
 
-        return grid;
+        wrap.appendChild(grid);
+        return wrap;
     }
 
     function startStatsPolling() {
