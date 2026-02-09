@@ -1586,9 +1586,16 @@ body.s-dark .node-card:hover {
 .infra-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
+    gap: 12px;
     margin-top: 20px;
     align-items: stretch;
+}
+
+/* Tablet Portrait: Stack to single column */
+@media (max-width: 900px) {
+    .infra-grid {
+        grid-template-columns: 1fr;
+    }
 }
 
 @media (max-width: 768px) {
