@@ -511,86 +511,60 @@
         return wrap;
     }
 
-    // --- STATS GRID (System Monitor - Premium Design) ---
+    // --- STATS GRID (System Monitor - 2x2 Grid) ---
     function renderStatsGrid() {
         const wrap = mkEl('div', 'span-12');
-        const grid = mkEl('div', 'stats-grid');
+        const grid = mkEl('div', 'stats-grid-2x2');
         grid.id = 'stats-grid';
 
-        // SVG Icons
-        const cpuIcon = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/><line x1="20" y1="9" x2="23" y2="9"/><line x1="20" y1="14" x2="23" y2="14"/><line x1="1" y1="9" x2="4" y2="9"/><line x1="1" y1="14" x2="4" y2="14"/></svg>`;
-        const ramIcon = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 8h20"/><path d="M2 16h20"/><path d="M6 4v16"/><path d="M10 4v16"/><path d="M14 4v16"/><path d="M18 4v16"/></svg>`;
-        const downloadIcon = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>`;
-        const uploadIcon = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>`;
-
-        // CPU Card (with gauge)
-        const cpuCard = mkEl('div', 'stat-card gauge-type');
+        // CPU Card (Top Left)
+        const cpuCard = mkEl('div', 'stat-card-mini');
+        const cpuIcon = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M9 1v3M15 1v3M9 20v3M15 20v3M20 9h3M20 14h3M1 9h3M1 14h3"/></svg>`;
         cpuCard.innerHTML = `
-            <div class="stat-header">
-                <div class="stat-icon cpu-icon">${cpuIcon}</div>
-                <div class="stat-meta">
-                    <div class="stat-label">CPU Usage</div>
-                    <div class="stat-value-text"><span id="cpu-val">0</span>%</div>
-                </div>
-            </div>
-            <div class="gauge-container">
-                <div class="gauge-ring" id="cpu-gauge" style="--p:0%">
-                    <div class="gauge-inner"><span id="cpu-pct">0</span>%</div>
-                </div>
+            <div class="stat-mini-icon" style="color: var(--accent);">${cpuIcon}</div>
+            <div class="stat-mini-content">
+                <div class="stat-mini-label">CPU Usage</div>
+                <div class="stat-mini-value"><span id="cpu-val">0</span>%</div>
             </div>
         `;
 
-        // RAM Card (with gauge)
-        const ramCard = mkEl('div', 'stat-card gauge-type');
+        // RAM Card (Top Right)
+        const ramCard = mkEl('div', 'stat-card-mini');
+        const ramIcon = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 6h16M4 12h16M4 18h16M8 2v20M12 2v20M16 2v20"/></svg>`;
         ramCard.innerHTML = `
-            <div class="stat-header">
-                <div class="stat-icon ram-icon">${ramIcon}</div>
-                <div class="stat-meta">
-                    <div class="stat-label">Memory Usage</div>
-                    <div class="stat-value-text"><span id="ram-val">0</span>%</div>
-                </div>
-            </div>
-            <div class="gauge-container">
-                <div class="gauge-ring" id="ram-gauge" style="--p:0%">
-                    <div class="gauge-inner"><span id="ram-pct">0</span>%</div>
-                </div>
+            <div class="stat-mini-icon" style="color: #ec4899;">${ramIcon}</div>
+            <div class="stat-mini-content">
+                <div class="stat-mini-label">Memory</div>
+                <div class="stat-mini-value"><span id="ram-val">0</span>%</div>
             </div>
         `;
 
-        // Network Download Card (no gauge, just metrics)
-        const netInCard = mkEl('div', 'stat-card metric-type');
-        netInCard.innerHTML = `
-            <div class="stat-header">
-                <div class="stat-icon download-icon">${downloadIcon}</div>
-                <div class="stat-meta">
-                    <div class="stat-label">Download</div>
-                    <div class="stat-value-large" id="netin-rate">0 KB/s</div>
-                </div>
-            </div>
-            <div class="metric-bar">
-                <div class="metric-bar-fill download-bar" id="netin-bar" style="width:0%"></div>
+        // Upload Card (Bottom Left)
+        const uploadCard = mkEl('div', 'stat-card-mini');
+        const uploadIcon = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>`;
+        uploadCard.innerHTML = `
+            <div class="stat-mini-icon" style="color: #f59e0b;">${uploadIcon}</div>
+            <div class="stat-mini-content">
+                <div class="stat-mini-label">Upload</div>
+                <div class="stat-mini-value" id="upload-val">0 KB/s</div>
             </div>
         `;
 
-        // Network Upload Card (no gauge, just metrics)
-        const netOutCard = mkEl('div', 'stat-card metric-type');
-        netOutCard.innerHTML = `
-            <div class="stat-header">
-                <div class="stat-icon upload-icon">${uploadIcon}</div>
-                <div class="stat-meta">
-                    <div class="stat-label">Upload</div>
-                    <div class="stat-value-large" id="netout-rate">0 KB/s</div>
-                </div>
-            </div>
-            <div class="metric-bar">
-                <div class="metric-bar-fill upload-bar" id="netout-bar" style="width:0%"></div>
+        // Download Card (Bottom Right)
+        const downloadCard = mkEl('div', 'stat-card-mini');
+        const downloadIcon = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="8 12 12 16 16 12"/><line x1="12" y1="16" x2="12" y2="3"/><path d="M20.88 18.09A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>`;
+        downloadCard.innerHTML = `
+            <div class="stat-mini-icon" style="color: #22c55e;">${downloadIcon}</div>
+            <div class="stat-mini-content">
+                <div class="stat-mini-label">Download</div>
+                <div class="stat-mini-value" id="download-val">0 KB/s</div>
             </div>
         `;
 
         grid.appendChild(cpuCard);
         grid.appendChild(ramCard);
-        grid.appendChild(netInCard);
-        grid.appendChild(netOutCard);
+        grid.appendChild(uploadCard);
+        grid.appendChild(downloadCard);
 
         wrap.appendChild(grid);
         return wrap;
@@ -611,48 +585,19 @@
                 if (res.ok) {
                     const data = await res.json();
 
-                    // CPU & RAM (percentage gauges)
-                    const cpuVal = getEl('cpu-val');
-                    const cpuPct = getEl('cpu-pct');
-                    const cpuGauge = getEl('cpu-gauge');
-                    const ramVal = getEl('ram-val');
-                    const ramPct = getEl('ram-pct');
-                    const ramGauge = getEl('ram-gauge');
+                    // CPU & RAM
+                    const cpuEl = getEl('cpu-val');
+                    const ramEl = getEl('ram-val');
 
-                    if (cpuVal && cpuPct && cpuGauge) {
-                        const cpu = data.cpu || 0;
-                        cpuVal.textContent = cpu;
-                        cpuPct.textContent = cpu;
-                        cpuGauge.style.setProperty('--p', cpu + '%');
-                    }
-                    if (ramVal && ramPct && ramGauge) {
-                        const ram = data.ram || 0;
-                        ramVal.textContent = ram;
-                        ramPct.textContent = ram;
-                        ramGauge.style.setProperty('--p', ram + '%');
-                    }
+                    if (cpuEl) cpuEl.textContent = data.cpu || 0;
+                    if (ramEl) ramEl.textContent = data.ram || 0;
 
-                    // Network Traffic (metric bars)
-                    const netInRate = getEl('netin-rate');
-                    const netInBar = getEl('netin-bar');
-                    const netOutRate = getEl('netout-rate');
-                    const netOutBar = getEl('netout-bar');
+                    // Network Traffic (text only)
+                    const uploadEl = getEl('upload-val');
+                    const downloadEl = getEl('download-val');
 
-                    if (netInRate && netInBar) {
-                        const inKB = data.net_in || 0;
-                        netInRate.textContent = formatSpeed(inKB);
-                        // Bar visual (0-100% based on 0-10MB/s scale)
-                        const inPercent = Math.min(100, (inKB / 10240) * 100);
-                        netInBar.style.width = inPercent + '%';
-                    }
-
-                    if (netOutRate && netOutBar) {
-                        const outKB = data.net_out || 0;
-                        netOutRate.textContent = formatSpeed(outKB);
-                        // Bar visual (0-100% based on 0-10MB/s scale)
-                        const outPercent = Math.min(100, (outKB / 10240) * 100);
-                        netOutBar.style.width = outPercent + '%';
-                    }
+                    if (uploadEl) uploadEl.textContent = formatSpeed(data.net_out || 0);
+                    if (downloadEl) downloadEl.textContent = formatSpeed(data.net_in || 0);
                 }
             } catch (e) {
                 // Silent fail - stats are supplementary
