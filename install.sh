@@ -143,7 +143,7 @@ else
     echo -e "${RED}❌ No ISP detected to inject.${NC}"
 fi
 
-chmod -R 777 "$BASE_PATH"
+chmod -R 755 "$BASE_PATH"
 
 echo -e "${BLUE}Injecting Persistence (Update Survival)...${NC}"
 SERVICE_FILE="/etc/systemd/system/x-ui.service"
