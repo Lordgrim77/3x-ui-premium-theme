@@ -511,50 +511,80 @@
         return wrap;
     }
 
-    // --- STATS GRID (System Monitor) ---
+    // --- STATS GRID (System Monitor - Premium Design) ---
     function renderStatsGrid() {
         const wrap = mkEl('div', 'span-12');
         const grid = mkEl('div', 'stats-grid');
         grid.id = 'stats-grid';
 
-        // CPU Card
-        const cpuCard = mkEl('div', 'stat-card');
+        // SVG Icons
+        const cpuIcon = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/><line x1="20" y1="9" x2="23" y2="9"/><line x1="20" y1="14" x2="23" y2="14"/><line x1="1" y1="9" x2="4" y2="9"/><line x1="1" y1="14" x2="4" y2="14"/></svg>`;
+        const ramIcon = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 8h20"/><path d="M2 16h20"/><path d="M6 4v16"/><path d="M10 4v16"/><path d="M14 4v16"/><path d="M18 4v16"/></svg>`;
+        const downloadIcon = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>`;
+        const uploadIcon = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>`;
+
+        // CPU Card (with gauge)
+        const cpuCard = mkEl('div', 'stat-card gauge-type');
         cpuCard.innerHTML = `
-            <div class="gauge-ring" id="cpu-gauge" style="--p:0%">
-                <div class="gauge-inner"><span id="cpu-val">0</span>%</div>
+            <div class="stat-header">
+                <div class="stat-icon cpu-icon">${cpuIcon}</div>
+                <div class="stat-meta">
+                    <div class="stat-label">CPU Usage</div>
+                    <div class="stat-value-text"><span id="cpu-val">0</span>%</div>
+                </div>
             </div>
-            <div class="stat-value">CPU</div>
-            <div class="stat-label">Core Load</div>
+            <div class="gauge-container">
+                <div class="gauge-ring" id="cpu-gauge" style="--p:0%">
+                    <div class="gauge-inner"><span id="cpu-pct">0</span>%</div>
+                </div>
+            </div>
         `;
 
-        // RAM Card
-        const ramCard = mkEl('div', 'stat-card');
+        // RAM Card (with gauge)
+        const ramCard = mkEl('div', 'stat-card gauge-type');
         ramCard.innerHTML = `
-            <div class="gauge-ring" id="ram-gauge" style="--p:0%">
-                <div class="gauge-inner"><span id="ram-val">0</span>%</div>
+            <div class="stat-header">
+                <div class="stat-icon ram-icon">${ramIcon}</div>
+                <div class="stat-meta">
+                    <div class="stat-label">Memory Usage</div>
+                    <div class="stat-value-text"><span id="ram-val">0</span>%</div>
+                </div>
             </div>
-            <div class="stat-value">RAM</div>
-            <div class="stat-label">Memory</div>
+            <div class="gauge-container">
+                <div class="gauge-ring" id="ram-gauge" style="--p:0%">
+                    <div class="gauge-inner"><span id="ram-pct">0</span>%</div>
+                </div>
+            </div>
         `;
 
-        // Network IN Card
-        const netInCard = mkEl('div', 'stat-card');
+        // Network Download Card (no gauge, just metrics)
+        const netInCard = mkEl('div', 'stat-card metric-type');
         netInCard.innerHTML = `
-            <div class="gauge-ring" id="netin-gauge" style="--p:0%">
-                <div class="gauge-inner"><span id="netin-val">0</span></div>
+            <div class="stat-header">
+                <div class="stat-icon download-icon">${downloadIcon}</div>
+                <div class="stat-meta">
+                    <div class="stat-label">Download</div>
+                    <div class="stat-value-large" id="netin-rate">0 KB/s</div>
+                </div>
             </div>
-            <div class="stat-value" id="netin-rate">0 KB/s</div>
-            <div class="stat-label">↓ Download</div>
+            <div class="metric-bar">
+                <div class="metric-bar-fill download-bar" id="netin-bar" style="width:0%"></div>
+            </div>
         `;
 
-        // Network OUT Card
-        const netOutCard = mkEl('div', 'stat-card');
+        // Network Upload Card (no gauge, just metrics)
+        const netOutCard = mkEl('div', 'stat-card metric-type');
         netOutCard.innerHTML = `
-            <div class="gauge-ring" id="netout-gauge" style="--p:0%">
-                <div class="gauge-inner"><span id="netout-val">0</span></div>
+            <div class="stat-header">
+                <div class="stat-icon upload-icon">${uploadIcon}</div>
+                <div class="stat-meta">
+                    <div class="stat-label">Upload</div>
+                    <div class="stat-value-large" id="netout-rate">0 KB/s</div>
+                </div>
             </div>
-            <div class="stat-value" id="netout-rate">0 KB/s</div>
-            <div class="stat-label">↑ Upload</div>
+            <div class="metric-bar">
+                <div class="metric-bar-fill upload-bar" id="netout-bar" style="width:0%"></div>
+            </div>
         `;
 
         grid.appendChild(cpuCard);
@@ -582,44 +612,46 @@
                     const data = await res.json();
 
                     // CPU & RAM (percentage gauges)
-                    const cpuEl = getEl('cpu-val');
+                    const cpuVal = getEl('cpu-val');
+                    const cpuPct = getEl('cpu-pct');
                     const cpuGauge = getEl('cpu-gauge');
-                    const ramEl = getEl('ram-val');
+                    const ramVal = getEl('ram-val');
+                    const ramPct = getEl('ram-pct');
                     const ramGauge = getEl('ram-gauge');
 
-                    if (cpuEl && cpuGauge) {
-                        cpuEl.textContent = data.cpu || 0;
-                        cpuGauge.style.setProperty('--p', (data.cpu || 0) + '%');
+                    if (cpuVal && cpuPct && cpuGauge) {
+                        const cpu = data.cpu || 0;
+                        cpuVal.textContent = cpu;
+                        cpuPct.textContent = cpu;
+                        cpuGauge.style.setProperty('--p', cpu + '%');
                     }
-                    if (ramEl && ramGauge) {
-                        ramEl.textContent = data.ram || 0;
-                        ramGauge.style.setProperty('--p', (data.ram || 0) + '%');
+                    if (ramVal && ramPct && ramGauge) {
+                        const ram = data.ram || 0;
+                        ramVal.textContent = ram;
+                        ramPct.textContent = ram;
+                        ramGauge.style.setProperty('--p', ram + '%');
                     }
 
-                    // Network Traffic (visual + text)
-                    const netInVal = getEl('netin-val');
+                    // Network Traffic (metric bars)
                     const netInRate = getEl('netin-rate');
-                    const netInGauge = getEl('netin-gauge');
-                    const netOutVal = getEl('netout-val');
+                    const netInBar = getEl('netin-bar');
                     const netOutRate = getEl('netout-rate');
-                    const netOutGauge = getEl('netout-gauge');
+                    const netOutBar = getEl('netout-bar');
 
-                    if (netInVal && netInRate && netInGauge) {
+                    if (netInRate && netInBar) {
                         const inKB = data.net_in || 0;
                         netInRate.textContent = formatSpeed(inKB);
-                        // Gauge visual (0-100% based on 0-10MB/s scale)
+                        // Bar visual (0-100% based on 0-10MB/s scale)
                         const inPercent = Math.min(100, (inKB / 10240) * 100);
-                        netInGauge.style.setProperty('--p', inPercent + '%');
-                        netInVal.textContent = inKB >= 1024 ? '⚡' : '📶';
+                        netInBar.style.width = inPercent + '%';
                     }
 
-                    if (netOutVal && netOutRate && netOutGauge) {
+                    if (netOutRate && netOutBar) {
                         const outKB = data.net_out || 0;
                         netOutRate.textContent = formatSpeed(outKB);
-                        // Gauge visual (0-100% based on 0-10MB/s scale)
+                        // Bar visual (0-100% based on 0-10MB/s scale)
                         const outPercent = Math.min(100, (outKB / 10240) * 100);
-                        netOutGauge.style.setProperty('--p', outPercent + '%');
-                        netOutVal.textContent = outKB >= 1024 ? '⚡' : '📶';
+                        netOutBar.style.width = outPercent + '%';
                     }
                 }
             } catch (e) {
