@@ -537,20 +537,51 @@
             <div class="stat-label">Memory</div>
         `;
 
+        // Network IN Card
+        const netInCard = mkEl('div', 'stat-card');
+        netInCard.innerHTML = `
+            <div class="gauge-ring" id="netin-gauge" style="--p:0%">
+                <div class="gauge-inner"><span id="netin-val">0</span></div>
+            </div>
+            <div class="stat-value" id="netin-rate">0 KB/s</div>
+            <div class="stat-label">↓ Download</div>
+        `;
+
+        // Network OUT Card
+        const netOutCard = mkEl('div', 'stat-card');
+        netOutCard.innerHTML = `
+            <div class="gauge-ring" id="netout-gauge" style="--p:0%">
+                <div class="gauge-inner"><span id="netout-val">0</span></div>
+            </div>
+            <div class="stat-value" id="netout-rate">0 KB/s</div>
+            <div class="stat-label">↑ Upload</div>
+        `;
+
         grid.appendChild(cpuCard);
         grid.appendChild(ramCard);
+        grid.appendChild(netInCard);
+        grid.appendChild(netOutCard);
 
         wrap.appendChild(grid);
         return wrap;
     }
 
     function startStatsPolling() {
+        // Helper: Format network speed
+        const formatSpeed = (kbps) => {
+            if (kbps >= 1024) {
+                return (kbps / 1024).toFixed(1) + ' MB/s';
+            }
+            return kbps + ' KB/s';
+        };
+
         const poll = async () => {
             try {
                 const res = await fetch('assets/css/status.json?t=' + Date.now());
                 if (res.ok) {
                     const data = await res.json();
 
+                    // CPU & RAM (percentage gauges)
                     const cpuEl = getEl('cpu-val');
                     const cpuGauge = getEl('cpu-gauge');
                     const ramEl = getEl('ram-val');
@@ -563,6 +594,32 @@
                     if (ramEl && ramGauge) {
                         ramEl.textContent = data.ram || 0;
                         ramGauge.style.setProperty('--p', (data.ram || 0) + '%');
+                    }
+
+                    // Network Traffic (visual + text)
+                    const netInVal = getEl('netin-val');
+                    const netInRate = getEl('netin-rate');
+                    const netInGauge = getEl('netin-gauge');
+                    const netOutVal = getEl('netout-val');
+                    const netOutRate = getEl('netout-rate');
+                    const netOutGauge = getEl('netout-gauge');
+
+                    if (netInVal && netInRate && netInGauge) {
+                        const inKB = data.net_in || 0;
+                        netInRate.textContent = formatSpeed(inKB);
+                        // Gauge visual (0-100% based on 0-10MB/s scale)
+                        const inPercent = Math.min(100, (inKB / 10240) * 100);
+                        netInGauge.style.setProperty('--p', inPercent + '%');
+                        netInVal.textContent = inKB >= 1024 ? '⚡' : '📶';
+                    }
+
+                    if (netOutVal && netOutRate && netOutGauge) {
+                        const outKB = data.net_out || 0;
+                        netOutRate.textContent = formatSpeed(outKB);
+                        // Gauge visual (0-100% based on 0-10MB/s scale)
+                        const outPercent = Math.min(100, (outKB / 10240) * 100);
+                        netOutGauge.style.setProperty('--p', outPercent + '%');
+                        netOutVal.textContent = outKB >= 1024 ? '⚡' : '📶';
                     }
                 }
             } catch (e) {

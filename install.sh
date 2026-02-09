@@ -166,22 +166,35 @@ STATS_FILE="$XUI_ROOT/web/assets/css/status.json"
 # Create stats collector script
 cat <<"EOF" > "$STATS_SCRIPT"
 #!/bin/bash
-# System Stats Collector for 3x-ui Premium Theme
+# System Stats Collector for 3x-ui Premium Theme (Enhanced)
 JSON_FILE="__STATS_FILE__"
 INTERVAL=2
 
 prev_total=0
 prev_idle=0
+prev_rx=0
+prev_tx=0
+
+# Get primary network interface
+get_primary_interface() {
+    ip route | grep default | awk '{print $5}' | head -n1
+}
+
+INTERFACE=$(get_primary_interface)
 
 while true; do
-    # CPU Usage Calculation
+    # CPU Usage Calculation (More Accurate)
     read cpu a b c idle rest < /proc/stat
     total=$((a+b+c+idle))
     
     if [ "$prev_total" -gt 0 ]; then
         diff_total=$((total-prev_total))
         diff_idle=$((idle-prev_idle))
-        cpu_usage=$((100*(diff_total-diff_idle)/diff_total))
+        if [ "$diff_total" -gt 0 ]; then
+            cpu_usage=$((100*(diff_total-diff_idle)/diff_total))
+        else
+            cpu_usage=0
+        fi
     else
         cpu_usage=0
     fi
@@ -189,11 +202,36 @@ while true; do
     prev_total=$total
     prev_idle=$idle
     
-    # RAM Usage
-    ram_usage=$(free -m | awk 'NR==2{printf "%.0f", $3*100/$2}')
+    # RAM Usage (More Precise)
+    mem_info=$(free -m | awk 'NR==2{printf "%.1f", $3*100/$2}')
+    ram_usage=${mem_info%.*}  # Convert to integer
+    
+    # Network Traffic (Bytes/sec)
+    if [ -n "$INTERFACE" ] && [ -f "/sys/class/net/$INTERFACE/statistics/rx_bytes" ]; then
+        current_rx=$(cat /sys/class/net/$INTERFACE/statistics/rx_bytes)
+        current_tx=$(cat /sys/class/net/$INTERFACE/statistics/tx_bytes)
+        
+        if [ "$prev_rx" -gt 0 ]; then
+            rx_rate=$(( (current_rx - prev_rx) / INTERVAL ))
+            tx_rate=$(( (current_tx - prev_tx) / INTERVAL ))
+            
+            # Convert to KB/s
+            net_in=$((rx_rate / 1024))
+            net_out=$((tx_rate / 1024))
+        else
+            net_in=0
+            net_out=0
+        fi
+        
+        prev_rx=$current_rx
+        prev_tx=$current_tx
+    else
+        net_in=0
+        net_out=0
+    fi
     
     # Write JSON atomically (prevent read errors)
-    echo "{\"cpu\":$cpu_usage,\"ram\":$ram_usage}" > "$JSON_FILE.tmp"
+    echo "{\"cpu\":$cpu_usage,\"ram\":$ram_usage,\"net_in\":$net_in,\"net_out\":$net_out}" > "$JSON_FILE.tmp"
     mv "$JSON_FILE.tmp" "$JSON_FILE"
     chmod 644 "$JSON_FILE"
     
