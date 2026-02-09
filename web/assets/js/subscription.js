@@ -707,6 +707,59 @@
                         }
                     }
 
+                    // Update Stats Grid (This part seems misplaced here, as this function is for infrastructure detection,
+                    // and stats polling is handled by startStatsPolling. However, following the instruction to insert it here.)
+                    // Note: cpuGauge and ramGauge elements are not defined in the provided HTML context,
+                    // so their updates might not have visual effect unless corresponding HTML is added.
+                    const cpuEl = document.getElementById('cpu-val');
+                    const cpuGauge = document.getElementById('cpu-gauge'); // Assuming this exists elsewhere
+                    const ramEl = document.getElementById('ram-val');
+                    const ramGauge = document.getElementById('ram-gauge'); // Assuming this exists elsewhere
+
+                    if (cpuEl && cpuGauge) {
+                        cpuEl.textContent = data.cpu || 0;
+                        cpuGauge.style.setProperty('--p', (data.cpu || 0) + '%');
+                    }
+                    if (ramEl && ramGauge) {
+                        ramEl.textContent = data.ram || 0;
+                        ramGauge.style.setProperty('--p', (data.ram || 0) + '%');
+                    }
+
+                    // Update Network Stats (if available) - Assuming previous logic exists for net_in/out
+                    // This part is also typically handled by startStatsPolling.
+
+                    // Update Infrastructure Info (Dynamic)
+                    // The `data.region` field might not be consistently available across ipwhois.app and ip-api.com.
+                    // ipwhois.app uses `region`, ip-api.com uses `regionName`.
+                    // The `loc` variable already combines city and country.
+                    // For consistency with existing `isp` and `loc` variables, it's better to use them.
+                    // Update Infrastructure Info (Dynamic)
+                    if (data.isp || data.region) {
+                        // Update ISP
+                        if (data.isp) {
+                            const ispEls = document.querySelectorAll('.infra-card:nth-child(2) .stat-value, [data-isp]');
+                            ispEls.forEach(el => {
+                                if (el.tagName === 'TEMPLATE') {
+                                    el.setAttribute('data-isp', data.isp);
+                                } else {
+                                    el.textContent = data.isp;
+                                }
+                            });
+                        }
+
+                        // Update Region/Location
+                        if (data.region) {
+                            const locEls = document.querySelectorAll('.infra-card:nth-child(3) .stat-value, [data-location]');
+                            locEls.forEach(el => {
+                                if (el.tagName === 'TEMPLATE') {
+                                    el.setAttribute('data-location', data.region);
+                                } else {
+                                    el.textContent = data.region;
+                                }
+                            });
+                        }
+                    }
+
                     if (STATE.raw) {
                         STATE.raw.isp = isp;
                         STATE.raw.location = loc;

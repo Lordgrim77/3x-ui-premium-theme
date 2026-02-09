@@ -97,76 +97,7 @@ TIMESTAMP=$(date +%s)
 sed -i "s|assets/css/premium.css?{{ .cur_ver }}|assets/css/premium.css?v=$TIMESTAMP|g" "$SUBPAGE_PATH"
 sed -i "s|assets/js/subscription.js?{{ .cur_ver }}|assets/js/subscription.js?v=$TIMESTAMP|g" "$SUBPAGE_PATH"
 
-# INFRASTRUCTURE AUTO-DETECTION
-echo -e "${BLUE}Detecting hosting infrastructure...${NC}"
-
-# Helper: Extract JSON value safely
-extract_json() {
-    echo "$1" | grep -oE "\"$2\"\s*:\s*\"[^\"]*\"" | sed -E "s/\"$2\"\s*:\s*\"//g" | sed 's/"$//g'
-}
-
-# --- SOURCE 1: ip-api.com ---
-IP_DATA=$(curl -s --max-time 3 http://ip-api.com/json/)
-ISP=$(extract_json "$IP_DATA" "isp")
-REGION=$(extract_json "$IP_DATA" "city")
-COUNTRY=$(extract_json "$IP_DATA" "country")
-
-# Copy official web folder to local x-ui root
-
-# --- SOURCE 2: ipinfo.io ---
-if [[ -z "$ISP" ]]; then
-    echo -e "${YELLOW}Primary API failed, trying RIPE database...${NC}"
-    IP_DATA=$(curl -s --max-time 3 https://ipinfo.io/json)
-    ISP=$(extract_json "$IP_DATA" "org" | sed 's/^AS[0-9]* //')
-    REGION=$(extract_json "$IP_DATA" "city")
-    COUNTRY=$(extract_json "$IP_DATA" "country")
-fi
-
-# --- SOURCE 3: ifconfig.co ---
-if [[ -z "$ISP" ]]; then
-    echo -e "${YELLOW}RIPE failed, trying deep lookup...${NC}"
-    IP_DATA=$(curl -s --max-time 5 https://ifconfig.co/json)
-    ISP=$(extract_json "$IP_DATA" "asn_org")
-    REGION=$(extract_json "$IP_DATA" "city")
-    COUNTRY=$(extract_json "$IP_DATA" "country")
-fi
-
-# --- FINAL FALLBACK ---
-if [[ -z "$ISP" ]]; then
-    ISP="Unknown Cloud"
-    LOCATION="Unknown Region"
-    echo -e "${RED}❌ All detection sources failed. Using fallback placeholders.${NC}"
-else
-    LOCATION="$REGION, $COUNTRY"
-fi
-
-# --- SIMPLE REPLACEMENT STRATEGY ---
-
-if [[ -n "$ISP" ]]; then
-    # Capture Real IP for client-side fallback
-    # Try multiple sources to ensure we get it even if one is geoblocked
-    REAL_IP=$(curl -s --max-time 3 ifconfig.me || curl -s --max-time 3 api.ipify.org || curl -s --max-time 3 icanhazip.com || curl -s --max-time 3 ident.me)
-
-    # Escape special characters for sed
-    SAFE_ISP=$(echo "$ISP" | sed -e 's/[]\/$*.^[]/\\&/g')
-    SAFE_LOCATION=$(echo "$LOCATION" | sed -e 's/[]\/$*.^[]/\\&/g')
-
-    sed -i "s|data-isp=\"Detecting...\"|data-isp=\"$SAFE_ISP\"|g" "$SUBPAGE_PATH"
-    sed -i "s|data-location=\"Unknown Region\"|data-location=\"$SAFE_LOCATION\"|g" "$SUBPAGE_PATH"
-    
-    if [[ -n "$REAL_IP" ]]; then
-        sed -i "s|data-ip=\"Self\"|data-ip=\"$REAL_IP\"|g" "$SUBPAGE_PATH"
-    fi
-
-    # Verification
-    if grep -q "$SAFE_ISP" "$SUBPAGE_PATH"; then
-        echo -e "${GREEN}Infrastructure data injected successfully${NC}"
-    else
-        echo -e "${RED}❌ Injection failed. Could not find placeholder text in template.${NC}"
-    fi
-else
-    echo -e "${RED}❌ No ISP detected to inject.${NC}"
-fi
+# Static infrastructure detection removed in favor of dynamic detection in server_stats.sh
 
 chmod -R 755 "$BASE_PATH"
 
@@ -193,22 +124,56 @@ cat <<"EOF" > "$STATS_SCRIPT"
 #!/bin/bash
 # System Stats Collector for 3x-ui Premium Theme (Enhanced)
 JSON_FILE="__STATS_FILE__"
+ISP_CACHE="/usr/local/x-ui/isp_info.json"
 INTERVAL=2
 
 prev_total=0
 prev_idle=0
-prev_rx=0
-prev_tx=0
 
-# Get primary network interface
-get_primary_interface() {
-    ip route | grep default | awk '{print $5}' | head -n1
+# Infrastructure Detection (Cached)
+detect_infrastructure() {
+    # If cache doesn't exist or is empty, fetch data
+    if [ ! -s "$ISP_CACHE" ]; then
+        # Try primary source
+        IP_DATA=$(curl -s --max-time 5 http://ip-api.com/json/)
+        
+        # Fallback if failed
+        if [[ -z "$IP_DATA" || "$IP_DATA" == *"fail"* ]]; then
+            IP_DATA=$(curl -s --max-time 5 https://ipinfo.io/json)
+            # Extract fields for ipinfo format
+            ISP=$(echo "$IP_DATA" | grep -oE "\"org\"\s*:\s*\"[^\"]*\"" | sed -E "s/\"org\"\s*:\s*\"//g" | sed 's/"$//g' | sed 's/^AS[0-9]* //')
+            REGION=$(echo "$IP_DATA" | grep -oE "\"city\"\s*:\s*\"[^\"]*\"" | sed -E "s/\"city\"\s*:\s*\"//g" | sed 's/"$//g')
+        else
+            # Extract fields for ip-api format
+            ISP=$(echo "$IP_DATA" | grep -oE "\"isp\"\s*:\s*\"[^\"]*\"" | sed -E "s/\"isp\"\s*:\s*\"//g" | sed 's/"$//g')
+            REGION=$(echo "$IP_DATA" | grep -oE "\"city\"\s*:\s*\"[^\"]*\"" | sed -E "s/\"city\"\s*:\s*\"//g" | sed 's/"$//g')
+        fi
+        
+        # Default to unknown if still failing
+        [ -z "$ISP" ] && ISP="Unknown Provider"
+        [ -z "$REGION" ] && REGION="Unknown Region"
+        
+        # Save to cache
+        echo "{\"isp\":\"$ISP\",\"region\":\"$REGION\"}" > "$ISP_CACHE"
+    fi
 }
 
-INTERFACE=$(get_primary_interface)
+# Run detection once on start
+detect_infrastructure
 
 while true; do
-    # CPU Usage Calculation (More Accurate)
+    # Read cached infrastructure data
+    if [ -f "$ISP_CACHE" ]; then
+        ISP_DATA=$(cat "$ISP_CACHE")
+        # Simple extraction to avoid jq dependency
+        ISP=$(echo "$ISP_DATA" | grep -oE "\"isp\":\"[^\"]*\"" | cut -d'"' -f4)
+        REGION=$(echo "$ISP_DATA" | grep -oE "\"region\":\"[^\"]*\"" | cut -d'"' -f4)
+    else
+        ISP="Detecting..."
+        REGION="..."
+    fi
+
+    # CPU Usage
     read cpu a b c idle rest < /proc/stat
     total=$((a+b+c+idle))
     
@@ -227,36 +192,13 @@ while true; do
     prev_total=$total
     prev_idle=$idle
     
-    # RAM Usage (More Precise)
+    # RAM Usage
     mem_info=$(free -m | awk 'NR==2{printf "%.1f", $3*100/$2}')
-    ram_usage=${mem_info%.*}  # Convert to integer
+    ram_usage=${mem_info%.*}
     
-    # Network Traffic (Bytes/sec)
-    if [ -n "$INTERFACE" ] && [ -f "/sys/class/net/$INTERFACE/statistics/rx_bytes" ]; then
-        current_rx=$(cat /sys/class/net/$INTERFACE/statistics/rx_bytes)
-        current_tx=$(cat /sys/class/net/$INTERFACE/statistics/tx_bytes)
-        
-        if [ "$prev_rx" -gt 0 ]; then
-            rx_rate=$(( (current_rx - prev_rx) / INTERVAL ))
-            tx_rate=$(( (current_tx - prev_tx) / INTERVAL ))
-            
-            # Convert to KB/s
-            net_in=$((rx_rate / 1024))
-            net_out=$((tx_rate / 1024))
-        else
-            net_in=0
-            net_out=0
-        fi
-        
-        prev_rx=$current_rx
-        prev_tx=$current_tx
-    else
-        net_in=0
-        net_out=0
-    fi
-    
-    # Write JSON atomically (prevent read errors)
-    echo "{\"cpu\":$cpu_usage,\"ram\":$ram_usage,\"net_in\":$net_in,\"net_out\":$net_out}" > "$JSON_FILE.tmp"
+    # Write JSON atomically with infrastructure data
+    # Safe JSON construction
+    echo "{\"cpu\":$cpu_usage,\"ram\":$ram_usage,\"isp\":\"$ISP\",\"region\":\"$REGION\"}" > "$JSON_FILE.tmp"
     mv "$JSON_FILE.tmp" "$JSON_FILE"
     chmod 644 "$JSON_FILE"
     
