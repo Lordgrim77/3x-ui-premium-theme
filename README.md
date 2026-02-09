@@ -7,6 +7,21 @@
 > - This project is free to use. Do NOT sell it under any circumstances.
 > - The author is **not responsible** for any misuse, damage, or loss caused by this software. Use at your own risk.
 
+## ✨ Features 
+
+🎨 UI/UX: 12 features
+- Dark/light theme, glassmorphism,smooth transitions, toast notifications
+📊 Dashboard:
+- Subscription info, config links, QR codes, status indicators
+📡 Server Stats (NEW):
+- Real-time CPU/RAM/Network monitoring
+🔧 Installation: 9 features
+- One-line install, auto-update survival, systemd integration
+🔒 Security:
+- no external APIs, safe defaults
+⚡ Performance:
+- Minimal bundle, efficient polling.
+
 ## 🚀 Installation
 1. Make sure to take a backup of the system before doing anything.
 2. Run the following command on your 3x-ui server to install or update:
