@@ -1787,12 +1787,12 @@ body.s-light .icon-btn-mini:hover {
     border-color: transparent;
 }
 
-/* --- STATS GRID (System Monitor - 2x2 Grid) --- */
-.stats-grid-2x2 {
+/* --- STATS GRID (System Monitor - Horizontal) --- */
+.stats-grid-horizontal {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     gap: 12px;
-    margin-top: 20px;
+    margin-top: 12px;
     width: 100%;
 }
 
@@ -1801,22 +1801,23 @@ body.s-light .icon-btn-mini:hover {
     border: var(--border-subtle);
     backdrop-filter: blur(var(--glass-blur));
     border-radius: var(--card-radius);
-    padding: 16px 20px;
+    padding: 16px;
     display: flex;
     align-items: center;
-    gap: 14px;
+    gap: 12px;
     transition: all 0.3s var(--ease-out);
+    box-shadow: var(--shadow-sm);
 }
 
 .stat-card-mini:hover {
     border-color: var(--accent);
     transform: translateY(-2px);
-    box-shadow: var(--shadow-md);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .stat-mini-icon {
-    width: 36px;
-    height: 36px;
+    width: 32px;
+    height: 32px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1830,63 +1831,76 @@ body.s-light .icon-btn-mini:hover {
 }
 
 .stat-mini-label {
-    font-size: 0.7rem;
+    font-size: 0.65rem;
     color: var(--text-secondary);
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    margin-bottom: 4px;
+    margin-bottom: 3px;
     font-weight: 600;
 }
 
 .stat-mini-value {
-    font-size: 1.5rem;
+    font-size: 1.25rem;
     font-weight: 700;
     color: var(--text-primary);
     line-height: 1;
 }
 
-/* Mobile Responsive - Stats Grid */
-@media (max-width: 768px) {
-    .stats-grid-2x2 {
-        grid-template-columns: 1fr;
-    }
-
-    .stat-card-mini {
-        padding: 14px 16px;
-    }
-
-    .stat-mini-icon {
-        width: 32px;
-        height: 32px;
-    }
-
-    .stat-mini-value {
-        font-size: 1.25rem;
+/* Tablet: 2x2 Grid */
+@media (max-width: 1024px) {
+    .stats-grid-horizontal {
+        grid-template-columns: repeat(2, 1fr);
     }
 }
 
-    .stat-header {
-        margin-bottom: 12px;
+/* Mobile: 2x2 Grid (more compact) */
+@media (max-width: 768px) {
+    .stats-grid-horizontal {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
     }
 
-    .gauge-container {
-        padding: 4px 0;
+    .stat-card-mini {
+        padding: 12px;
     }
 
-    .gauge-ring {
-        width: 60px;
-        height: 60px;
+    .stat-mini-icon {
+        width: 28px;
+        height: 28px;
     }
 
-    .gauge-inner {
-        font-size: 1rem;
+    .stat-mini-label {
+        font-size: 0.6rem;
     }
 
-    .stat-value-text {
-        font-size: 1.25rem;
+    .stat-mini-value {
+        font-size: 1.1rem;
     }
+}
 
-    .stat-value-large {
-        font-size: 1.5rem;
-    }
+
+.stat-header {
+    margin-bottom: 12px;
+}
+
+.gauge-container {
+    padding: 4px 0;
+}
+
+.gauge-ring {
+    width: 60px;
+    height: 60px;
+}
+
+.gauge-inner {
+    font-size: 1rem;
+}
+
+.stat-value-text {
+    font-size: 1.25rem;
+}
+
+.stat-value-large {
+    font-size: 1.5rem;
+}
 }

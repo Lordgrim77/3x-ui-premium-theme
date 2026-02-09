@@ -191,11 +191,11 @@
         // Nodes List (Span 12)
         grid.appendChild(renderNodesList());
 
+        // Server Monitor Stats (Span 12)
+        grid.appendChild(renderStatsGrid());
+
         // Infrastructure Section (v1.8.0)
         grid.appendChild(renderInfrastructureSection());
-
-        // Stats Grid (System Monitor)
-        grid.appendChild(renderStatsGrid());
 
         app.appendChild(grid);
 
@@ -511,10 +511,17 @@
         return wrap;
     }
 
-    // --- STATS GRID (System Monitor - 2x2 Grid) ---
+    // --- STATS GRID (System Monitor - 4x1 Horizontal) ---
     function renderStatsGrid() {
         const wrap = mkEl('div', 'span-12');
-        const grid = mkEl('div', 'stats-grid-2x2');
+
+        // Header
+        const header = mkEl('div', 'nodes-header');
+        const monitorIcon = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>`;
+        header.innerHTML = `${monitorIcon} Server Monitor`;
+        wrap.appendChild(header);
+
+        const grid = mkEl('div', 'stats-grid-horizontal');
         grid.id = 'stats-grid';
 
         // CPU Card (Top Left)
