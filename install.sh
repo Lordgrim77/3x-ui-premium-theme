@@ -35,7 +35,7 @@ fi
 BASE_PATH="$XUI_ROOT/web"
 ASSETS_PATH="$BASE_PATH/assets"
 HTML_PATH="$BASE_PATH/html"
-REPO_URL="https://raw.githubusercontent.com/Lordgrim77/3x-ui-premium-theme/development"
+REPO_URL="https://raw.githubusercontent.com/Lordgrim77/3x-ui-premium-theme/main"
 
 # Create directories if they don't exist
 echo -e "${BLUE}Ensuring theme directories exist...${NC}"
