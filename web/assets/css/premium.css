@@ -1884,29 +1884,3 @@ body.s-light .icon-btn-mini:hover {
         font-size: 1.1rem;
     }
 }
-
-
-.stat-header {
-    margin-bottom: 12px;
-}
-
-.gauge-container {
-    padding: 4px 0;
-}
-
-.gauge-ring {
-    width: 60px;
-    height: 60px;
-}
-
-.gauge-inner {
-    font-size: 1rem;
-}
-
-.stat-value-text {
-    font-size: 1.25rem;
-}
-
-.stat-value-large {
-    font-size: 1.5rem;
-}
