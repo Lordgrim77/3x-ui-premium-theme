@@ -17,7 +17,7 @@
 Dark/light theme, glassmorphism,smooth transitions, toast notifications
 - **📊 Dashboard**: Subscription info, config links, QR codes, status indicators
 - **📡 Server Stats (NEW)**: Real-time CPU/RAM/Network monitoring
-- **🔧 Installation**: One-line install, auto-update survival, systemd integration
+- **🔧 Installation**: One-line install, systemd integration
 - **🔒 Security**: no external APIs, safe defaults
 - **⚡ Performance**: Minimal bundle, efficient polling.
 
