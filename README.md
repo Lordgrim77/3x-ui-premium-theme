@@ -9,18 +9,12 @@
 
 ## ✨ Features 
 
-**🎨 UI/UX: 12 features**
-- Dark/light theme, glassmorphism,smooth transitions, toast notifications
-**📊 Dashboard**
-- Subscription info, config links, QR codes, status indicators
-**📡 Server Stats (NEW)**
-- Real-time CPU/RAM/Network monitoring
-**🔧 Installation**
-- One-line install, auto-update survival, systemd integration
-**🔒 Security**
-- no external APIs, safe defaults
-**⚡ Performance**
-- Minimal bundle, efficient polling.
+- **🎨 UI/UX: 12 features**: Dark/light theme, glassmorphism,smooth transitions, toast notifications
+- **📊 Dashboard**: Subscription info, config links, QR codes, status indicators
+- **📡 Server Stats (NEW)**: Real-time CPU/RAM/Network monitoring
+- **🔧 Installation**: One-line install, auto-update survival, systemd integration
+- **🔒 Security**: no external APIs, safe defaults
+- **⚡ Performance**: Minimal bundle, efficient polling.
 
 ## 🚀 Installation
 1. Make sure to take a backup of the system before doing anything.
