@@ -97,6 +97,20 @@ TIMESTAMP=$(date +%s)
 sed -i "s|assets/css/premium.css?{{ .cur_ver }}|assets/css/premium.css?v=$TIMESTAMP|g" "$SUBPAGE_PATH"
 sed -i "s|assets/js/subscription.js?{{ .cur_ver }}|assets/js/subscription.js?v=$TIMESTAMP|g" "$SUBPAGE_PATH"
 
+# INFRASTRUCTURE AUTO-DETECTION
+echo -e "${BLUE}Detecting hosting infrastructure...${NC}"
+
+# Helper: Extract JSON value safely
+extract_json() {
+    echo "$1" | grep -oE "\"$2\"\s*:\s*\"[^\"]*\"" | sed -E "s/\"$2\"\s*:\s*\"//g" | sed 's/"$//g'
+}
+
+# --- SOURCE 1: ip-api.com ---
+IP_DATA=$(curl -s --max-time 3 http://ip-api.com/json/)
+ISP=$(extract_json "$IP_DATA" "isp")
+REGION=$(extract_json "$IP_DATA" "city")
+COUNTRY=$(extract_json "$IP_DATA" "country")
+
 # Copy official web folder to local x-ui root
 
 # --- SOURCE 2: ipinfo.io ---
