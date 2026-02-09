@@ -9,17 +9,17 @@
 
 ## ✨ Features 
 
-🎨 UI/UX: 12 features
+**🎨 UI/UX: 12 features**
 - Dark/light theme, glassmorphism,smooth transitions, toast notifications
-📊 Dashboard:
+**📊 Dashboard**
 - Subscription info, config links, QR codes, status indicators
-📡 Server Stats (NEW):
+**📡 Server Stats (NEW)**
 - Real-time CPU/RAM/Network monitoring
-🔧 Installation: 9 features
+**🔧 Installation**
 - One-line install, auto-update survival, systemd integration
-🔒 Security:
+**🔒 Security**
 - no external APIs, safe defaults
-⚡ Performance:
+**⚡ Performance**
 - Minimal bundle, efficient polling.
 
 ## 🚀 Installation
