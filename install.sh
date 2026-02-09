@@ -26,16 +26,29 @@ if [ "$EUID" -ne 0 ]; then
 fi
 
 # Define paths
-if [[ -d "/usr/local/x-ui" ]]; then
-    XUI_ROOT="/usr/local/x-ui"
-else
-    XUI_ROOT=$(dirname $(readlink -f $(which x-ui 2>/dev/null || echo "/usr/local/x-ui/x-ui")))
-fi
-
+XUI_ROOT="/usr/local/x-ui"
 BASE_PATH="$XUI_ROOT/web"
 ASSETS_PATH="$BASE_PATH/assets"
 HTML_PATH="$BASE_PATH/html"
-REPO_URL="https://raw.githubusercontent.com/Lordgrim77/3x-ui-premium-theme/main"
+
+# Auto-detect branch (main or development)
+# User can override by setting BRANCH env var: BRANCH=development bash install.sh
+if [ -z "$BRANCH" ]; then
+    # Try to detect from the URL used to download this script
+    # Default to 'main' for stability
+    BRANCH="main"
+    
+    # Check if script was sourced from development branch
+    if curl -s --head "https://raw.githubusercontent.com/Lordgrim77/3x-ui-premium-theme/development/install.sh" | grep -q "200 OK"; then
+        # If user explicitly downloaded from development, detect it
+        if [ -f "/tmp/xui_installer_dev" ]; then
+            BRANCH="development"
+        fi
+    fi
+fi
+
+echo -e "${BLUE}Using branch: ${GREEN}${BRANCH}${NC}"
+REPO_URL="https://raw.githubusercontent.com/Lordgrim77/3x-ui-premium-theme/${BRANCH}"
 
 # Create directories if they don't exist
 echo -e "${BLUE}Ensuring theme directories exist...${NC}"
