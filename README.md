@@ -9,7 +9,8 @@
 
 ## ✨ Features 
 
-- **🎨 UI/UX: 12 features**: Dark/light theme, glassmorphism,smooth transitions, toast notifications
+- **🎨 UI/UX**:
+Dark/light theme, glassmorphism,smooth transitions, toast notifications
 - **📊 Dashboard**: Subscription info, config links, QR codes, status indicators
 - **📡 Server Stats (NEW)**: Real-time CPU/RAM/Network monitoring
 - **🔧 Installation**: One-line install, auto-update survival, systemd integration
