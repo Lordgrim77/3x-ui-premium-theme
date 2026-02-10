@@ -1,7 +1,7 @@
-# 3X-UI Subscription Theme 🎨(v2.0)
+# 3X-UI Subscription Theme 🎨
 <p align="center">
   <img src="https://raw.githubusercontent.com/Lordgrim77/3x-ui-premium-theme/refs/heads/main/screenshots/screenshot-2.jpg" alt="English UI" width="30%">
-  <img src="https://raw.githubusercontent.com/Lordgrim77/3x-ui-premium-theme/refs/heads/main/screenshots/screenshot-1.jpg" alt="Persian UI" width="40%">
+  <img src="https://raw.githubusercontent.com/Lordgrim77/3x-ui-premium-theme/refs/heads/main/screenshots/screenshot-1.jpg" alt="Persian UI" width="50%">
 </p>
 
 ##  Disclaimer ❗
@@ -17,7 +17,7 @@
 Dark/light theme, glassmorphism,smooth transitions, toast notifications
 - **📊 Dashboard**: Subscription info, config links, QR codes, status indicators
 - **📡 Server Stats (NEW)**: Real-time CPU/RAM/Network monitoring
-- **🔧 Installation**: One-line install, auto-update survival, systemd integration
+- **🔧 Installation**: One-line install, systemd integration
 - **🔒 Security**: no external APIs, safe defaults
 - **⚡ Performance**: Minimal bundle, efficient polling.
 
