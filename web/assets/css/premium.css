@@ -1798,7 +1798,7 @@ body.s-dark .node-card:hover {
     transform: translateY(-4px);
     background: rgba(var(--node-color, 255, 255, 255), 0.08);
     border-color: var(--accent) !important;
-    box-shadow: 0 10px 30px var(--accent-glow) !important;
+    box-shadow: 0 10px 40px var(--accent-glow) !important;
 }
 
 .infra-icon {
@@ -1991,8 +1991,14 @@ body.s-light .icon-btn-mini:hover {
 
 .stat-card-mini:hover {
     border-color: var(--accent);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transform: translateY(-4px);
+    background: rgba(var(--node-color, 255, 255, 255), 0.08);
+    box-shadow: 0 10px 35px var(--accent-glow);
+}
+
+.stat-card-mini:hover .stat-mini-icon {
+    transform: scale(1.15);
+    opacity: 1;
 }
 
 .stat-mini-icon {
@@ -2002,7 +2008,8 @@ body.s-light .icon-btn-mini:hover {
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    opacity: 0.9;
+    opacity: 0.8;
+    transition: all 0.3s var(--ease-out);
 }
 
 .stat-mini-content {
