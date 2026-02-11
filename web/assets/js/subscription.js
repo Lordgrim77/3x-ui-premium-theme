@@ -940,7 +940,7 @@
     }
 
     // --- PREMIUM BACKGROUND ANIMATION (Digital Rain 2.0) ---
-    // --- PREMIUM BACKGROUND ANIMATION (Neural Network) ---
+    // --- PREMIUM BACKGROUND ANIMATION (Neural Network v1.6.1) ---
     class NeuralNetwork {
         constructor() {
             if (document.getElementById('canvas-bg')) return;
@@ -949,7 +949,7 @@
             document.body.prepend(this.canvas);
             this.ctx = this.canvas.getContext('2d');
             this.particles = [];
-            this.mouse = { x: null, y: null, radius: 150 };
+            this.mouse = { x: null, y: null, radius: 180 }; // Increased interaction radius
 
             this.resize();
             window.addEventListener('resize', () => this.resize());
@@ -968,48 +968,52 @@
         }
 
         resize() {
-            this.canvas.width = window.innerWidth;
-            this.canvas.height = window.innerHeight;
+            // High DPI (Retina) Fix
+            const dpr = window.devicePixelRatio || 1;
+            this.canvas.width = window.innerWidth * dpr;
+            this.canvas.height = window.innerHeight * dpr;
+            this.canvas.style.width = window.innerWidth + 'px';
+            this.canvas.style.height = window.innerHeight + 'px';
+            this.ctx.scale(dpr, dpr);
+
             this.initParticles();
         }
 
         initParticles() {
             this.particles = [];
-            // Density: 1 particle per 9000px sq (approx 100 on 1080p)
-            let n = (this.canvas.width * this.canvas.height) / 9000;
+            // Reduced density slightly for bolder particles (cleaner look)
+            let n = (window.innerWidth * window.innerHeight) / 10000;
             for (let i = 0; i < n; i++) {
-                let size = (Math.random() * 2) + 1;
-                let x = (Math.random() * ((this.canvas.width - size * 2) - (size * 2)) + size * 2);
-                let y = (Math.random() * ((this.canvas.height - size * 2) - (size * 2)) + size * 2);
-                let dirX = (Math.random() * 0.4) - 0.2;
-                let dirY = (Math.random() * 0.4) - 0.2;
+                // Bolder Size: 1.5 to 3.5 (was 1 to 3)
+                let size = (Math.random() * 2) + 1.5;
+                let x = Math.random() * (innerWidth - size * 2) + size * 2;
+                let y = Math.random() * (innerHeight - size * 2) + size * 2;
+                let dirX = (Math.random() * 0.6) - 0.3; // Slightly faster
+                let dirY = (Math.random() * 0.6) - 0.3;
                 this.particles.push({ x, y, dirX, dirY, size });
             }
         }
 
         animate() {
             requestAnimationFrame(this.animate);
-            this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+            this.ctx.clearRect(0, 0, innerWidth, innerHeight);
 
             const isLight = document.body.classList.contains('s-light');
-            // Colors
-            const particleColor = isLight ? 'rgba(0, 0, 0, 0.5)' : 'rgba(255, 255, 255, 0.5)';
-            const lineColor = isLight ? 'rgba(0, 0, 0, 0.05)' : 'rgba(255, 255, 255, 0.05)';
-            const connectDist = 120;
+            // Bolder Colors (Higher Opacity)
+            const particleColor = isLight ? 'rgba(0, 0, 0, 0.7)' : 'rgba(255, 255, 255, 0.7)';
+            const lineColor = isLight ? 'rgba(0, 0, 0, 0.12)' : 'rgba(255, 255, 255, 0.12)';
+            const connectDist = 140; // Increased connection distance
 
-            // Physics & Draw Loop
             for (let i = 0; i < this.particles.length; i++) {
                 let p = this.particles[i];
 
-                // Move
                 p.x += p.dirX;
                 p.y += p.dirY;
 
-                // Wall Bounce
-                if (p.x > this.canvas.width || p.x < 0) p.dirX *= -1;
-                if (p.y > this.canvas.height || p.y < 0) p.dirY *= -1;
+                if (p.x > innerWidth || p.x < 0) p.dirX *= -1;
+                if (p.y > innerHeight || p.y < 0) p.dirY *= -1;
 
-                // Mouse Interaction (Magnetic)
+                // Mouse Magnet
                 if (this.mouse.x != null) {
                     let dx = this.mouse.x - p.x;
                     let dy = this.mouse.y - p.y;
@@ -1018,10 +1022,8 @@
                         const forceDirectionX = dx / dist;
                         const forceDirectionY = dy / dist;
                         const force = (200 - dist) / 200;
-                        const dirX = forceDirectionX * force * 0.5; // push factor
-                        const dirY = forceDirectionY * force * 0.5;
-
-                        // Gently attract
+                        const dirX = forceDirectionX * force * 0.8; // Stronger pull
+                        const dirY = forceDirectionY * force * 0.8;
                         p.x += dirX;
                         p.y += dirY;
                     }
@@ -1043,7 +1045,7 @@
                     if (dist < connectDist) {
                         this.ctx.beginPath();
                         this.ctx.strokeStyle = lineColor;
-                        this.ctx.lineWidth = 1;
+                        this.ctx.lineWidth = 1.5; // Thicker lines
                         this.ctx.moveTo(p.x, p.y);
                         this.ctx.lineTo(p2.x, p2.y);
                         this.ctx.stroke();
