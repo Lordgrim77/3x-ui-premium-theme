@@ -38,6 +38,11 @@
     --theme-ram: #ec4899;
     --theme-up: #3b82f6;
     --theme-down: #10b981;
+    --theme-rem: #8b5cf6;
+    --theme-exp: #f59e0b;
+    --theme-isp: #6366f1;
+    --theme-loc: #3b82f6;
+    --theme-ping: #10b981;
 }
 
 /* NUCLEAR SCROLL FIX: Global Unlock */
