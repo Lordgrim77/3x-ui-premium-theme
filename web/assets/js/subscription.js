@@ -1024,19 +1024,26 @@
                     p.size = (p.baseSize || p.size) + Math.sin(p.angle) * 0.6;
                 }
 
-                // Mouse-to-Particle Connections (cursor = Super Node)
+                // Mouse-to-Particle Connections + Magnetic Pull
                 if (this.mouse.x != null) {
                     let dx = this.mouse.x - p.x;
                     let dy = this.mouse.y - p.y;
                     let dist = Math.sqrt(dx * dx + dy * dy);
                     if (dist < 250) {
                         let opacity = 1 - (dist / 250);
+
+                        // Visual: Draw connection line to cursor
                         this.ctx.beginPath();
                         this.ctx.strokeStyle = `rgba(${pColor}, ${opacity * 0.9})`;
                         this.ctx.lineWidth = 1.5;
                         this.ctx.moveTo(p.x, p.y);
                         this.ctx.lineTo(this.mouse.x, this.mouse.y);
                         this.ctx.stroke();
+
+                        // Physics: Gently attract particle towards cursor
+                        let force = opacity * 0.6;
+                        p.x += (dx / dist) * force;
+                        p.y += (dy / dist) * force;
                     }
                 }
 
