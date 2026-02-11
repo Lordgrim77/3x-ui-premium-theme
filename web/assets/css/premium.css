@@ -94,8 +94,8 @@ body.premium-theme.s-dark {
 /* THEME: CERAMIC (Light) */
 body.premium-theme.s-light {
     --bg-main: #f8fafc;
-    --bg-card: #ffffff;
-    --bg-sec: #ffffff;
+    --bg-card: rgba(255, 255, 255, 0.7);
+    --bg-sec: rgba(255, 255, 255, 0.7);
     --accent: #4f46e5;
     --accent-glow: rgba(79, 70, 229, 0.25);
 
@@ -103,7 +103,7 @@ body.premium-theme.s-light {
     --usage-depleted: #dc2626;
     --usage-expired: #d97706;
 
-    --card-bg: rgba(255, 255, 255, 0.8);
+    --card-bg: rgba(255, 255, 255, 0.7);
     --card-border: rgba(0, 0, 0, 0.04);
     --card-hover: rgba(255, 255, 255, 0.95);
 
