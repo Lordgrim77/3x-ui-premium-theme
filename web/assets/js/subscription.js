@@ -103,24 +103,29 @@
         const used = (STATE.raw.up || 0) + (STATE.raw.down || 0);
         const expired = STATE.raw.expire > 0 && now > STATE.raw.expire;
         const depleted = total > 0 && used >= total;
-        const active = !expired && !depleted;
 
-        let label = active ? 'User Active' : 'User Inactive';
+        let state = 'active';
+        if (expired) state = 'warn'; // Expired = Yellow (warn)
+        else if (depleted) state = 'depleted'; // Depleted = Red
+        else if (total === 0) state = 'unlimited'; // Unlimited = Cyan
+        else state = 'active'; // Else Green
+
+        let label = 'User Active';
         let colorVar = 'var(--usage-active)';
-        if (depleted) {
+
+        if (state === 'warn') {
+            colorVar = 'var(--usage-expired)';
+            label = 'Monthly Expired';
+        } else if (state === 'depleted') {
             colorVar = 'var(--usage-depleted)';
             label = 'Data Depleted';
-        } else if (expired || total === 0) {
-            colorVar = 'var(--usage-expired)';
-            label = total === 0 ? 'Unlimited Data' : 'Monthly Expired';
+        } else if (state === 'unlimited') {
+            colorVar = 'var(--accent)';
+            label = 'Unlimited Data';
         }
 
         const pct = total === 0 ? 0 : Math.min(100, (used / total) * 100);
-
-        let state = 'active';
-        if (depleted) state = 'depleted';
-        else if (expired || total === 0) state = 'warn'; // Unlimited & Expired now use Yellow (warn)
-        else state = 'active';
+        const active = !expired && !depleted;
 
         return { active, expired, depleted, label, color: colorVar, pct, used, total, state };
     }
