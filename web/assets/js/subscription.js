@@ -592,6 +592,9 @@
     }
 
     function startStatsPolling() {
+        if (window.statsPollingActive) return; // Guard against multiple chains
+        window.statsPollingActive = true;
+
         // Helper: Format network speed
         const formatSpeed = (kbps) => {
             if (kbps >= 1024) {
@@ -914,9 +917,6 @@
         animate() {
             if (this.isScrolling) return;
             requestAnimationFrame(this.animate);
-
-            // Periodic Safety Sync (Once every ~2 seconds @ 60fps)
-            if (Math.random() < 0.01) this.updateStyles();
 
             this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 

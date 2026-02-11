@@ -1528,36 +1528,34 @@ body.s-dark .node-card:hover {
 }
 
 /* UNIVERSAL TOAST ISOLATION */
-.premium-toast {
-    position: fixed !important;
-    left: 50% !important;
-    transform: translateX(-50%) translateY(-150%) !important;
-    z-index: 1000000 !important;
+body.premium-theme .premium-toast {
+    position: fixed;
+    left: 50%;
+    transform: translateX(-50%) translateY(-150%);
+    z-index: 1000000;
     opacity: 0;
     visibility: hidden;
-    transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    transition: all 0.5s var(--ease-out);
     padding: 14px 32px;
     min-width: 180px;
     text-align: center;
     font-weight: 700;
     letter-spacing: 0.05em;
     font-size: 0.9rem;
-    border: 1px solid var(--accent) !important;
-    backdrop-filter: blur(var(--glass-blur)) brightness(1.1) !important;
-    border-radius: 100px !important;
-    /* Pill shape for premium feel */
+    border: 1px solid var(--accent);
+    backdrop-filter: blur(var(--glass-blur)) brightness(1.1);
+    border-radius: 100px;
     box-shadow: var(--shadow-xl);
-    background: var(--bg-card) !important;
-    color: var(--text-primary) !important;
+    background: var(--bg-card);
+    color: var(--text-primary);
     pointer-events: none;
-    animation: none !important;
-    /* KILL ALL INHERITED ANIMATIONS */
+    animation: none;
 }
 
-.premium-toast.show {
-    visibility: visible !important;
-    opacity: 1 !important;
-    transform: translateX(-50%) translateY(0) !important;
+body.premium-theme .premium-toast.show {
+    visibility: visible;
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
 }
 
 /* ANIMATIONS */
@@ -1749,11 +1747,11 @@ body.s-dark .node-card:hover {
 
 /* Removed body.ready animation to prevent mobile scroll conflicts */
 
-.infra-card:hover {
+body.premium-theme .infra-card:hover {
     transform: translateY(-4px);
     background: rgba(var(--node-color, 255, 255, 255), 0.08);
-    border-color: var(--accent) !important;
-    box-shadow: 0 10px 40px var(--accent-glow) !important;
+    border-color: var(--accent);
+    box-shadow: 0 10px 40px var(--accent-glow);
 }
 
 .infra-icon {
