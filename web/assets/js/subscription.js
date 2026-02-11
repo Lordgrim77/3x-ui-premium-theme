@@ -1024,36 +1024,27 @@
                     p.size = (p.baseSize || p.size) + Math.sin(p.angle) * 0.6;
                 }
 
-                // Mouse-to-Particle Connections + Magnetic Pull
+                // Spotlight: Calculate mouse proximity for glow effect
+                let mouseProximity = 0; // 0 = far, 1 = on top of cursor
                 if (this.mouse.x != null) {
                     let dx = this.mouse.x - p.x;
                     let dy = this.mouse.y - p.y;
                     let dist = Math.sqrt(dx * dx + dy * dy);
                     if (dist < 250) {
-                        let opacity = 1 - (dist / 250);
-
-                        // Visual: Draw connection line to cursor
-                        this.ctx.beginPath();
-                        this.ctx.strokeStyle = `rgba(${pColor}, ${opacity * 0.9})`;
-                        this.ctx.lineWidth = 1.5;
-                        this.ctx.moveTo(p.x, p.y);
-                        this.ctx.lineTo(this.mouse.x, this.mouse.y);
-                        this.ctx.stroke();
-
-                        // Physics: Gently attract particle towards cursor
-                        let force = opacity * 0.6;
-                        p.x += (dx / dist) * force;
-                        p.y += (dy / dist) * force;
+                        mouseProximity = 1 - (dist / 250);
                     }
                 }
 
-                // Draw Particle (High Opacity)
+                // Draw Particle — Spotlight makes it bigger & brighter
+                let renderSize = Math.max(0, p.size + mouseProximity * 3); // Grow up to +3px near cursor
+                let particleOpacity = 0.5 + mouseProximity * 0.5; // 0.5 base → 1.0 near cursor
+
                 this.ctx.beginPath();
-                this.ctx.arc(p.x, p.y, Math.max(0, p.size), 0, Math.PI * 2, false);
-                this.ctx.fillStyle = `rgba(${pColor}, 0.85)`;
+                this.ctx.arc(p.x, p.y, renderSize, 0, Math.PI * 2, false);
+                this.ctx.fillStyle = `rgba(${pColor}, ${particleOpacity})`;
                 this.ctx.fill();
 
-                // Draw Connections (Smooth Distance-Based Fade)
+                // Draw Connections (Spotlight intensifies nearby lines)
                 for (let j = i + 1; j < this.particles.length; j++) {
                     let p2 = this.particles[j];
                     let dx = p.x - p2.x;
@@ -1061,10 +1052,26 @@
                     let dist = Math.sqrt(dx * dx + dy * dy);
 
                     if (dist < connectDist) {
-                        let opacity = 1 - (dist / connectDist);
+                        let lineOpacity = 1 - (dist / connectDist);
+
+                        // Check if this connection is near the mouse (spotlight boost)
+                        let lineGlow = 0;
+                        if (this.mouse.x != null) {
+                            let midX = (p.x + p2.x) / 2;
+                            let midY = (p.y + p2.y) / 2;
+                            let mouseDist = Math.sqrt((this.mouse.x - midX) ** 2 + (this.mouse.y - midY) ** 2);
+                            if (mouseDist < 200) {
+                                lineGlow = 1 - (mouseDist / 200);
+                            }
+                        }
+
+                        // Base opacity 0.2, spotlight boosts up to 0.8
+                        let finalOpacity = lineOpacity * (0.2 + lineGlow * 0.6);
+                        let finalWidth = 1 + lineGlow * 1.5; // 1px base → 2.5px near cursor
+
                         this.ctx.beginPath();
-                        this.ctx.strokeStyle = `rgba(${lColor}, ${opacity * 0.4})`;
-                        this.ctx.lineWidth = 1.2;
+                        this.ctx.strokeStyle = `rgba(${lColor}, ${finalOpacity})`;
+                        this.ctx.lineWidth = finalWidth;
                         this.ctx.moveTo(p.x, p.y);
                         this.ctx.lineTo(p2.x, p2.y);
                         this.ctx.stroke();
