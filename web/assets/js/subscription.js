@@ -135,16 +135,11 @@
                 expire: parseInt(dataEl.getAttribute('data-expire') || 0) * 1000,
                 subUrl: dataEl.getAttribute('data-sub-url') || '',
                 lastOnline: parseInt(dataEl.getAttribute('data-lastonline') || 0),
-                isp: dataEl.getAttribute('data-isp') || 'Detecting...',
-                location: dataEl.getAttribute('data-location') || 'Unknown Region',
+                isp: 'Detecting...',
+                location: 'Detecting...',
                 serverIp: dataEl.getAttribute('data-ip') || 'Self'
             };
             STATE.subUrl = STATE.raw.subUrl;
-
-            // FALLBACK: If server-side injection failed (still "Detecting..."), try client-side
-            if (STATE.raw.isp === 'Detecting...') {
-                detectClientSideInfrastructure();
-            }
         }
 
         // 3. CSS Fail-safe
@@ -678,134 +673,6 @@
                 dot.classList.add('error');
                 valEl.classList.add('text-red');
             });
-    }
-
-    function detectClientSideInfrastructure() {
-        console.log('☁️ Infrastructure detection started (v2.7.0)...');
-
-        // Target Determination
-        const dataEl = getEl('subscription-data');
-        const injectedIp = dataEl ? dataEl.getAttribute('data-ip') : null;
-        const target = (injectedIp && injectedIp !== 'Self') ? injectedIp : window.location.hostname;
-        const isSSL = window.location.protocol === 'https:';
-
-        console.log(`🔍 Lookup Target: ${target} (${injectedIp ? 'Injected IP' : 'Hostname'}) | SSL: ${isSSL}`);
-
-        const runLookup = (url, isFallback = false) => {
-            fetch(url)
-                .then(res => res.json())
-                .then(data => {
-                    console.log(`📊 Result (${isFallback ? 'Fallback' : 'Primary'}):`, data);
-
-                    // Field mapping for ipwhois.app (connection.isp) vs ip-api.com (isp)
-                    let isp = data.connection?.isp || data.isp || data.org || data.asn || 'Cloud Provider';
-                    let loc = (data.city ? data.city + ', ' : '') + (data.country_name || data.country || 'Unknown');
-
-                    // CDN Masking Logic (v2.7.0)
-                    const cdnRegex = /(cloudflare|cloudfront|bunny|akamai|fastly|incapsula|sucuri|gcore|limelight|edgecast|stackpath|privacy|scutwork|cdn)/i;
-                    if (cdnRegex.test(isp)) {
-                        console.log('🛡️ CDN Detected: Applying Privacy Shield');
-                        isp = 'Protected';
-                        loc = 'Protected';
-
-                        // Swap Icons to Padlock
-                        const lockIco = `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--accent)"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>`;
-                        const ispIcoEl = document.getElementById('infra-isp-icon');
-                        const locIcoEl = document.getElementById('infra-loc-icon');
-                        if (ispIcoEl) {
-                            ispIcoEl.innerHTML = lockIco;
-                            ispIcoEl.style.color = 'var(--accent)';
-                        }
-                        if (locIcoEl) {
-                            locIcoEl.innerHTML = lockIco;
-                            locIcoEl.style.color = 'var(--accent)';
-                        }
-                    }
-
-                    // Update Stats Grid (This part seems misplaced here, as this function is for infrastructure detection,
-                    // and stats polling is handled by startStatsPolling. However, following the instruction to insert it here.)
-                    // Note: cpuGauge and ramGauge elements are not defined in the provided HTML context,
-                    // so their updates might not have visual effect unless corresponding HTML is added.
-                    const cpuEl = document.getElementById('cpu-val');
-                    const cpuGauge = document.getElementById('cpu-gauge'); // Assuming this exists elsewhere
-                    const ramEl = document.getElementById('ram-val');
-                    const ramGauge = document.getElementById('ram-gauge'); // Assuming this exists elsewhere
-
-                    if (cpuEl && cpuGauge) {
-                        cpuEl.textContent = data.cpu || 0;
-                        cpuGauge.style.setProperty('--p', (data.cpu || 0) + '%');
-                    }
-                    if (ramEl && ramGauge) {
-                        ramEl.textContent = data.ram || 0;
-                        ramGauge.style.setProperty('--p', (data.ram || 0) + '%');
-                    }
-
-                    // Update Network Stats (if available) - Assuming previous logic exists for net_in/out
-                    // This part is also typically handled by startStatsPolling.
-
-                    // Update Infrastructure Info (Dynamic)
-                    // The `data.region` field might not be consistently available across ipwhois.app and ip-api.com.
-                    // ipwhois.app uses `region`, ip-api.com uses `regionName`.
-                    // The `loc` variable already combines city and country.
-                    // For consistency with existing `isp` and `loc` variables, it's better to use them.
-                    // Update Infrastructure Info (Dynamic)
-                    if (data.isp || data.region) {
-                        // Update ISP
-                        if (data.isp) {
-                            const ispEls = document.querySelectorAll('.infra-card:nth-child(2) .stat-value, [data-isp]');
-                            ispEls.forEach(el => {
-                                if (el.tagName === 'TEMPLATE') {
-                                    el.setAttribute('data-isp', data.isp);
-                                } else {
-                                    el.textContent = data.isp;
-                                }
-                            });
-                        }
-
-                        // Update Region/Location
-                        if (data.region) {
-                            const locEls = document.querySelectorAll('.infra-card:nth-child(3) .stat-value, [data-location]');
-                            locEls.forEach(el => {
-                                if (el.tagName === 'TEMPLATE') {
-                                    el.setAttribute('data-location', data.region);
-                                } else {
-                                    el.textContent = data.region;
-                                }
-                            });
-                        }
-                    }
-
-                    if (STATE.raw) {
-                        STATE.raw.isp = isp;
-                        STATE.raw.location = loc;
-                    }
-
-                    // Get elements ONLY when data is ready to avoid race condition
-                    const ispUI = document.getElementById('infra-isp');
-                    const locUI = document.getElementById('infra-loc');
-
-                    if (ispUI) {
-                        ispUI.textContent = isp;
-                        console.log('✅ Updated Provider UI');
-                    }
-                    if (locUI) {
-                        locUI.textContent = loc;
-                        console.log('✅ Updated Region UI');
-                    }
-                })
-                .catch(err => {
-                    console.error('❌ Lookup failed:', err);
-                    if (!isFallback && !isSSL) {
-                        runLookup(`https://ipapi.co/${target}/json/`, true);
-                    }
-                });
-        };
-
-        if (isSSL) {
-            runLookup(`https://ipwhois.app/json/${target}`);
-        } else {
-            runLookup(`http://ip-api.com/json/${target}`);
-        }
     }
 
     function renderQRModal() {
