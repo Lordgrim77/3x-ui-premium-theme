@@ -940,24 +940,29 @@
     }
 
     // --- PREMIUM BACKGROUND ANIMATION (Digital Rain 2.0) ---
-    class MatrixRain {
+    // --- PREMIUM BACKGROUND ANIMATION (Neural Network) ---
+    class NeuralNetwork {
         constructor() {
-            if (document.getElementById('canvas-bg')) return; // Singleton Guard
+            if (document.getElementById('canvas-bg')) return;
             this.canvas = document.createElement('canvas');
             this.canvas.id = 'canvas-bg';
             document.body.prepend(this.canvas);
             this.ctx = this.canvas.getContext('2d');
-
-            this.fontSize = 14;
-            this.columns = 0;
-            this.drops = [];
-
-            // Premium Character Set (Katakana + Latin + Digits)
-            this.chars = 'ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            this.particles = [];
+            this.mouse = { x: null, y: null, radius: 150 };
 
             this.resize();
             window.addEventListener('resize', () => this.resize());
+            window.addEventListener('mousemove', (e) => {
+                this.mouse.x = e.x;
+                this.mouse.y = e.y;
+            });
+            window.addEventListener('mouseout', () => {
+                this.mouse.x = null;
+                this.mouse.y = null;
+            });
 
+            this.initParticles();
             this.animate = this.animate.bind(this);
             requestAnimationFrame(this.animate);
         }
@@ -965,45 +970,86 @@
         resize() {
             this.canvas.width = window.innerWidth;
             this.canvas.height = window.innerHeight;
-            this.columns = Math.floor(this.canvas.width / this.fontSize);
+            this.initParticles();
+        }
 
-            // Reset drops if dimensions change significantly
-            if (this.drops.length !== this.columns) {
-                this.drops = [];
-                for (let i = 0; i < this.columns; i++) {
-                    this.drops[i] = Math.random() * -100; // Start at random heights above screen
-                }
+        initParticles() {
+            this.particles = [];
+            // Density: 1 particle per 9000px sq (approx 100 on 1080p)
+            let n = (this.canvas.width * this.canvas.height) / 9000;
+            for (let i = 0; i < n; i++) {
+                let size = (Math.random() * 2) + 1;
+                let x = (Math.random() * ((this.canvas.width - size * 2) - (size * 2)) + size * 2);
+                let y = (Math.random() * ((this.canvas.height - size * 2) - (size * 2)) + size * 2);
+                let dirX = (Math.random() * 0.4) - 0.2;
+                let dirY = (Math.random() * 0.4) - 0.2;
+                this.particles.push({ x, y, dirX, dirY, size });
             }
         }
 
         animate() {
-            // Theme check for colors
-            const isLight = document.body.classList.contains('s-light');
-
-            // Fade effect (Trail)
-            // Light mode: Fade to white. Dark mode: Fade to black.
-            this.ctx.fillStyle = isLight ? 'rgba(248, 250, 252, 0.1)' : 'rgba(2, 6, 23, 0.05)';
-            this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-
-            // Text Color & Font
-            this.ctx.fillStyle = isLight ? '#64748b' : '#30363d'; // Slate-500 vs Dark Gray (Subtle)
-            this.ctx.font = this.fontSize + 'px monospace';
-
-            for (let i = 0; i < this.drops.length; i++) {
-                // Random Character
-                const text = this.chars.charAt(Math.floor(Math.random() * this.chars.length));
-
-                // Draw
-                this.ctx.fillText(text, i * this.fontSize, this.drops[i] * this.fontSize);
-
-                // Reset drop or move down
-                if (this.drops[i] * this.fontSize > this.canvas.height && Math.random() > 0.975) {
-                    this.drops[i] = 0;
-                }
-                this.drops[i]++;
-            }
-
             requestAnimationFrame(this.animate);
+            this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+            const isLight = document.body.classList.contains('s-light');
+            // Colors
+            const particleColor = isLight ? 'rgba(0, 0, 0, 0.5)' : 'rgba(255, 255, 255, 0.5)';
+            const lineColor = isLight ? 'rgba(0, 0, 0, 0.05)' : 'rgba(255, 255, 255, 0.05)';
+            const connectDist = 120;
+
+            // Physics & Draw Loop
+            for (let i = 0; i < this.particles.length; i++) {
+                let p = this.particles[i];
+
+                // Move
+                p.x += p.dirX;
+                p.y += p.dirY;
+
+                // Wall Bounce
+                if (p.x > this.canvas.width || p.x < 0) p.dirX *= -1;
+                if (p.y > this.canvas.height || p.y < 0) p.dirY *= -1;
+
+                // Mouse Interaction (Magnetic)
+                if (this.mouse.x != null) {
+                    let dx = this.mouse.x - p.x;
+                    let dy = this.mouse.y - p.y;
+                    let dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < 200) {
+                        const forceDirectionX = dx / dist;
+                        const forceDirectionY = dy / dist;
+                        const force = (200 - dist) / 200;
+                        const dirX = forceDirectionX * force * 0.5; // push factor
+                        const dirY = forceDirectionY * force * 0.5;
+
+                        // Gently attract
+                        p.x += dirX;
+                        p.y += dirY;
+                    }
+                }
+
+                // Draw Particle
+                this.ctx.beginPath();
+                this.ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2, false);
+                this.ctx.fillStyle = particleColor;
+                this.ctx.fill();
+
+                // Draw Connections
+                for (let j = i; j < this.particles.length; j++) {
+                    let p2 = this.particles[j];
+                    let dx = p.x - p2.x;
+                    let dy = p.y - p2.y;
+                    let dist = Math.sqrt(dx * dx + dy * dy);
+
+                    if (dist < connectDist) {
+                        this.ctx.beginPath();
+                        this.ctx.strokeStyle = lineColor;
+                        this.ctx.lineWidth = 1;
+                        this.ctx.moveTo(p.x, p.y);
+                        this.ctx.lineTo(p2.x, p2.y);
+                        this.ctx.stroke();
+                    }
+                }
+            }
         }
     }
 
