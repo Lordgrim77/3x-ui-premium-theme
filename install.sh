@@ -100,7 +100,8 @@ curl -Ls "$REPO_URL/web/html/settings/panel/subscription/subpage.html?v=$VERSION
 sed -i "s|assets/css/premium.css?{{ .cur_ver }}|assets/css/premium.css?v=$TIMESTAMP|g" "$SUBPAGE_PATH"
 sed -i "s|assets/js/subscription.js?{{ .cur_ver }}|assets/js/subscription.js?v=$TIMESTAMP|g" "$SUBPAGE_PATH"
 
-# Static infrastructure detection removed in favor of dynamic detection in server_stats.sh
+# Clear stale ISP cache to force fresh detection on install/update
+[[ -f "/usr/local/x-ui/isp_info.json" ]] && rm -f "/usr/local/x-ui/isp_info.json"
 
 chmod -R 755 "$BASE_PATH"
 
@@ -138,11 +139,11 @@ detect_infrastructure() {
     # If cache doesn't exist or is empty, fetch data
     if [ ! -s "$ISP_CACHE" ]; then
         # Try primary source
-        IP_DATA=$(curl -s --max-time 5 http://ip-api.com/json/)
+        IP_DATA=$(curl -s --max-time 10 http://ip-api.com/json/)
         
         # Fallback if failed
         if [[ -z "$IP_DATA" || "$IP_DATA" == *"fail"* ]]; then
-            IP_DATA=$(curl -s --max-time 5 https://ipinfo.io/json)
+            IP_DATA=$(curl -s --max-time 10 https://ipinfo.io/json)
             # Extract fields for ipinfo format
             ISP=$(echo "$IP_DATA" | grep -oE "\"org\"\s*:\s*\"[^\"]*\"" | sed -E "s/\"org\"\s*:\s*\"//g" | sed 's/"$//g' | sed 's/^AS[0-9]* //')
             REGION=$(echo "$IP_DATA" | grep -oE "\"city\"\s*:\s*\"[^\"]*\"" | sed -E "s/\"city\"\s*:\s*\"//g" | sed 's/"$//g')
@@ -152,9 +153,9 @@ detect_infrastructure() {
             REGION=$(echo "$IP_DATA" | grep -oE "\"city\"\s*:\s*\"[^\"]*\"" | sed -E "s/\"city\"\s*:\s*\"//g" | sed 's/"$//g')
         fi
         
-        # Default to unknown if still failing
-        [ -z "$ISP" ] && ISP="Unknown Provider"
-        [ -z "$REGION" ] && REGION="Unknown Region"
+        # Final Fallback
+        [[ -z "$ISP" ]] && ISP="Unknown Provider"
+        [[ -z "$REGION" ]] && REGION="Unknown Region"
         
         # Save to cache
         echo "{\"isp\":\"$ISP\",\"region\":\"$REGION\"}" > "$ISP_CACHE"
