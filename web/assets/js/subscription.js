@@ -608,6 +608,18 @@
 
                     if (uploadEl) uploadEl.textContent = formatSpeed(data.net_out || 0);
                     if (downloadEl) downloadEl.textContent = formatSpeed(data.net_in || 0);
+
+                    // Infrastructure Info (Dynamic Update)
+                    if (data.isp) {
+                        const ispEl = getEl('infra-isp');
+                        if (ispEl) ispEl.textContent = data.isp;
+                        if (STATE.raw) STATE.raw.isp = data.isp;
+                    }
+                    if (data.region) {
+                        const locEl = getEl('infra-loc');
+                        if (locEl) locEl.textContent = data.region;
+                        if (STATE.raw) STATE.raw.location = data.region;
+                    }
                 }
             } catch (e) {
                 // Silent fail - stats are supplementary
@@ -930,6 +942,7 @@
     // --- PREMIUM BACKGROUND ANIMATION (Digital Rain 2.0) ---
     class MatrixRain {
         constructor() {
+            if (document.getElementById('canvas-bg')) return; // Singleton Guard
             this.canvas = document.createElement('canvas');
             this.canvas.id = 'canvas-bg';
             document.body.prepend(this.canvas);

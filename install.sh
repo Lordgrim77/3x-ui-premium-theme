@@ -7,7 +7,9 @@
 # Author: LORD GRIM
 # Repo: https://github.com/Lordgrim77/3x-ui-premium-theme
 # Version for cache busting
+# Version for cache busting
 VERSION="1.3.0"
+TIMESTAMP=$(date +%s)
 
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -79,8 +81,9 @@ rm -rf "$TEMP_ZIP" "/tmp/3x-ui-extract"
 
 echo -e "${BLUE}Fetching assets...${NC}"
 #  Assets (Overwriting official ones where needed)
-curl -Ls "$REPO_URL/web/assets/js/subscription.js?v=$VERSION" -o "$ASSETS_PATH/js/subscription.js"
-curl -Ls "$REPO_URL/web/assets/css/premium.css?v=$VERSION" -o "$ASSETS_PATH/css/premium.css"
+# Use TIMESTAMP to bust GitHub CDN cache
+curl -Ls "$REPO_URL/web/assets/js/subscription.js?v=$TIMESTAMP" -o "$ASSETS_PATH/js/subscription.js"
+curl -Ls "$REPO_URL/web/assets/css/premium.css?v=$TIMESTAMP" -o "$ASSETS_PATH/css/premium.css"
 
 # Templates (Crucial for Persistence/Debug Mode)
 echo -e "${BLUE}Fetching assets...${NC}"
@@ -93,7 +96,7 @@ curl -Ls "$REPO_URL/web/html/settings/panel/subscription/subpage.html?v=$VERSION
 
 # CACHE BUSTING: Inject installation timestamp to force browser update
 # Replaces {{ .cur_ver }} with ?v=<timestamp> for premium assets only
-TIMESTAMP=$(date +%s)
+# TIMESTAMP is already defined at top of script
 sed -i "s|assets/css/premium.css?{{ .cur_ver }}|assets/css/premium.css?v=$TIMESTAMP|g" "$SUBPAGE_PATH"
 sed -i "s|assets/js/subscription.js?{{ .cur_ver }}|assets/js/subscription.js?v=$TIMESTAMP|g" "$SUBPAGE_PATH"
 
