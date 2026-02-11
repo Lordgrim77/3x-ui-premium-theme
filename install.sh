@@ -131,8 +131,14 @@ JSON_FILE="__STATS_FILE__"
 ISP_CACHE="/usr/local/x-ui/isp_info.json"
 INTERVAL=2
 
+# Detect primary interface
+INTERFACE=$(ip route get 8.8.8.8 2>/dev/null | awk '{print $5; exit}')
+[[ -z "$INTERFACE" ]] && INTERFACE=$(ip -o -4 route show to default | awk '{print $5; exit}')
+
 prev_total=0
 prev_idle=0
+prev_rx=0
+prev_tx=0
 
 # Infrastructure Detection (Cached)
 detect_infrastructure() {
@@ -199,10 +205,26 @@ while true; do
     # RAM Usage
     mem_info=$(free -m | awk 'NR==2{printf "%.1f", $3*100/$2}')
     ram_usage=${mem_info%.*}
+
+    # Network Traffic
+    if [ -n "$INTERFACE" ]; then
+        read rx tx < <(grep "$INTERFACE" /proc/net/dev | awk '{print $2, $10}')
+        if [ "$prev_rx" -gt 0 ]; then
+            net_in=$(( (rx - prev_rx) / 1024 / INTERVAL ))
+            net_out=$(( (tx - prev_tx) / 1024 / INTERVAL ))
+        else
+            net_in=0
+            net_out=0
+        fi
+        prev_rx=$rx
+        prev_tx=$tx
+    else
+        net_in=0
+        net_out=0
+    fi
     
     # Write JSON atomically with infrastructure data
-    # Safe JSON construction
-    echo "{\"cpu\":$cpu_usage,\"ram\":$ram_usage,\"isp\":\"$ISP\",\"region\":\"$REGION\"}" > "$JSON_FILE.tmp"
+    echo "{\"cpu\":$cpu_usage,\"ram\":$ram_usage,\"net_in\":$net_in,\"net_out\":$net_out,\"isp\":\"$ISP\",\"region\":\"$REGION\"}" > "$JSON_FILE.tmp"
     mv "$JSON_FILE.tmp" "$JSON_FILE"
     chmod 644 "$JSON_FILE"
     
