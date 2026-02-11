@@ -1097,11 +1097,10 @@ body.s-light .progress-container {
 /* Unlimited Data Special Appearance */
 .progress-bar.unlimited-bar {
     transform: scaleX(1) !important;
-    /* Removed hardcoded background to let theme adaptive variables take over */
-    background: linear-gradient(90deg, var(--accent) 0%, var(--accent-hover) 50%, var(--accent) 100%);
+    background: linear-gradient(90deg, #00e5ff 0%, #33ebff 50%, #00e5ff 100%);
     background-size: 200% 100%;
     animation: fluid-flow 3s infinite linear, liquid-pulse 3s infinite ease-in-out;
-    box-shadow: 0 0 35px var(--accent-glow);
+    box-shadow: 0 0 35px rgba(0, 229, 255, 0.6);
 }
 
 @keyframes glass-reflection {
@@ -1993,72 +1992,6 @@ body.s-light .icon-btn-mini:hover {
     background: var(--accent);
     color: #fff;
     border-color: transparent;
-}
-
-/* --- STAT MINI GRID (Info Card Components) --- */
-.stat-mini-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-.stat-mini {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    padding: 16px;
-    background: var(--bg-card, var(--card-bg));
-    border: 1px solid var(--card-border);
-    backdrop-filter: blur(var(--glass-blur));
-    border-radius: 16px;
-    transition: all 0.3s var(--ease-out);
-}
-
-.stat-mini:hover {
-    transform: translateX(6px);
-    border-color: var(--accent);
-    background: rgba(var(--node-color, 255, 255, 255), 0.08);
-    box-shadow: 0 8px 25px var(--accent-glow);
-}
-
-.stat-icon {
-    width: 38px;
-    height: 38px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(var(--node-color, 255, 255, 255), 0.08);
-    border-radius: 12px;
-    flex-shrink: 0;
-}
-
-.stat-mini:hover .stat-icon {
-    background: var(--accent);
-    color: white !important;
-}
-
-.stat-mini:hover .stat-icon svg {
-    color: white !important;
-}
-
-.stat-content {
-    flex: 1;
-    min-width: 0;
-}
-
-.stat-value {
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: var(--text-primary);
-    line-height: 1.2;
-}
-
-.stat-label {
-    font-size: 0.7rem;
-    color: var(--text-secondary);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    font-weight: 600;
 }
 
 /* --- STATS GRID (System Monitor - Horizontal) --- */

@@ -341,10 +341,8 @@
 
         rem.innerHTML = `
             <div class="stat-icon">${icoRem}</div>
-            <div class="stat-content">
-                <div class="stat-value">${remText}</div>
-                <div class="stat-label">${t('rem')}</div>
-            </div>
+            <div class="stat-value">${remText}</div>
+            <div class="stat-label">${t('rem')}</div>
         `;
 
         // Expire...
@@ -360,10 +358,8 @@
 
         exp.innerHTML = `
             <div class="stat-icon">${icoExp}</div>
-            <div class="stat-content">
-                <div class="stat-value">${expText}</div>
-                <div class="stat-label">${t('exp')}</div>
-            </div>
+            <div class="stat-value">${expText}</div>
+            <div class="stat-label">${t('exp')}</div>
         `;
 
         // Upload
@@ -371,10 +367,8 @@
         const icoUp = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--theme-up)"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>`;
         up.innerHTML = `
             <div class="stat-icon">${icoUp}</div>
-            <div class="stat-content">
-                <div class="stat-value">${formatBytes(STATE.raw.up)}</div>
-                <div class="stat-label">${t('upload')}</div>
-            </div>
+            <div class="stat-value">${formatBytes(STATE.raw.up)}</div>
+            <div class="stat-label">${t('upload')}</div>
         `;
 
         // Download
@@ -382,10 +376,8 @@
         const icoDown = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--theme-down)"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>`;
         down.innerHTML = `
             <div class="stat-icon">${icoDown}</div>
-            <div class="stat-content">
-                <div class="stat-value">${formatBytes(STATE.raw.down)}</div>
-                <div class="stat-label">${t('download')}</div>
-            </div>
+            <div class="stat-value">${formatBytes(STATE.raw.down)}</div>
+            <div class="stat-label">${t('download')}</div>
         `;
 
         // Last Online
@@ -407,10 +399,8 @@
         const icoOnline = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--status-online)"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>`;
         lastOnline.innerHTML = `
             <div class="stat-icon">${icoOnline}</div>
-            <div class="stat-content">
-                <div class="stat-value">${lastOnlineText}</div>
-                <div class="stat-label">Last Online</div>
-            </div>
+            <div class="stat-value">${lastOnlineText}</div>
+            <div class="stat-label">Last Online</div>
         `;
 
         card.appendChild(up);
