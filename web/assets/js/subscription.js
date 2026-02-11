@@ -166,7 +166,7 @@
         }
 
         // 6. Start Background Animation
-        new MatrixRain();
+        new NeuralNetwork();
     }
 
     // --- RENDERERS ---
