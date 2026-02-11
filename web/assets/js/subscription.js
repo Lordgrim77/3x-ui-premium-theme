@@ -309,7 +309,7 @@
           <div class="progress-container">
               <div class="progress-bar ${s.total === 0 ? 'unlimited-bar' : ''}" 
                    id="prog-bar" 
-                   style="transform:scaleX(${s.total === 0 ? 1 : 0}); background-color:${s.color}; box-shadow: 0 0 15px ${s.color}66">
+                   style="transform:scaleX(${s.total === 0 ? 1 : 0});">
               </div>
           </div>
             <div class="usage-sub">
@@ -347,7 +347,7 @@
         }
 
         const exp = mkEl('div', 'stat-mini');
-        const icoExp = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--status-warn)"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>`;
+        const icoExp = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--theme-warn, var(--status-warn))"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>`;
 
         exp.innerHTML = `
             <div class="stat-icon">${icoExp}</div>
@@ -357,7 +357,7 @@
 
         // Upload
         const up = mkEl('div', 'stat-mini');
-        const icoUp = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:#3b82f6"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>`;
+        const icoUp = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--theme-up)"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>`;
         up.innerHTML = `
             <div class="stat-icon">${icoUp}</div>
             <div class="stat-value">${formatBytes(STATE.raw.up)}</div>
@@ -366,7 +366,7 @@
 
         // Download
         const down = mkEl('div', 'stat-mini');
-        const icoDown = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:#8b5cf6"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>`;
+        const icoDown = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--theme-down)"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>`;
         down.innerHTML = `
             <div class="stat-icon">${icoDown}</div>
             <div class="stat-value">${formatBytes(STATE.raw.down)}</div>
@@ -389,7 +389,7 @@
             else lastOnlineText = days + 'd ago';
         }
 
-        const icoOnline = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:#10b981"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>`;
+        const icoOnline = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--status-online)"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>`;
         lastOnline.innerHTML = `
             <div class="stat-icon">${icoOnline}</div>
             <div class="stat-value">${lastOnlineText}</div>
@@ -535,7 +535,7 @@
         const cpuCard = mkEl('div', 'stat-card-mini');
         const cpuIcon = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M9 1v3M15 1v3M9 20v3M15 20v3M20 9h3M20 14h3M1 9h3M1 14h3"/></svg>`;
         cpuCard.innerHTML = `
-            <div class="stat-mini-icon" style="color: var(--accent);">${cpuIcon}</div>
+            <div class="stat-mini-icon" style="color: var(--theme-cpu);">${cpuIcon}</div>
             <div class="stat-mini-content">
                 <div class="stat-mini-label">CPU Usage</div>
                 <div class="stat-mini-value"><span id="cpu-val">0</span>%</div>
@@ -546,7 +546,7 @@
         const ramCard = mkEl('div', 'stat-card-mini');
         const ramIcon = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 6h16M4 12h16M4 18h16M8 2v20M12 2v20M16 2v20"/></svg>`;
         ramCard.innerHTML = `
-            <div class="stat-mini-icon" style="color: #ec4899;">${ramIcon}</div>
+            <div class="stat-mini-icon" style="color: var(--theme-ram);">${ramIcon}</div>
             <div class="stat-mini-content">
                 <div class="stat-mini-label">Memory</div>
                 <div class="stat-mini-value"><span id="ram-val">0</span>%</div>
@@ -557,7 +557,7 @@
         const uploadCard = mkEl('div', 'stat-card-mini');
         const uploadIcon = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>`;
         uploadCard.innerHTML = `
-            <div class="stat-mini-icon" style="color: #f59e0b;">${uploadIcon}</div>
+            <div class="stat-mini-icon" style="color: var(--theme-up);">${uploadIcon}</div>
             <div class="stat-mini-content">
                 <div class="stat-mini-label">Upload</div>
                 <div class="stat-mini-value" id="upload-val">0 KB/s</div>
@@ -568,7 +568,7 @@
         const downloadCard = mkEl('div', 'stat-card-mini');
         const downloadIcon = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="8 12 12 16 16 12"/><line x1="12" y1="16" x2="12" y2="3"/><path d="M20.88 18.09A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>`;
         downloadCard.innerHTML = `
-            <div class="stat-mini-icon" style="color: #22c55e;">${downloadIcon}</div>
+            <div class="stat-mini-icon" style="color: var(--theme-down);">${downloadIcon}</div>
             <div class="stat-mini-content">
                 <div class="stat-mini-label">Download</div>
                 <div class="stat-mini-value" id="download-val">0 KB/s</div>
@@ -624,6 +624,9 @@
                         if (locEl) locEl.textContent = data.region;
                         if (STATE.raw) STATE.raw.location = data.region;
                     }
+
+                    // Adaptive Sync: Update state based on potential new usage/ISP data
+                    applyTheme();
                 }
             } catch (e) {
                 // Silent fail - stats are supplementary
@@ -893,41 +896,15 @@
         }
 
         animate() {
-            if (!this.isScrolling) {
-                requestAnimationFrame(this.animate);
-            } else {
-                // Keep loop dead during scroll to save GPU/CPU resources
-                return;
-            }
-            this.ctx.clearRect(0, 0, innerWidth, innerHeight);
+            if (this.isScrolling) return;
+            requestAnimationFrame(this.animate);
 
-            const isLight = document.body.classList.contains('s-light');
-            const s = getStatusInfo();
+            this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-            // DYNAMIC State-Aware Animation Colors
-            const colorMap = {
-                active: {
-                    p: isLight ? '79, 70, 229' : '129, 140, 248', // Indigo
-                    l: isLight ? '100, 116, 139' : '148, 163, 184' // Slate
-                },
-                warn: {
-                    p: isLight ? '217, 119, 6' : '245, 158, 11',  // Amber/Orange
-                    l: isLight ? '180, 83, 9' : '217, 119, 6'
-                },
-                depleted: {
-                    p: isLight ? '225, 29, 72' : '255, 51, 68',  // Rose/Red
-                    l: isLight ? '190, 18, 60' : '255, 51, 68'
-                },
-                unlimited: {
-                    p: isLight ? '2, 132, 199' : '14, 165, 233', // Sky/Blue
-                    l: isLight ? '3, 105, 161' : '56, 189, 248'
-                }
-            };
-
-            const colors = colorMap[s.state] || colorMap.active;
-            const pColor = colors.p;
-            const lColor = colors.l;
-            const connectDist = 150;
+            const connectDist = this.isMobile ? 120 : 150;
+            const style = getComputedStyle(document.body);
+            const pColor = style.getPropertyValue('--node-color').trim() || '99, 102, 241';
+            const lColor = style.getPropertyValue('--line-color').trim() || '148, 163, 184';
 
             for (let i = 0; i < this.particles.length; i++) {
                 let p = this.particles[i];
