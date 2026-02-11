@@ -238,7 +238,7 @@
                 if (bar) {
                     const s = getStatusInfo();
                     setTimeout(() => {
-                        bar.style.transform = `scaleX(${s.pct / 100})`;
+                        bar.style.transform = `translateX(-${100 - s.pct}%)`;
                     }, 400); // Progress bar slides after card reveal
                 }
             }, 600);
@@ -315,7 +315,7 @@
           <div class="progress-container">
               <div class="progress-bar ${s.total === 0 ? 'unlimited-bar' : ''}" 
                    id="prog-bar" 
-                   style="transform:scaleX(${s.total === 0 ? 1 : 0});">
+                   style="transform:translateX(${s.total === 0 ? '0' : '-100%'});">
                    <div class="bloom"></div>
               </div>
           </div>
