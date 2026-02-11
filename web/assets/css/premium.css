@@ -608,11 +608,11 @@ body.s-dark .icon-btn {
 }
 
 .icon-btn:hover {
-    background: var(--card-hover);
+    background: rgba(var(--node-color, 255, 255, 255), 0.12);
     border-color: var(--accent);
     color: var(--accent);
-    transform: translate3d(0, -2px, 0) scale(1.05);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    transform: translate3d(0, -3px, 0);
+    box-shadow: 0 8px 25px var(--accent-glow);
 }
 
 /* LANG SWITCHER */
@@ -725,8 +725,9 @@ body.s-dark .icon-btn {
 }
 
 .lang-opt:hover {
-    background: var(--card-border);
-    color: var(--text-primary);
+    background: var(--accent);
+    color: #fff;
+    box-shadow: 0 5px 15px var(--accent-glow);
 }
 
 /* DASHBOARD GRID */
@@ -1504,10 +1505,11 @@ body.s-dark .node-card:hover {
 }
 
 .qr-close:hover {
-    background: rgba(239, 68, 68, 0.15);
-    color: #f87171;
-    border-color: rgba(239, 68, 68, 0.2);
-    transform: scale(1.05);
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+    box-shadow: 0 8px 25px var(--accent-glow);
+    transform: scale(1.1);
 }
 
 .qr-container {
@@ -1944,9 +1946,9 @@ body.s-light .infra-icon {
 .icon-btn-mini:hover {
     background: var(--accent);
     color: #fff;
-    box-shadow: 0 0 15px var(--accent-glow);
-    transform: translateY(-2px);
-    border-color: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 5px 20px var(--accent-glow);
+    transform: translateY(-3px);
+    border-color: var(--accent);
 }
 
 .icon-btn-mini:active {
