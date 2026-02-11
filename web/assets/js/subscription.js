@@ -819,9 +819,13 @@
             this.mouse = { x: null, y: null, radius: 180 };
             this.isScrolling = false;
             this.scrollTimeout = null;
+            this.resizeTimeout = null;
 
             this.resize();
-            window.addEventListener('resize', () => this.resize());
+            window.addEventListener('resize', () => {
+                clearTimeout(this.resizeTimeout);
+                this.resizeTimeout = setTimeout(() => this.resize(), 200);
+            });
             window.addEventListener('mousemove', (e) => {
                 if (this.isScrolling) return;
                 this.mouse.x = e.x;
@@ -859,7 +863,9 @@
             this.canvas.style.height = window.innerHeight + 'px';
             this.ctx.scale(dpr, dpr);
 
-            this.initParticles();
+            if (this.particles.length === 0) {
+                this.initParticles();
+            }
         }
 
         initParticles() {
@@ -902,9 +908,12 @@
                 p.x += p.dirX;
                 p.y += p.dirY;
 
-                // Wall Bounce
-                if (p.x > innerWidth || p.x < 0) p.dirX *= -1;
-                if (p.y > innerHeight || p.y < 0) p.dirY *= -1;
+                // Wall Bounce & Clamping (Stability Fix)
+                if (p.x > innerWidth) { p.x = innerWidth; p.dirX *= -1; }
+                else if (p.x < 0) { p.x = 0; p.dirX *= -1; }
+
+                if (p.y > innerHeight) { p.y = innerHeight; p.dirY *= -1; }
+                else if (p.y < 0) { p.y = 0; p.dirY *= -1; }
 
                 // Pulse (Breathing Effect)
                 if (p.angle !== undefined) {
