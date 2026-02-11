@@ -107,19 +107,21 @@
 
         let label = active ? 'User Active' : 'User Inactive';
         let colorVar = 'var(--usage-active)';
-        if (expired) {
-            colorVar = 'var(--usage-expired)';
-        } else if (depleted) {
+        if (depleted) {
             colorVar = 'var(--usage-depleted)';
             label = 'Data Depleted';
+        } else if (expired) {
+            colorVar = 'var(--usage-expired)';
+            label = 'Monthly Expired';
         }
 
         const pct = total === 0 ? 0 : Math.min(100, (used / total) * 100);
 
         let state = 'active';
         if (total === 0) state = 'unlimited';
-        else if (expired || depleted) state = 'depleted';
-        else if (pct > 80 || (STATE.raw.expire > 0 && (STATE.raw.expire - now) < (7 * 24 * 60 * 60 * 1000))) state = 'warn';
+        else if (depleted) state = 'depleted';
+        else if (expired) state = 'warn'; // Warn = Yellow/Expired per user
+        else if (pct > 80) state = 'active'; // No more 'warn' for pct, just active green or yellow expired 
 
         return { active, expired, depleted, label, color: colorVar, pct, used, total, state };
     }
@@ -977,7 +979,18 @@
 
     function toggleTheme(e) {
         const nextTheme = STATE.theme === 'dark' ? 'light' : 'dark';
-        const burstColor = nextTheme === 'dark' ? '#020617' : '#f8fafc';
+
+        // Logic to fetch target background color dynamically
+        const status = getStatusInfo().state;
+        const mockClass = `premium-theme ${nextTheme === 'dark' ? 's-dark' : 's-light'} status-${status}`;
+
+        const dummy = document.createElement('div');
+        dummy.className = mockClass;
+        dummy.style.display = 'none';
+        document.body.appendChild(dummy);
+        const burstColor = getComputedStyle(dummy).getPropertyValue('--bg-main').trim() || (nextTheme === 'dark' ? '#020617' : '#f8fafc');
+        document.body.removeChild(dummy);
+
         const btn = e.currentTarget;
         const rect = btn.getBoundingClientRect();
         const burst = mkEl('div', 'theme-burst');
