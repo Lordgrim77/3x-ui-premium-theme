@@ -316,6 +316,7 @@
               <div class="progress-bar ${s.total === 0 ? 'unlimited-bar' : ''}" 
                    id="prog-bar" 
                    style="transform:scaleX(${s.total === 0 ? 1 : 0});">
+                   <div class="bloom"></div>
               </div>
           </div>
             <div class="usage-sub">
