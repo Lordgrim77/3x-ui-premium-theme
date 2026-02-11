@@ -10,6 +10,7 @@
 
 (function () {
     // --- CONFIG & STATE ---
+    const VERSION = "__VERSION__"; // Injected by installer
     const STATE = {
         theme: localStorage.getItem('xui_theme') || 'dark', // 'dark' | 'light'
         lang: localStorage.getItem('xui_lang') || 'en',   // 'en' | 'cn' | 'fa'
@@ -161,7 +162,7 @@
         if (!document.querySelector('link[href*="premium.css"]')) {
             const css = document.createElement('link');
             css.rel = 'stylesheet';
-            css.href = './assets/css/premium.css';
+            css.href = `./assets/css/premium.css?v=${VERSION}`;
             document.head.appendChild(css);
         }
 
