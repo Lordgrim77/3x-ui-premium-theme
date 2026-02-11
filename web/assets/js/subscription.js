@@ -981,16 +981,16 @@
 
         initParticles() {
             this.particles = [];
-            // Reduced density slightly for bolder particles (cleaner look)
+            // Optimized density for bold, clean look
             let n = (window.innerWidth * window.innerHeight) / 10000;
             for (let i = 0; i < n; i++) {
-                // Bolder Size: 1.5 to 3.5 (was 1 to 3)
-                let size = (Math.random() * 2) + 1.5;
+                let size = (Math.random() * 2.5) + 1.5; // Range: 1.5 to 4
                 let x = Math.random() * (innerWidth - size * 2) + size * 2;
                 let y = Math.random() * (innerHeight - size * 2) + size * 2;
-                let dirX = (Math.random() * 0.6) - 0.3; // Slightly faster
-                let dirY = (Math.random() * 0.6) - 0.3;
-                this.particles.push({ x, y, dirX, dirY, size });
+                let dirX = (Math.random() * 0.4) - 0.2; // Calm drift
+                let dirY = (Math.random() * 0.4) - 0.2;
+                let pulseSpeed = 0.02 + Math.random() * 0.02; // Breathing speed
+                this.particles.push({ x, y, dirX, dirY, size, baseSize: size, angle: Math.random() * 6.28, pulseSpeed });
             }
         }
 
@@ -1000,55 +1000,64 @@
 
             const isLight = document.body.classList.contains('s-light');
 
-            // Premium Theme Colors
-            // Light: Indigo-600 Particles (0.4), Slate-400 Lines (0.15)
-            // Dark:  Indigo-300 Particles (0.4), Slate-600 Lines (0.1)
-            const particleColor = isLight ? 'rgba(79, 70, 229, 0.4)' : 'rgba(165, 180, 252, 0.4)';
-            const lineColor = isLight ? 'rgba(148, 163, 184, 0.3)' : 'rgba(148, 163, 184, 0.15)';
-            const connectDist = 140;
+            // HIGH VISIBILITY Theme Colors
+            // Light: Indigo-600 (bright), Slate-500 (visible lines)
+            // Dark:  Indigo-400 (vivid glow), Slate-400 (visible lines)
+            const pColor = isLight ? '79, 70, 229' : '129, 140, 248';
+            const lColor = isLight ? '100, 116, 139' : '148, 163, 184';
+            const connectDist = 150;
 
             for (let i = 0; i < this.particles.length; i++) {
                 let p = this.particles[i];
 
+                // Movement
                 p.x += p.dirX;
                 p.y += p.dirY;
 
+                // Wall Bounce
                 if (p.x > innerWidth || p.x < 0) p.dirX *= -1;
                 if (p.y > innerHeight || p.y < 0) p.dirY *= -1;
 
-                // Mouse Magnet
+                // Pulse (Breathing Effect)
+                if (p.angle !== undefined) {
+                    p.angle += (p.pulseSpeed || 0.02);
+                    p.size = (p.baseSize || p.size) + Math.sin(p.angle) * 0.6;
+                }
+
+                // Mouse-to-Particle Connections (cursor = Super Node)
                 if (this.mouse.x != null) {
                     let dx = this.mouse.x - p.x;
                     let dy = this.mouse.y - p.y;
                     let dist = Math.sqrt(dx * dx + dy * dy);
-                    if (dist < 200) {
-                        const forceDirectionX = dx / dist;
-                        const forceDirectionY = dy / dist;
-                        const force = (200 - dist) / 200;
-                        const dirX = forceDirectionX * force * 0.8; // Stronger pull
-                        const dirY = forceDirectionY * force * 0.8;
-                        p.x += dirX;
-                        p.y += dirY;
+                    if (dist < 250) {
+                        let opacity = 1 - (dist / 250);
+                        this.ctx.beginPath();
+                        this.ctx.strokeStyle = `rgba(${pColor}, ${opacity * 0.9})`;
+                        this.ctx.lineWidth = 1.5;
+                        this.ctx.moveTo(p.x, p.y);
+                        this.ctx.lineTo(this.mouse.x, this.mouse.y);
+                        this.ctx.stroke();
                     }
                 }
 
-                // Draw Particle
+                // Draw Particle (High Opacity)
                 this.ctx.beginPath();
-                this.ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2, false);
-                this.ctx.fillStyle = particleColor;
+                this.ctx.arc(p.x, p.y, Math.max(0, p.size), 0, Math.PI * 2, false);
+                this.ctx.fillStyle = `rgba(${pColor}, 0.85)`;
                 this.ctx.fill();
 
-                // Draw Connections
-                for (let j = i; j < this.particles.length; j++) {
+                // Draw Connections (Smooth Distance-Based Fade)
+                for (let j = i + 1; j < this.particles.length; j++) {
                     let p2 = this.particles[j];
                     let dx = p.x - p2.x;
                     let dy = p.y - p2.y;
                     let dist = Math.sqrt(dx * dx + dy * dy);
 
                     if (dist < connectDist) {
+                        let opacity = 1 - (dist / connectDist);
                         this.ctx.beginPath();
-                        this.ctx.strokeStyle = lineColor;
-                        this.ctx.lineWidth = 1.5; // Thicker lines
+                        this.ctx.strokeStyle = `rgba(${lColor}, ${opacity * 0.4})`;
+                        this.ctx.lineWidth = 1.2;
                         this.ctx.moveTo(p.x, p.y);
                         this.ctx.lineTo(p2.x, p2.y);
                         this.ctx.stroke();
