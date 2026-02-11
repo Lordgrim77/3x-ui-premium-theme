@@ -959,9 +959,7 @@ body.s-dark .span-4 {
         inset 0 2px 10px rgba(0, 0, 0, 0.3),
         0 0 0 1px rgba(255, 255, 255, 0.05);
     background-image:
-        radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.08), transparent 70%),
-        linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-    background-size: 100% 100%, 20px 100%;
+        radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.1), transparent 80%);
 }
 
 /* Glass Shard Reflection */
