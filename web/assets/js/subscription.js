@@ -164,6 +164,9 @@
         if (!window.statusLoop) {
             window.statusLoop = setInterval(updateStatus, 60000); // Check status every min
         }
+
+        // 6. Start Background Animation
+        new MatrixRain();
     }
 
     // --- RENDERERS ---
@@ -924,50 +927,119 @@
         document.body.removeChild(textArea);
     }
 
-    function applyTheme() {
-        document.body.classList.remove('s-dark', 's-light');
-        document.body.classList.add(STATE.theme === 'dark' ? 's-dark' : 's-light');
-    }
+    // --- PREMIUM BACKGROUND ANIMATION (Digital Rain 2.0) ---
+    class MatrixRain {
+        constructor() {
+            this.canvas = document.createElement('canvas');
+            this.canvas.id = 'canvas-bg';
+            document.body.prepend(this.canvas);
+            this.ctx = this.canvas.getContext('2d');
 
-    function toggleTheme(e) {
-        const nextTheme = STATE.theme === 'dark' ? 'light' : 'dark';
-        const burstColor = nextTheme === 'dark' ? '#020617' : '#f8fafc';
-        const btn = e.currentTarget;
-        const rect = btn.getBoundingClientRect();
-        const burst = mkEl('div', 'theme-burst');
+            this.fontSize = 14;
+            this.columns = 0;
+            this.drops = [];
 
-        burst.style.background = burstColor;
-        burst.style.left = (rect.left + rect.width / 2) + 'px';
-        burst.style.top = (rect.top + rect.height / 2) + 'px';
-        document.body.appendChild(burst);
+            // Premium Character Set (Katakana + Latin + Digits)
+            this.chars = 'ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
-        setTimeout(() => {
-            STATE.theme = nextTheme;
-            localStorage.setItem('xui_theme', STATE.theme);
-            applyTheme();
-            const btnIcon = getEl('theme-btn');
-            const newSVG = STATE.theme === 'dark' ?
-                `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>` :
-                `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>`;
-            if (btnIcon) btnIcon.innerHTML = newSVG;
-        }, 500);
+            this.resize();
+            window.addEventListener('resize', () => this.resize());
 
-        setTimeout(() => burst.remove(), 1600);
-    }
+            this.animate = this.animate.bind(this);
+            requestAnimationFrame(this.animate);
+        }
 
-    function showToast(msg) {
-        const toastEl = getEl('toast');
-        if (toastEl) {
-            toastEl.innerText = msg;
-            toastEl.classList.add('show');
-            if (toastEl._timeout) clearTimeout(toastEl._timeout);
-            toastEl._timeout = setTimeout(() => toastEl.classList.remove('show'), 2000);
+        resize() {
+            this.canvas.width = window.innerWidth;
+            this.canvas.height = window.innerHeight;
+            this.columns = Math.floor(this.canvas.width / this.fontSize);
+
+            // Reset drops if dimensions change significantly
+            if (this.drops.length !== this.columns) {
+                this.drops = [];
+                for (let i = 0; i < this.columns; i++) {
+                    this.drops[i] = Math.random() * -100; // Start at random heights above screen
+                }
+            }
+        }
+
+        animate() {
+            // Theme check for colors
+            const isLight = document.body.classList.contains('s-light');
+
+            // Fade effect (Trail)
+            // Light mode: Fade to white. Dark mode: Fade to black.
+            this.ctx.fillStyle = isLight ? 'rgba(248, 250, 252, 0.1)' : 'rgba(2, 6, 23, 0.05)';
+            this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+            // Text Color & Font
+            this.ctx.fillStyle = isLight ? '#64748b' : '#30363d'; // Slate-500 vs Dark Gray (Subtle)
+            this.ctx.font = this.fontSize + 'px monospace';
+
+            for (let i = 0; i < this.drops.length; i++) {
+                // Random Character
+                const text = this.chars.charAt(Math.floor(Math.random() * this.chars.length));
+
+                // Draw
+                this.ctx.fillText(text, i * this.fontSize, this.drops[i] * this.fontSize);
+
+                // Reset drop or move down
+                if (this.drops[i] * this.fontSize > this.canvas.height && Math.random() > 0.975) {
+                    this.drops[i] = 0;
+                }
+                this.drops[i]++;
+            }
+
+            requestAnimationFrame(this.animate);
         }
     }
 
-    function updateStatus() { }
-
-    // --- BOOT ---
-    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
-    else init();
 })();
+
+function applyTheme() {
+    document.body.classList.remove('s-dark', 's-light');
+    document.body.classList.add(STATE.theme === 'dark' ? 's-dark' : 's-light');
+}
+
+function toggleTheme(e) {
+    const nextTheme = STATE.theme === 'dark' ? 'light' : 'dark';
+    const burstColor = nextTheme === 'dark' ? '#020617' : '#f8fafc';
+    const btn = e.currentTarget;
+    const rect = btn.getBoundingClientRect();
+    const burst = mkEl('div', 'theme-burst');
+
+    burst.style.background = burstColor;
+    burst.style.left = (rect.left + rect.width / 2) + 'px';
+    burst.style.top = (rect.top + rect.height / 2) + 'px';
+    document.body.appendChild(burst);
+
+    setTimeout(() => {
+        STATE.theme = nextTheme;
+        localStorage.setItem('xui_theme', STATE.theme);
+        applyTheme();
+        const btnIcon = getEl('theme-btn');
+        const newSVG = STATE.theme === 'dark' ?
+            `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>` :
+            `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>`;
+        if (btnIcon) btnIcon.innerHTML = newSVG;
+    }, 500);
+
+    setTimeout(() => burst.remove(), 1600);
+}
+
+function showToast(msg) {
+    const toastEl = getEl('toast');
+    if (toastEl) {
+        toastEl.innerText = msg;
+        toastEl.classList.add('show');
+        if (toastEl._timeout) clearTimeout(toastEl._timeout);
+        toastEl._timeout = setTimeout(() => toastEl.classList.remove('show'), 2000);
+    }
+}
+
+function updateStatus() { }
+
+// --- BOOT ---
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+else init();
+}) ();
