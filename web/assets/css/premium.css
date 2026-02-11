@@ -999,12 +999,11 @@ body.s-light .progress-container {
     position: relative;
     /* Removed overflow: hidden to allow bloom/glow to breathe */
 
-    /* Living Fluid Fill */
-    background: linear-gradient(90deg,
-            var(--accent) 0%,
-            var(--accent-hover) 50%,
-            var(--accent) 100%);
-    background-size: 200% 100%;
+    /* Living Fluid Fill with Surface Tension Layer */
+    background:
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.25) 0%, transparent 45%),
+        linear-gradient(90deg, var(--accent) 0%, var(--accent-hover) 50%, var(--accent) 100%);
+    background-size: 100% 100%, 200% 100%;
     animation: fluid-flow 4s infinite linear;
 
     box-shadow:
@@ -1030,21 +1029,6 @@ body.s-light .progress-container {
     box-shadow: 0 0 15px #fff;
 }
 
-/* Surface Tension Highlight */
-.progress-bar::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 40%;
-    background: linear-gradient(to bottom,
-            rgba(255, 255, 255, 0.3) 0%,
-            rgba(255, 255, 255, 0) 100%);
-    opacity: 0.6;
-    z-index: 2;
-}
-
 /* Glass Flow Flare */
 .progress-bar::after {
     content: '';
@@ -1052,13 +1036,14 @@ body.s-light .progress-container {
     inset: 0;
     background: linear-gradient(90deg,
             transparent 0%,
-            rgba(255, 255, 255, 0.3) 50%,
+            rgba(255, 255, 255, 0.2) 50%,
             transparent 100%);
     background-size: 100px 100%;
-    animation: fluid-flow 3s infinite linear reverse;
+    animation: fluid-flow 3.5s infinite linear reverse;
     opacity: 0.4;
     border-radius: inherit;
     pointer-events: none;
+    z-index: 3;
 }
 
 /* Lead Glow Bloom (Modern Engine) */
@@ -2042,14 +2027,15 @@ body.s-light .icon-btn-mini:hover {
     background: rgba(var(--node-color, 255, 255, 255), 0.04);
     border: 1px solid var(--card-border);
     border-radius: 16px;
-    padding: 14px 16px;
+    padding: 10px 14px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     text-align: center;
-    gap: 12px;
-    min-height: 120px;
+    gap: 8px;
+    min-height: 90px;
+    height: 100%;
     transition: all 0.3s var(--ease-out);
 }
 
