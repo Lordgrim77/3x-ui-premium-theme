@@ -110,18 +110,17 @@
         if (depleted) {
             colorVar = 'var(--usage-depleted)';
             label = 'Data Depleted';
-        } else if (expired) {
+        } else if (expired || total === 0) {
             colorVar = 'var(--usage-expired)';
-            label = 'Monthly Expired';
+            label = total === 0 ? 'Unlimited Data' : 'Monthly Expired';
         }
 
         const pct = total === 0 ? 0 : Math.min(100, (used / total) * 100);
 
         let state = 'active';
-        if (total === 0) state = 'unlimited';
-        else if (depleted) state = 'depleted';
-        else if (expired) state = 'warn'; // Warn = Yellow/Expired per user
-        else if (pct > 80) state = 'active'; // No more 'warn' for pct, just active green or yellow expired 
+        if (depleted) state = 'depleted';
+        else if (expired || total === 0) state = 'warn'; // Unlimited & Expired now use Yellow (warn)
+        else state = 'active';
 
         return { active, expired, depleted, label, color: colorVar, pct, used, total, state };
     }
@@ -349,7 +348,7 @@
         }
 
         const exp = mkEl('div', 'stat-mini');
-        const icoExp = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--theme-warn, var(--status-warn))"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>`;
+        const icoExp = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--accent)"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>`;
 
         exp.innerHTML = `
             <div class="stat-icon">${icoExp}</div>
@@ -484,7 +483,7 @@
 
         // Location Card (Region)
         const locCard = mkEl('div', 'infra-card');
-        const icoGlobe = `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color:#3b82f6"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>`;
+        const icoGlobe = `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--accent)"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>`;
         locCard.innerHTML = `
             <div class="infra-icon" id="infra-loc-icon">${icoGlobe}</div>
             <div class="infra-details">
@@ -495,7 +494,7 @@
 
         // Ping Card
         const ping = mkEl('div', 'infra-card');
-        const icoWifi = `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color:#10b981"><path d="M5 12.55a11 11 0 0 1 14.08 0"></path><path d="M1.42 9a16 16 0 0 1 21.16 0"></path><path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path><line x1="12" y1="20" x2="12.01" y2="20"></line></svg>`;
+        const icoWifi = `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--accent)"><path d="M5 12.55a11 11 0 0 1 14.08 0"></path><path d="M1.42 9a16 16 0 0 1 21.16 0"></path><path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path><line x1="12" y1="20" x2="12.01" y2="20"></line></svg>`;
         ping.innerHTML = `
             <div class="infra-icon">${icoWifi}</div>
             <div class="infra-details">

@@ -66,10 +66,10 @@ body.premium-theme {
 /* THEME: DEEP SPACE (Default) */
 body.premium-theme.s-dark {
     --bg-main: #020617;
-    --bg-card: rgba(15, 23, 42, 0.8);
+    --bg-card: rgba(15, 23, 42, 0.85);
     --bg-sec: #0f172a;
     --accent: #6366f1;
-    --accent-glow: rgba(99, 102, 241, 0.5);
+    --accent-glow: rgba(99, 102, 241, 0.4);
 
     --usage-active: #10b981;
     --usage-depleted: #ff3344;
@@ -100,42 +100,42 @@ body.premium-theme.s-dark {
 /* DARK MODE - ADAPTIVE STATES (Boosted Specificity) */
 body.premium-theme.s-dark.status-active {
     --accent: #10b981;
-    --accent-glow: rgba(16, 185, 129, 0.4);
+    --accent-glow: rgba(16, 185, 129, 0.3);
     --accent-hover: #34d399;
-    --gradient-overlay: radial-gradient(circle at top right, rgba(16, 185, 129, 0.15), transparent 40%);
+    --gradient-overlay: radial-gradient(circle at top right, rgba(16, 185, 129, 0.1), transparent 40%);
     --bg-main: #020617;
-    --bg-card: rgba(15, 23, 42, 0.8);
+    --bg-card: rgba(15, 23, 42, 0.85);
     --bg-sec: #0f172a;
-    --card-bg: rgba(15, 23, 42, 0.6);
+    --card-bg: rgba(15, 23, 42, 0.7);
     --usage-active: var(--accent);
     --node-color: 16, 185, 129;
     --line-color: 148, 163, 184;
 }
 
 body.premium-theme.s-dark.status-warn {
-    --accent: #f59e0b;
-    --accent-glow: rgba(245, 158, 11, 0.3);
-    --accent-hover: #fbbf24;
-    --gradient-overlay: radial-gradient(circle at top right, rgba(245, 158, 11, 0.12), transparent 40%);
+    --accent: #fbbf24;
+    --accent-glow: rgba(251, 191, 36, 0.3);
+    --accent-hover: #fcd34d;
+    --gradient-overlay: radial-gradient(circle at top right, rgba(251, 191, 36, 0.1), transparent 40%);
     --bg-main: #0c0a09;
-    --bg-card: rgba(28, 25, 23, 0.85);
+    --bg-card: rgba(28, 25, 23, 0.9);
     --bg-sec: #1c1917;
-    --card-bg: rgba(28, 25, 23, 0.7);
+    --card-bg: rgba(28, 25, 23, 0.75);
     --usage-active: var(--accent);
     --usage-expired: var(--accent);
-    --node-color: 245, 158, 11;
-    --line-color: 180, 83, 9;
+    --node-color: 251, 191, 36;
+    --line-color: 245, 158, 11;
 }
 
 body.premium-theme.s-dark.status-depleted {
     --accent: #ff3344;
-    --accent-glow: rgba(255, 51, 68, 0.4);
+    --accent-glow: rgba(255, 51, 68, 0.35);
     --accent-hover: #ff4d5a;
-    --gradient-overlay: radial-gradient(circle at top right, rgba(255, 51, 68, 0.15), transparent 40%);
+    --gradient-overlay: radial-gradient(circle at top right, rgba(255, 51, 68, 0.12), transparent 40%);
     --bg-main: #090202;
-    --bg-card: rgba(20, 5, 5, 0.85);
+    --bg-card: rgba(20, 5, 5, 0.9);
     --bg-sec: #120404;
-    --card-bg: rgba(20, 5, 5, 0.7);
+    --card-bg: rgba(20, 5, 5, 0.75);
     --usage-active: var(--accent);
     --usage-depleted: var(--accent);
     --node-color: 255, 51, 68;
@@ -194,13 +194,13 @@ body.premium-theme.s-light {
 /* LIGHT MODE - ADAPTIVE STATES (Boosted Specificity) */
 body.premium-theme.s-light.status-active {
     --accent: #059669;
-    --accent-glow: rgba(5, 150, 105, 0.2);
+    --accent-glow: rgba(5, 150, 105, 0.15);
     --accent-hover: #047857;
-    --gradient-overlay: radial-gradient(circle at top right, rgba(5, 150, 105, 0.05), transparent 40%);
+    --gradient-overlay: radial-gradient(circle at top right, rgba(5, 150, 105, 0.03), transparent 40%);
     --bg-main: #f0fdf4;
-    --bg-card: rgba(255, 255, 255, 0.75);
+    --bg-card: rgba(255, 255, 255, 0.8);
     --bg-sec: #f0fdf4;
-    --card-bg: rgba(255, 255, 255, 0.7);
+    --card-bg: rgba(255, 255, 255, 0.75);
     --usage-active: var(--accent);
     --node-color: 5, 150, 105;
     --line-color: 16, 185, 129;
@@ -208,13 +208,13 @@ body.premium-theme.s-light.status-active {
 
 body.premium-theme.s-light.status-warn {
     --accent: #d97706;
-    --accent-glow: rgba(217, 119, 6, 0.15);
+    --accent-glow: rgba(217, 119, 6, 0.1);
     --accent-hover: #b45309;
-    --gradient-overlay: radial-gradient(circle at top right, rgba(217, 119, 6, 0.08), transparent 40%);
+    --gradient-overlay: radial-gradient(circle at top right, rgba(217, 119, 6, 0.05), transparent 40%);
     --bg-main: #fffcf0;
-    --bg-card: rgba(254, 252, 232, 0.85);
+    --bg-card: rgba(254, 252, 232, 0.9);
     --bg-sec: #fefce8;
-    --card-bg: rgba(254, 252, 232, 0.75);
+    --card-bg: rgba(254, 252, 232, 0.8);
     --usage-active: var(--accent);
     --usage-expired: var(--accent);
     --node-color: 217, 119, 6;
@@ -223,13 +223,13 @@ body.premium-theme.s-light.status-warn {
 
 body.premium-theme.status-depleted.s-light {
     --accent: #e11d48;
-    --accent-glow: rgba(225, 29, 72, 0.2);
+    --accent-glow: rgba(225, 29, 72, 0.15);
     --accent-hover: #be123c;
-    --gradient-overlay: radial-gradient(circle at top right, rgba(225, 29, 72, 0.1), transparent 40%);
+    --gradient-overlay: radial-gradient(circle at top right, rgba(225, 29, 72, 0.05), transparent 40%);
     --bg-main: #fff1f2;
-    --bg-card: rgba(255, 241, 242, 0.9);
+    --bg-card: rgba(255, 241, 242, 0.95);
     --bg-sec: #fff1f2;
-    --card-bg: rgba(255, 241, 242, 0.8);
+    --card-bg: rgba(255, 241, 242, 0.85);
     --usage-active: var(--accent);
     --usage-depleted: var(--accent);
     --node-color: 225, 29, 72;
@@ -1042,15 +1042,15 @@ body.s-light .progress-container {
 .progress-bar.unlimited-bar {
     transform: scaleX(1) !important;
     background: linear-gradient(90deg,
-            var(--accent) 0%,
-            var(--accent-hover) 25%,
-            var(--accent) 50%,
-            var(--accent-hover) 75%,
-            var(--accent) 100%);
+            #00e5ff 0%,
+            #33ebff 25%,
+            #00e5ff 50%,
+            #33ebff 75%,
+            #00e5ff 100%);
     background-size: 200% 100%;
     animation: infinity-flow 3s infinite linear,
         liquid-pulse 4s infinite ease-in-out;
-    box-shadow: 0 0 20px rgba(0, 210, 255, 0.4);
+    box-shadow: 0 0 25px rgba(0, 229, 255, 0.45);
 }
 
 @keyframes infinity-flow {
