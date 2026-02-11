@@ -1097,10 +1097,13 @@ body.s-light .progress-container {
 /* Unlimited Data Special Appearance */
 .progress-bar.unlimited-bar {
     transform: scaleX(1) !important;
-    background: linear-gradient(90deg, #00e5ff 0%, #33ebff 50%, #00e5ff 100%);
+    background: linear-gradient(90deg,
+            var(--accent) 0%,
+            var(--accent-hover) 50%,
+            var(--accent) 100%);
     background-size: 200% 100%;
     animation: fluid-flow 3s infinite linear, liquid-pulse 3s infinite ease-in-out;
-    box-shadow: 0 0 35px rgba(0, 229, 255, 0.6);
+    box-shadow: 0 0 35px var(--accent-glow);
 }
 
 @keyframes glass-reflection {
