@@ -816,11 +816,14 @@
             document.body.prepend(this.canvas);
             this.ctx = this.canvas.getContext('2d');
             this.particles = [];
-            this.mouse = { x: null, y: null, radius: 180 }; // Increased interaction radius
+            this.mouse = { x: null, y: null, radius: 180 };
+            this.isScrolling = false;
+            this.scrollTimeout = null;
 
             this.resize();
             window.addEventListener('resize', () => this.resize());
             window.addEventListener('mousemove', (e) => {
+                if (this.isScrolling) return;
                 this.mouse.x = e.x;
                 this.mouse.y = e.y;
             });
@@ -828,6 +831,19 @@
                 this.mouse.x = null;
                 this.mouse.y = null;
             });
+
+            // Scroll detection
+            window.addEventListener('scroll', () => {
+                this.isScrolling = true;
+                this.mouse.x = null; // Clear interaction during scroll
+                this.mouse.y = null;
+                clearTimeout(this.scrollTimeout);
+                this.scrollTimeout = setTimeout(() => {
+                    this.isScrolling = false;
+                    // Restart animation loop when scroll stops
+                    requestAnimationFrame(this.animate);
+                }, 200); // Resume interaction 200ms after scroll stops
+            }, { passive: true });
 
             this.initParticles();
             this.animate = this.animate.bind(this);
@@ -862,7 +878,12 @@
         }
 
         animate() {
-            requestAnimationFrame(this.animate);
+            if (!this.isScrolling) {
+                requestAnimationFrame(this.animate);
+            } else {
+                // Keep loop dead during scroll to save GPU/CPU resources
+                return;
+            }
             this.ctx.clearRect(0, 0, innerWidth, innerHeight);
 
             const isLight = document.body.classList.contains('s-light');
