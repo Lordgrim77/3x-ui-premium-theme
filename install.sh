@@ -8,7 +8,7 @@
 # Repo: https://github.com/Lordgrim77/3x-ui-premium-theme
 # Version for cache busting
 # Version for cache busting
-VERSION="1.3.0"
+VERSION="2.9.0"
 TIMESTAMP=$(date +%s)
 
 RED='\033[0;31m'
