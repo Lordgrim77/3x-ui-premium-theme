@@ -90,34 +90,37 @@ body.premium-theme.s-dark {
 
     /* Subtle Borders */
     --border-subtle: 1px solid rgba(255, 255, 255, 0.08);
-    --border-medium: 1px solid rgba(255, 255, 255, 0.12);
 }
 
 /* DARK MODE - ADAPTIVE STATES */
 body.s-dark.status-active {
     --accent: #6366f1;
-    --accent-glow: rgba(99, 102, 241, 0.5);
+    --accent-glow: rgba(99, 102, 241, 0.4);
+    --accent-hover: #818cf8;
     --gradient-overlay: radial-gradient(circle at top right, rgba(99, 102, 241, 0.15), transparent 40%);
     --bg-main: #020617;
 }
 
 body.s-dark.status-warn {
     --accent: #f59e0b;
-    --accent-glow: rgba(245, 158, 11, 0.4);
+    --accent-glow: rgba(245, 158, 11, 0.3);
+    --accent-hover: #fbbf24;
     --gradient-overlay: radial-gradient(circle at top right, rgba(245, 158, 11, 0.12), transparent 40%);
     --bg-main: #0c0a09;
 }
 
 body.s-dark.status-depleted {
     --accent: #ff3344;
-    --accent-glow: rgba(255, 51, 68, 0.45);
+    --accent-glow: rgba(255, 51, 68, 0.4);
+    --accent-hover: #ff4d5a;
     --gradient-overlay: radial-gradient(circle at top right, rgba(255, 51, 68, 0.15), transparent 40%);
     --bg-main: #090202;
 }
 
 body.s-dark.status-unlimited {
     --accent: #0ea5e9;
-    --accent-glow: rgba(14, 165, 233, 0.4);
+    --accent-glow: rgba(14, 165, 233, 0.3);
+    --accent-hover: #38bdf8;
     --gradient-overlay: radial-gradient(circle at top right, rgba(14, 165, 233, 0.12), transparent 40%);
     --bg-main: #020617;
 }
@@ -157,31 +160,34 @@ body.premium-theme.s-light {
     --border-medium: 1px solid rgba(148, 163, 184, 0.25);
 }
 
-/* LIGHT MODE - ADAPTIVE STATES */
 body.s-light.status-active {
     --accent: #4f46e5;
-    --accent-glow: rgba(79, 70, 229, 0.25);
+    --accent-glow: rgba(79, 70, 229, 0.2);
+    --accent-hover: #4338ca;
     --gradient-overlay: radial-gradient(circle at top right, rgba(79, 70, 229, 0.05), transparent 40%);
     --bg-main: #f8fafc;
 }
 
 body.s-light.status-warn {
     --accent: #d97706;
-    --accent-glow: rgba(217, 119, 6, 0.2);
+    --accent-glow: rgba(217, 119, 6, 0.15);
+    --accent-hover: #b45309;
     --gradient-overlay: radial-gradient(circle at top right, rgba(217, 119, 6, 0.08), transparent 40%);
     --bg-main: #fffcf0;
 }
 
 body.s-light.status-depleted {
     --accent: #e11d48;
-    --accent-glow: rgba(225, 29, 72, 0.25);
+    --accent-glow: rgba(225, 29, 72, 0.2);
+    --accent-hover: #be123c;
     --gradient-overlay: radial-gradient(circle at top right, rgba(225, 29, 72, 0.1), transparent 40%);
     --bg-main: #fff1f2;
 }
 
 body.s-light.status-unlimited {
     --accent: #0284c7;
-    --accent-glow: rgba(2, 132, 199, 0.2);
+    --accent-glow: rgba(2, 132, 199, 0.15);
+    --accent-hover: #0369a1;
     --gradient-overlay: radial-gradient(circle at top right, rgba(2, 132, 199, 0.08), transparent 40%);
     --bg-main: #f0f9ff;
 }
@@ -677,8 +683,8 @@ body.premium-theme.ready .glass-panel {
 
 .glass-panel:hover {
     transform: translateY(-4px) translateZ(0);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-    border-color: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1), 0 0 15px var(--accent-glow);
+    border-color: var(--accent);
 }
 
 /* SPAN UTILITIES */
@@ -745,9 +751,12 @@ body.s-dark .span-4 {
         0 4px 16px rgba(0, 0, 0, 0.3);
 }
 
+.span-12:hover,
 .span-8:hover,
 .span-4:hover {
     transform: translate3d(0, -4px, 0);
+    border-color: var(--accent) !important;
+    box-shadow: 0 10px 40px var(--accent-glow) !important;
 }
 
 .span-12 {
@@ -1211,7 +1220,7 @@ body.s-dark .node-card {
     background: var(--card-hover);
     transform: translate3d(0, -4px, 0);
     border-color: var(--accent);
-    box-shadow: var(--shadow-lg);
+    box-shadow: 0 10px 30px var(--accent-glow);
 }
 
 body.s-dark .node-card:hover {
@@ -1705,8 +1714,8 @@ body.s-dark .node-card:hover {
 
 .infra-card:hover {
     transform: translateY(-4px);
-    border-color: var(--accent);
-    box-shadow: var(--shadow-lg);
+    border-color: var(--accent) !important;
+    box-shadow: 0 10px 30px var(--accent-glow) !important;
 }
 
 .infra-icon {
