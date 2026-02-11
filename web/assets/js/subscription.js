@@ -116,7 +116,12 @@
 
         const pct = total === 0 ? 0 : Math.min(100, (used / total) * 100);
 
-        return { active, expired, depleted, label, color: colorVar, pct, used, total };
+        let state = 'active';
+        if (total === 0) state = 'unlimited';
+        else if (expired || depleted) state = 'depleted';
+        else if (pct > 80 || (STATE.raw.expire > 0 && (STATE.raw.expire - now) < (7 * 24 * 60 * 60 * 1000))) state = 'warn';
+
+        return { active, expired, depleted, label, color: colorVar, pct, used, total, state };
     }
 
     // --- INITIALIZATION ---
@@ -897,12 +902,31 @@
             this.ctx.clearRect(0, 0, innerWidth, innerHeight);
 
             const isLight = document.body.classList.contains('s-light');
+            const s = getStatusInfo();
 
-            // HIGH VISIBILITY Theme Colors
-            // Light: Indigo-600 (bright), Slate-500 (visible lines)
-            // Dark:  Indigo-400 (vivid glow), Slate-400 (visible lines)
-            const pColor = isLight ? '79, 70, 229' : '129, 140, 248';
-            const lColor = isLight ? '100, 116, 139' : '148, 163, 184';
+            // DYNAMIC State-Aware Animation Colors
+            const colorMap = {
+                active: {
+                    p: isLight ? '79, 70, 229' : '129, 140, 248', // Indigo
+                    l: isLight ? '100, 116, 139' : '148, 163, 184' // Slate
+                },
+                warn: {
+                    p: isLight ? '217, 119, 6' : '245, 158, 11',  // Amber/Orange
+                    l: isLight ? '180, 83, 9' : '217, 119, 6'
+                },
+                depleted: {
+                    p: isLight ? '225, 29, 72' : '255, 51, 68',  // Rose/Red
+                    l: isLight ? '190, 18, 60' : '255, 51, 68'
+                },
+                unlimited: {
+                    p: isLight ? '2, 132, 199' : '14, 165, 233', // Sky/Blue
+                    l: isLight ? '3, 105, 161' : '56, 189, 248'
+                }
+            };
+
+            const colors = colorMap[s.state] || colorMap.active;
+            const pColor = colors.p;
+            const lColor = colors.l;
             const connectDist = 150;
 
             for (let i = 0; i < this.particles.length; i++) {
@@ -968,8 +992,10 @@
     }
 
     function applyTheme() {
-        document.body.classList.remove('s-dark', 's-light');
+        const s = getStatusInfo();
+        document.body.classList.remove('s-dark', 's-light', 'status-active', 'status-warn', 'status-depleted', 'status-unlimited');
         document.body.classList.add(STATE.theme === 'dark' ? 's-dark' : 's-light');
+        document.body.classList.add(`status-${s.state}`);
     }
 
     function toggleTheme(e) {

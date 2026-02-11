@@ -24,7 +24,8 @@
 
     /* DYNAMIC USAGE PALETTE */
     --usage-active: #10b981;
-    --usage-depleted: #ff1111; /* Strong Red */
+    --usage-depleted: #ff1111;
+    /* Strong Red */
     --usage-expired: #f59e0b;
 
     /* LAYOUT */
@@ -66,7 +67,8 @@ body.premium-theme.s-dark {
     --accent-glow: rgba(99, 102, 241, 0.5);
 
     --usage-active: #10b981;
-    --usage-depleted: #ff3344; /* Vivid Red-Rose for Dark Mode */
+    --usage-depleted: #ff3344;
+    /* Vivid Red-Rose for Dark Mode */
     --usage-expired: #f59e0b;
 
     --card-bg: rgba(15, 23, 42, 0.6);
@@ -91,6 +93,35 @@ body.premium-theme.s-dark {
     --border-medium: 1px solid rgba(255, 255, 255, 0.12);
 }
 
+/* DARK MODE - ADAPTIVE STATES */
+body.s-dark.status-active {
+    --accent: #6366f1;
+    --accent-glow: rgba(99, 102, 241, 0.5);
+    --gradient-overlay: radial-gradient(circle at top right, rgba(99, 102, 241, 0.15), transparent 40%);
+    --bg-main: #020617;
+}
+
+body.s-dark.status-warn {
+    --accent: #f59e0b;
+    --accent-glow: rgba(245, 158, 11, 0.4);
+    --gradient-overlay: radial-gradient(circle at top right, rgba(245, 158, 11, 0.12), transparent 40%);
+    --bg-main: #0c0a09;
+}
+
+body.s-dark.status-depleted {
+    --accent: #ff3344;
+    --accent-glow: rgba(255, 51, 68, 0.45);
+    --gradient-overlay: radial-gradient(circle at top right, rgba(255, 51, 68, 0.15), transparent 40%);
+    --bg-main: #090202;
+}
+
+body.s-dark.status-unlimited {
+    --accent: #0ea5e9;
+    --accent-glow: rgba(14, 165, 233, 0.4);
+    --gradient-overlay: radial-gradient(circle at top right, rgba(14, 165, 233, 0.12), transparent 40%);
+    --bg-main: #020617;
+}
+
 /* THEME: CERAMIC (Light) */
 body.premium-theme.s-light {
     --bg-main: #f8fafc;
@@ -100,7 +131,8 @@ body.premium-theme.s-light {
     --accent-glow: rgba(79, 70, 229, 0.25);
 
     --usage-active: #059669;
-    --usage-depleted: #e11d48; /* Strong Crimson for Light Mode */
+    --usage-depleted: #e11d48;
+    /* Strong Crimson for Light Mode */
     --usage-expired: #d97706;
 
     --card-bg: rgba(255, 255, 255, 0.7);
@@ -123,6 +155,35 @@ body.premium-theme.s-light {
     /* Subtle Borders */
     --border-subtle: 1px solid rgba(148, 163, 184, 0.15);
     --border-medium: 1px solid rgba(148, 163, 184, 0.25);
+}
+
+/* LIGHT MODE - ADAPTIVE STATES */
+body.s-light.status-active {
+    --accent: #4f46e5;
+    --accent-glow: rgba(79, 70, 229, 0.25);
+    --gradient-overlay: radial-gradient(circle at top right, rgba(79, 70, 229, 0.05), transparent 40%);
+    --bg-main: #f8fafc;
+}
+
+body.s-light.status-warn {
+    --accent: #d97706;
+    --accent-glow: rgba(217, 119, 6, 0.2);
+    --gradient-overlay: radial-gradient(circle at top right, rgba(217, 119, 6, 0.08), transparent 40%);
+    --bg-main: #fffcf0;
+}
+
+body.s-light.status-depleted {
+    --accent: #e11d48;
+    --accent-glow: rgba(225, 29, 72, 0.25);
+    --gradient-overlay: radial-gradient(circle at top right, rgba(225, 29, 72, 0.1), transparent 40%);
+    --bg-main: #fff1f2;
+}
+
+body.s-light.status-unlimited {
+    --accent: #0284c7;
+    --accent-glow: rgba(2, 132, 199, 0.2);
+    --gradient-overlay: radial-gradient(circle at top right, rgba(2, 132, 199, 0.08), transparent 40%);
+    --bg-main: #f0f9ff;
 }
 
 /* THEME BURST ANIMATION */
