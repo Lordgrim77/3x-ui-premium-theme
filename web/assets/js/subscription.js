@@ -1024,27 +1024,28 @@
                     p.size = (p.baseSize || p.size) + Math.sin(p.angle) * 0.6;
                 }
 
-                // Spotlight: Calculate mouse proximity for glow effect
-                let mouseProximity = 0; // 0 = far, 1 = on top of cursor
+                // Repulsion Field: Push particles away from cursor
                 if (this.mouse.x != null) {
-                    let dx = this.mouse.x - p.x;
-                    let dy = this.mouse.y - p.y;
+                    let dx = p.x - this.mouse.x;
+                    let dy = p.y - this.mouse.y;
                     let dist = Math.sqrt(dx * dx + dy * dy);
-                    if (dist < 250) {
-                        mouseProximity = 1 - (dist / 250);
+                    let repulsionRadius = 200;
+                    if (dist < repulsionRadius && dist > 0) {
+                        let force = (repulsionRadius - dist) / repulsionRadius; // 1 = on cursor, 0 = at edge
+                        let pushX = (dx / dist) * force * 4; // Push strength
+                        let pushY = (dy / dist) * force * 4;
+                        p.x += pushX;
+                        p.y += pushY;
                     }
                 }
 
-                // Draw Particle — Spotlight makes it bigger & brighter
-                let renderSize = Math.max(0, p.size + mouseProximity * 3); // Grow up to +3px near cursor
-                let particleOpacity = 0.5 + mouseProximity * 0.5; // 0.5 base → 1.0 near cursor
-
+                // Draw Particle
                 this.ctx.beginPath();
-                this.ctx.arc(p.x, p.y, renderSize, 0, Math.PI * 2, false);
-                this.ctx.fillStyle = `rgba(${pColor}, ${particleOpacity})`;
+                this.ctx.arc(p.x, p.y, Math.max(0, p.size), 0, Math.PI * 2, false);
+                this.ctx.fillStyle = `rgba(${pColor}, 0.85)`;
                 this.ctx.fill();
 
-                // Draw Connections (Spotlight intensifies nearby lines)
+                // Draw Connections (Smooth Distance-Based Fade)
                 for (let j = i + 1; j < this.particles.length; j++) {
                     let p2 = this.particles[j];
                     let dx = p.x - p2.x;
@@ -1052,26 +1053,10 @@
                     let dist = Math.sqrt(dx * dx + dy * dy);
 
                     if (dist < connectDist) {
-                        let lineOpacity = 1 - (dist / connectDist);
-
-                        // Check if this connection is near the mouse (spotlight boost)
-                        let lineGlow = 0;
-                        if (this.mouse.x != null) {
-                            let midX = (p.x + p2.x) / 2;
-                            let midY = (p.y + p2.y) / 2;
-                            let mouseDist = Math.sqrt((this.mouse.x - midX) ** 2 + (this.mouse.y - midY) ** 2);
-                            if (mouseDist < 200) {
-                                lineGlow = 1 - (mouseDist / 200);
-                            }
-                        }
-
-                        // Base opacity 0.2, spotlight boosts up to 0.8
-                        let finalOpacity = lineOpacity * (0.2 + lineGlow * 0.6);
-                        let finalWidth = 1 + lineGlow * 1.5; // 1px base → 2.5px near cursor
-
+                        let opacity = 1 - (dist / connectDist);
                         this.ctx.beginPath();
-                        this.ctx.strokeStyle = `rgba(${lColor}, ${finalOpacity})`;
-                        this.ctx.lineWidth = finalWidth;
+                        this.ctx.strokeStyle = `rgba(${lColor}, ${opacity * 0.4})`;
+                        this.ctx.lineWidth = 1.2;
                         this.ctx.moveTo(p.x, p.y);
                         this.ctx.lineTo(p2.x, p2.y);
                         this.ctx.stroke();
