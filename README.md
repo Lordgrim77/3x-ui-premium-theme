@@ -1,4 +1,4 @@
-# 3X-UI Subscription Theme 🎨
+# 3X-UI Subscription Theme(v2.0) 🎨
 <p align="center">
   <img src="https://raw.githubusercontent.com/Lordgrim77/3x-ui-premium-theme/refs/heads/main/screenshots/screenshot-2.jpg" alt="English UI" width="30%">
   <img src="https://raw.githubusercontent.com/Lordgrim77/3x-ui-premium-theme/refs/heads/main/screenshots/screenshot-1.jpg" alt="Persian UI" width="50%">
@@ -14,7 +14,7 @@
 ## ✨ Features 
 
 - **🎨 UI/UX**:
-Dark/light theme, glassmorphism,smooth transitions, toast notifications
+Dark/light theme, glassmorphism,smooth transitions, toast notifications, Interactive Background Animation (NEW), Color theme changes according to the status(NEW)
 - **📊 Dashboard**: Subscription info, config links, QR codes, status indicators
 - **📡 Server Stats (NEW)**: Real-time CPU/RAM/Network monitoring
 - **🔧 Installation**: One-line install, systemd integration
@@ -41,9 +41,6 @@ bash <(curl -Ls https://raw.githubusercontent.com/Lordgrim77/3x-ui-premium-theme
 
 ## 🛡️ Technical Note & Security
 - **Recommendation**: For extreme high-security environments, consider manual source-code integration.
-
-## Notes
-- IF CDNs are used in Subscription, Some Infrastructure Insights may shows "Protected" for security reasons.
   
 ## 👨‍💻 Author
 Made with ❤️ by 𝙇𝙊𝙍𝘿𝙂𝙍𝙄𝙈
