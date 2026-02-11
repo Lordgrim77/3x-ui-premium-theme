@@ -915,6 +915,9 @@
             if (this.isScrolling) return;
             requestAnimationFrame(this.animate);
 
+            // Periodic Safety Sync (Once every ~2 seconds @ 60fps)
+            if (Math.random() < 0.01) this.updateStyles();
+
             this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
             const connectDist = 150;
@@ -989,6 +992,12 @@
         document.body.classList.remove('s-dark', 's-light', 'status-active', 'status-warn', 'status-depleted', 'status-unlimited');
         document.body.classList.add(STATE.theme === 'dark' ? 's-dark' : 's-light');
         document.body.classList.add(`status-${s.state}`);
+
+        // Sync Background Animation Colors
+        const bg = getEl('canvas-bg');
+        if (bg && bg._network) {
+            bg._network.updateStyles();
+        }
     }
 
     function toggleTheme(e) {
