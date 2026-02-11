@@ -104,6 +104,9 @@ body.premium-theme.s-dark.status-active {
     --accent-hover: #818cf8;
     --gradient-overlay: radial-gradient(circle at top right, rgba(99, 102, 241, 0.15), transparent 40%);
     --bg-main: #020617;
+    --bg-card: rgba(15, 23, 42, 0.8);
+    --bg-sec: #0f172a;
+    --card-bg: rgba(15, 23, 42, 0.6);
     --usage-active: var(--accent);
     --node-color: 99, 102, 241;
     --line-color: 148, 163, 184;
@@ -115,6 +118,9 @@ body.premium-theme.s-dark.status-warn {
     --accent-hover: #fbbf24;
     --gradient-overlay: radial-gradient(circle at top right, rgba(245, 158, 11, 0.12), transparent 40%);
     --bg-main: #0c0a09;
+    --bg-card: rgba(28, 25, 23, 0.85);
+    --bg-sec: #1c1917;
+    --card-bg: rgba(28, 25, 23, 0.7);
     --usage-active: var(--accent);
     --usage-expired: var(--accent);
     --theme-cpu: var(--accent);
@@ -129,6 +135,9 @@ body.premium-theme.s-dark.status-depleted {
     --accent-hover: #ff4d5a;
     --gradient-overlay: radial-gradient(circle at top right, rgba(255, 51, 68, 0.15), transparent 40%);
     --bg-main: #090202;
+    --bg-card: rgba(20, 5, 5, 0.85);
+    --bg-sec: #120404;
+    --card-bg: rgba(20, 5, 5, 0.7);
     --usage-active: var(--accent);
     --usage-depleted: var(--accent);
     --theme-cpu: var(--accent);
@@ -145,6 +154,9 @@ body.premium-theme.s-dark.status-unlimited {
     --accent-hover: #38bdf8;
     --gradient-overlay: radial-gradient(circle at top right, rgba(14, 165, 233, 0.12), transparent 40%);
     --bg-main: #020617;
+    --bg-card: rgba(15, 23, 42, 0.82);
+    --bg-sec: #0f172a;
+    --card-bg: rgba(15, 23, 42, 0.65);
     --usage-active: var(--accent);
     --node-color: 14, 165, 233;
     --line-color: 56, 189, 248;
@@ -192,6 +204,9 @@ body.premium-theme.s-light.status-active {
     --accent-hover: #4338ca;
     --gradient-overlay: radial-gradient(circle at top right, rgba(79, 70, 229, 0.05), transparent 40%);
     --bg-main: #f8fafc;
+    --bg-card: rgba(255, 255, 255, 0.75);
+    --bg-sec: rgba(241, 245, 249, 0.8);
+    --card-bg: rgba(255, 255, 255, 0.7);
     --usage-active: var(--accent);
     --node-color: 79, 70, 229;
     --line-color: 100, 116, 139;
@@ -203,6 +218,9 @@ body.premium-theme.s-light.status-warn {
     --accent-hover: #b45309;
     --gradient-overlay: radial-gradient(circle at top right, rgba(217, 119, 6, 0.08), transparent 40%);
     --bg-main: #fffcf0;
+    --bg-card: rgba(254, 252, 232, 0.85);
+    --bg-sec: #fefce8;
+    --card-bg: rgba(254, 252, 232, 0.75);
     --usage-active: var(--accent);
     --usage-expired: var(--accent);
     --theme-cpu: var(--accent);
@@ -217,6 +235,9 @@ body.premium-theme.status-depleted.s-light {
     --accent-hover: #be123c;
     --gradient-overlay: radial-gradient(circle at top right, rgba(225, 29, 72, 0.1), transparent 40%);
     --bg-main: #fff1f2;
+    --bg-card: rgba(255, 241, 242, 0.9);
+    --bg-sec: #fff1f2;
+    --card-bg: rgba(255, 241, 242, 0.8);
     --usage-active: var(--accent);
     --usage-depleted: var(--accent);
     --theme-cpu: var(--accent);
@@ -233,6 +254,9 @@ body.premium-theme.s-light.status-unlimited {
     --accent-hover: #0369a1;
     --gradient-overlay: radial-gradient(circle at top right, rgba(2, 132, 199, 0.08), transparent 40%);
     --bg-main: #f0f9ff;
+    --bg-card: rgba(224, 242, 254, 0.85);
+    --bg-sec: #e0f2fe;
+    --card-bg: rgba(224, 242, 254, 0.75);
     --usage-active: var(--accent);
     --node-color: 2, 132, 199;
     --line-color: 3, 105, 161;
@@ -713,7 +737,7 @@ body.s-dark .icon-btn {
 
 /* CARD COMMON */
 body.premium-theme .glass-panel {
-    background: var(--card-bg);
+    background: var(--bg-card, var(--card-bg));
     backdrop-filter: var(--glass-blur);
     border: 1px solid var(--card-border);
     border-radius: var(--card-radius);
@@ -1168,7 +1192,7 @@ body.s-light .progress-container {
 
 /* Dark mode stat cards */
 body.s-dark .stat-mini {
-    background: rgba(255, 255, 255, 0.03);
+    background: var(--bg-card, var(--card-bg));
     border: 1px solid rgba(255, 255, 255, 0.05);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
@@ -1322,7 +1346,7 @@ body.s-dark .node-card:hover {
     position: fixed;
     inset: 0;
     z-index: 10000;
-    background: var(--bg-main);
+    background: var(--bg-main) !important;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1402,7 +1426,7 @@ body.s-dark .node-card:hover {
 }
 
 .qr-modal {
-    background: var(--bg-card);
+    background: var(--bg-card, var(--card-bg));
     backdrop-filter: blur(var(--glass-blur));
     border: var(--border-medium);
     border-radius: 24px;
@@ -1734,7 +1758,7 @@ body.s-dark .node-card:hover {
 }
 
 .infra-card {
-    background: var(--bg-card);
+    background: var(--bg-card, var(--card-bg));
     backdrop-filter: blur(var(--glass-blur));
     border: var(--border-subtle);
     border-radius: 20px;
@@ -1934,7 +1958,7 @@ body.s-light .icon-btn-mini:hover {
 }
 
 .stat-card-mini {
-    background: var(--card-bg);
+    background: var(--bg-card, var(--card-bg));
     border: var(--border-subtle);
     backdrop-filter: blur(var(--glass-blur));
     border-radius: var(--card-radius);
