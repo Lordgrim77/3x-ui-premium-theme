@@ -110,18 +110,18 @@
         else if (total === 0) state = 'unlimited'; // Unlimited = Cyan
         else state = 'active'; // Else Green
 
-        let label = 'User Active';
-        let colorVar = 'var(--usage-active)';
-
         if (state === 'warn') {
             colorVar = 'var(--usage-expired)';
-            label = 'Monthly Expired';
+            label = 'Expired';
         } else if (state === 'depleted') {
             colorVar = 'var(--usage-depleted)';
-            label = 'Data Depleted';
+            label = 'Limited';
         } else if (state === 'unlimited') {
             colorVar = 'var(--accent)';
-            label = 'Unlimited Data';
+            label = 'Active';
+        } else if (state === 'active') {
+            colorVar = 'var(--usage-active)';
+            label = 'Active';
         }
 
         const pct = total === 0 ? 0 : Math.min(100, (used / total) * 100);
