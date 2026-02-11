@@ -303,7 +303,7 @@
     }
 
     function renderUsageCard() {
-        const card = mkEl('div', 'glass-panel span-8 usage-overview');
+        const card = mkEl('div', 'span-8 usage-overview');
         const s = getStatusInfo();
 
         card.innerHTML = `
@@ -327,7 +327,7 @@
     }
 
     function renderInfoCard() {
-        const card = mkEl('div', 'glass-panel span-4 stat-mini-grid');
+        const card = mkEl('div', 'span-4 stat-mini-grid');
 
         // Remaining usage...
         let remText = '∞';
