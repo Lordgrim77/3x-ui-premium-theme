@@ -1078,6 +1078,19 @@ body.s-light .progress-container {
     opacity: 0.8;
 }
 
+/* Stagnant State Overrides (Liquid isn't going anywhere) */
+body.status-warn .progress-bar .bloom,
+body.status-depleted .progress-bar .bloom {
+    display: none !important;
+}
+
+body.status-warn .progress-bar::before,
+body.status-depleted .progress-bar::before {
+    opacity: 0.3;
+    filter: blur(6px);
+    box-shadow: none;
+}
+
 @keyframes fluid-flow {
     0% {
         background-position: 100% 0%;
