@@ -994,52 +994,50 @@
         }
     }
 
-})();
-
-function applyTheme() {
-    document.body.classList.remove('s-dark', 's-light');
-    document.body.classList.add(STATE.theme === 'dark' ? 's-dark' : 's-light');
-}
-
-function toggleTheme(e) {
-    const nextTheme = STATE.theme === 'dark' ? 'light' : 'dark';
-    const burstColor = nextTheme === 'dark' ? '#020617' : '#f8fafc';
-    const btn = e.currentTarget;
-    const rect = btn.getBoundingClientRect();
-    const burst = mkEl('div', 'theme-burst');
-
-    burst.style.background = burstColor;
-    burst.style.left = (rect.left + rect.width / 2) + 'px';
-    burst.style.top = (rect.top + rect.height / 2) + 'px';
-    document.body.appendChild(burst);
-
-    setTimeout(() => {
-        STATE.theme = nextTheme;
-        localStorage.setItem('xui_theme', STATE.theme);
-        applyTheme();
-        const btnIcon = getEl('theme-btn');
-        const newSVG = STATE.theme === 'dark' ?
-            `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>` :
-            `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>`;
-        if (btnIcon) btnIcon.innerHTML = newSVG;
-    }, 500);
-
-    setTimeout(() => burst.remove(), 1600);
-}
-
-function showToast(msg) {
-    const toastEl = getEl('toast');
-    if (toastEl) {
-        toastEl.innerText = msg;
-        toastEl.classList.add('show');
-        if (toastEl._timeout) clearTimeout(toastEl._timeout);
-        toastEl._timeout = setTimeout(() => toastEl.classList.remove('show'), 2000);
+    function applyTheme() {
+        document.body.classList.remove('s-dark', 's-light');
+        document.body.classList.add(STATE.theme === 'dark' ? 's-dark' : 's-light');
     }
-}
 
-function updateStatus() { }
+    function toggleTheme(e) {
+        const nextTheme = STATE.theme === 'dark' ? 'light' : 'dark';
+        const burstColor = nextTheme === 'dark' ? '#020617' : '#f8fafc';
+        const btn = e.currentTarget;
+        const rect = btn.getBoundingClientRect();
+        const burst = mkEl('div', 'theme-burst');
 
-// --- BOOT ---
-if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
-else init();
-}) ();
+        burst.style.background = burstColor;
+        burst.style.left = (rect.left + rect.width / 2) + 'px';
+        burst.style.top = (rect.top + rect.height / 2) + 'px';
+        document.body.appendChild(burst);
+
+        setTimeout(() => {
+            STATE.theme = nextTheme;
+            localStorage.setItem('xui_theme', STATE.theme);
+            applyTheme();
+            const btnIcon = getEl('theme-btn');
+            const newSVG = STATE.theme === 'dark' ?
+                `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>` :
+                `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>`;
+            if (btnIcon) btnIcon.innerHTML = newSVG;
+        }, 500);
+
+        setTimeout(() => burst.remove(), 1600);
+    }
+
+    function showToast(msg) {
+        const toastEl = getEl('toast');
+        if (toastEl) {
+            toastEl.innerText = msg;
+            toastEl.classList.add('show');
+            if (toastEl._timeout) clearTimeout(toastEl._timeout);
+            toastEl._timeout = setTimeout(() => toastEl.classList.remove('show'), 2000);
+        }
+    }
+
+    function updateStatus() { }
+
+    // --- BOOT ---
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+    else init();
+})();
