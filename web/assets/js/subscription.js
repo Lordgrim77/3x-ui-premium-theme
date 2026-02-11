@@ -107,8 +107,12 @@
 
         let label = active ? 'User Active' : 'User Inactive';
         let colorVar = 'var(--usage-active)';
-        if (expired) colorVar = 'var(--usage-expired)';
-        else if (depleted) colorVar = 'var(--usage-depleted)';
+        if (expired) {
+            colorVar = 'var(--usage-expired)';
+        } else if (depleted) {
+            colorVar = 'var(--usage-depleted)';
+            label = 'Data Depleted';
+        }
 
         const pct = total === 0 ? 0 : Math.min(100, (used / total) * 100);
 

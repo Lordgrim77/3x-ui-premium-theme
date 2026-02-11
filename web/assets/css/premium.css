@@ -24,7 +24,7 @@
 
     /* DYNAMIC USAGE PALETTE */
     --usage-active: #10b981;
-    --usage-depleted: #ef4444;
+    --usage-depleted: #ff1111; /* Strong Red */
     --usage-expired: #f59e0b;
 
     /* LAYOUT */
@@ -66,7 +66,7 @@ body.premium-theme.s-dark {
     --accent-glow: rgba(99, 102, 241, 0.5);
 
     --usage-active: #10b981;
-    --usage-depleted: #f87171;
+    --usage-depleted: #ff3344; /* Vivid Red-Rose for Dark Mode */
     --usage-expired: #f59e0b;
 
     --card-bg: rgba(15, 23, 42, 0.6);
@@ -100,7 +100,7 @@ body.premium-theme.s-light {
     --accent-glow: rgba(79, 70, 229, 0.25);
 
     --usage-active: #059669;
-    --usage-depleted: #dc2626;
+    --usage-depleted: #e11d48; /* Strong Crimson for Light Mode */
     --usage-expired: #d97706;
 
     --card-bg: rgba(255, 255, 255, 0.7);
