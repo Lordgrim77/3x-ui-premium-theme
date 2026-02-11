@@ -999,10 +999,13 @@
             this.ctx.clearRect(0, 0, innerWidth, innerHeight);
 
             const isLight = document.body.classList.contains('s-light');
-            // Bolder Colors (Higher Opacity)
-            const particleColor = isLight ? 'rgba(0, 0, 0, 0.7)' : 'rgba(255, 255, 255, 0.7)';
-            const lineColor = isLight ? 'rgba(0, 0, 0, 0.12)' : 'rgba(255, 255, 255, 0.12)';
-            const connectDist = 140; // Increased connection distance
+
+            // Premium Theme Colors
+            // Light: Indigo-600 Particles (0.4), Slate-400 Lines (0.15)
+            // Dark:  Indigo-300 Particles (0.4), Slate-600 Lines (0.1)
+            const particleColor = isLight ? 'rgba(79, 70, 229, 0.4)' : 'rgba(165, 180, 252, 0.4)';
+            const lineColor = isLight ? 'rgba(148, 163, 184, 0.3)' : 'rgba(148, 163, 184, 0.15)';
+            const connectDist = 140;
 
             for (let i = 0; i < this.particles.length; i++) {
                 let p = this.particles[i];
