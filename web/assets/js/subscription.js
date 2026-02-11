@@ -832,6 +832,7 @@
             if (document.getElementById('canvas-bg')) return;
             this.canvas = document.createElement('canvas');
             this.canvas.id = 'canvas-bg';
+            this.canvas._network = this; // Store reference for theme updates
             document.body.prepend(this.canvas);
             this.ctx = this.canvas.getContext('2d');
             this.particles = [];
@@ -839,6 +840,8 @@
             this.isScrolling = false;
             this.scrollTimeout = null;
             this.resizeTimeout = null;
+            this.styles = { pColor: '99, 102, 241', lColor: '148, 163, 184' };
+            this.updateStyles();
 
             this.resize();
             window.addEventListener('resize', () => {
@@ -871,6 +874,12 @@
             this.initParticles();
             this.animate = this.animate.bind(this);
             requestAnimationFrame(this.animate);
+        }
+
+        updateStyles() {
+            const style = getComputedStyle(document.body);
+            this.styles.pColor = style.getPropertyValue('--node-color').trim() || '99, 102, 241';
+            this.styles.lColor = style.getPropertyValue('--line-color').trim() || '148, 163, 184';
         }
 
         resize() {
@@ -908,10 +917,9 @@
 
             this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-            const connectDist = this.isMobile ? 120 : 150;
-            const style = getComputedStyle(document.body);
-            const pColor = style.getPropertyValue('--node-color').trim() || '99, 102, 241';
-            const lColor = style.getPropertyValue('--line-color').trim() || '148, 163, 184';
+            const connectDist = 150;
+            const connectDistSq = connectDist * connectDist; // Use squared distance
+            const { pColor, lColor } = this.styles;
 
             for (let i = 0; i < this.particles.length; i++) {
                 let p = this.particles[i];
@@ -959,9 +967,10 @@
                     let p2 = this.particles[j];
                     let dx = p.x - p2.x;
                     let dy = p.y - p2.y;
-                    let dist = Math.sqrt(dx * dx + dy * dy);
+                    let distSq = dx * dx + dy * dy;
 
-                    if (dist < connectDist) {
+                    if (distSq < connectDistSq) {
+                        let dist = Math.sqrt(distSq);
                         let opacity = 1 - (dist / connectDist);
                         this.ctx.beginPath();
                         this.ctx.strokeStyle = `rgba(${lColor}, ${opacity * 0.4})`;
@@ -1009,6 +1018,12 @@
             STATE.theme = nextTheme;
             localStorage.setItem('xui_theme', STATE.theme);
             applyTheme();
+            if (window.statusLoop) { // Trigger background style update
+                const bg = document.getElementById('canvas-bg');
+                if (bg && bg._network) bg._network.updateStyles();
+                // Alternatively, if we don't have direct access, a global event
+                window.dispatchEvent(new CustomEvent('themeChanged'));
+            }
             const btnIcon = getEl('theme-btn');
             const newSVG = STATE.theme === 'dark' ?
                 `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>` :

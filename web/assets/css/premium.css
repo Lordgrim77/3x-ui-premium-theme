@@ -88,8 +88,8 @@ body.premium-theme.s-dark {
     --text-primary: #f8fafc;
     --text-secondary: #94a3b8;
 
-    --glass-blur: 35px;
-    /* Increased from 20px for better depth */
+    --glass-blur: 20px;
+    /* Balanced for "Premium Vibe" + High Performance */
     --gradient-overlay: radial-gradient(circle at top right, rgba(99, 102, 241, 0.15), transparent 40%);
 
     /* Dark Mode Premium Shadows */
@@ -186,8 +186,8 @@ body.premium-theme.s-light {
     --text-primary: #0f172a;
     --text-secondary: #64748b;
 
-    --glass-blur: 35px;
-    /* Increased from 20px for better depth */
+    --glass-blur: 20px;
+    /* Balanced for "Premium Vibe" + High Performance */
     --gradient-overlay: radial-gradient(circle at top right, rgba(79, 70, 229, 0.05), transparent 40%);
 
     /* Light Mode Premium Shadows */
@@ -318,7 +318,8 @@ body {
     /* Minimize transition scope to avoid full-page repaints */
     transition: background 0.3s ease, color 0.3s;
     min-height: 100vh;
-    text-rendering: optimizeLegibility;
+    text-rendering: optimizeSpeed;
+    /* Performance boost */
     -webkit-font-smoothing: antialiased;
 }
 
