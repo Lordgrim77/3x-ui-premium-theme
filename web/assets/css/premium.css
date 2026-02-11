@@ -1273,7 +1273,7 @@ body.s-light .progress-container {
 /* Dark mode stat cards */
 body.s-dark .stat-mini {
     background: var(--bg-card, var(--card-bg));
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--card-border);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
