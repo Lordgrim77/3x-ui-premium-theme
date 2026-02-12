@@ -107,19 +107,19 @@ body.premium-theme.s-dark.status-warn {
 }
 
 body.premium-theme.s-dark.status-depleted {
-    --accent: #ff4d6d;
-    --accent-glow: rgba(255, 77, 109, 0.4);
-    --accent-hover: #ff758f;
-    --gradient-overlay: radial-gradient(circle at top right, rgba(255, 77, 109, 0.15), transparent 40%);
-    --bg-main: #0d0103;
-    --bg-card: rgba(32, 7, 9, 0.88);
-    --bg-sec: #1a0507;
-    --card-bg: rgba(32, 7, 9, 0.75);
-    --card-border: rgba(255, 77, 109, 0.35);
+    --accent: #ff3131;
+    --accent-glow: rgba(255, 49, 49, 0.45);
+    --accent-hover: #ff5c5c;
+    --gradient-overlay: radial-gradient(circle at top right, rgba(255, 49, 49, 0.18), transparent 40%);
+    --bg-main: #0d0101;
+    --bg-card: rgba(32, 5, 5, 0.88);
+    --bg-sec: #1a0303;
+    --card-bg: rgba(32, 5, 5, 0.75);
+    --card-border: rgba(255, 49, 49, 0.4);
     --usage-active: var(--accent);
     --usage-depleted: var(--accent);
-    --node-color: 255, 77, 109;
-    --line-color: 255, 120, 140;
+    --node-color: 255, 49, 49;
+    --line-color: 255, 80, 80;
 }
 
 body.premium-theme.s-dark.status-unlimited {
@@ -203,19 +203,19 @@ body.premium-theme.s-light.status-warn {
 }
 
 body.premium-theme.status-depleted.s-light {
-    --accent: #ff4d6d;
-    --accent-glow: rgba(255, 77, 109, 0.15);
-    --accent-hover: #ff758f;
-    --gradient-overlay: radial-gradient(circle at top right, rgba(255, 77, 109, 0.08), transparent 40%);
-    --bg-main: #fff5f6;
-    --bg-card: rgba(255, 245, 246, 0.95);
-    --bg-sec: #fff5f6;
-    --card-bg: rgba(255, 245, 246, 0.85);
-    --card-border: rgba(255, 77, 109, 0.2);
+    --accent: #ff3131;
+    --accent-glow: rgba(255, 49, 49, 0.15);
+    --accent-hover: #ff5c5c;
+    --gradient-overlay: radial-gradient(circle at top right, rgba(255, 49, 49, 0.1), transparent 40%);
+    --bg-main: #fff5f5;
+    --bg-card: rgba(255, 245, 245, 0.95);
+    --bg-sec: #fff5f5;
+    --card-bg: rgba(255, 245, 245, 0.85);
+    --card-border: rgba(255, 49, 49, 0.25);
     --usage-active: var(--accent);
     --usage-depleted: var(--accent);
-    --node-color: 255, 77, 109;
-    --line-color: 255, 100, 120;
+    --node-color: 255, 49, 49;
+    --line-color: 255, 80, 80;
 }
 
 body.premium-theme.s-light.status-unlimited {
