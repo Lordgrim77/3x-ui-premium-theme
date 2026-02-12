@@ -9,7 +9,6 @@
  */
 
 (function () {
-    // --- CONFIG & STATE ---
     const VERSION = "__VERSION__"; // Injected by installer
     const STATE = {
         theme: localStorage.getItem('xui_theme') || 'dark', // 'dark' | 'light'
@@ -74,7 +73,6 @@
 
     function t(key) { return I18N[STATE.lang][key] || key; }
 
-    // --- UTILS ---
     const getEl = (id) => document.getElementById(id);
     const mkEl = (tag, cls, html) => {
         const el = document.createElement(tag);
@@ -526,11 +524,9 @@
         return wrap;
     }
 
-    // --- STATS GRID (System Monitor - 4x1 Horizontal) ---
     function renderStatsGrid() {
         const wrap = mkEl('div', 'span-12');
 
-        // Header
         const header = mkEl('div', 'nodes-header');
         const monitorIcon = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>`;
         header.innerHTML = `${monitorIcon} Server Monitor`;
@@ -829,8 +825,6 @@
         document.body.removeChild(textArea);
     }
 
-    // --- PREMIUM BACKGROUND ANIMATION (Digital Rain 2.0) ---
-    // --- PREMIUM BACKGROUND ANIMATION (Neural Network v1.6.1) ---
     class NeuralNetwork {
         constructor() {
             if (document.getElementById('canvas-bg')) return;

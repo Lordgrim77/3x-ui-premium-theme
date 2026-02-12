@@ -14,26 +14,20 @@
 
 :root {
     --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
-    /* Smoother Quart-out easing */
     --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
 
-    /* STATUS COLORS */
     --status-online: #10b981;
     --status-offline: #64748b;
     --status-warn: #f59e0b;
 
-    /* DYNAMIC USAGE PALETTE */
     --usage-active: #10b981;
     --usage-depleted: #ff1111;
-    /* Strong Red */
     --usage-expired: #f59e0b;
 
-    /* LAYOUT */
     --grid-gap: 20px;
     --card-radius: 20px;
     --btn-radius: 12px;
 
-    /* COMPONENT ACCENTS (Static Brand Colors) */
     --theme-cpu: #6366f1;
     --theme-ram: #ec4899;
     --theme-up: #3b82f6;
@@ -78,7 +72,6 @@ body.premium-theme.s-dark {
 
     --usage-active: #10b981;
     --usage-depleted: #ff3344;
-    /* Vivid Red-Rose for Dark Mode */
     --usage-expired: #f59e0b;
 
     --card-bg: rgba(15, 23, 42, 0.6);
@@ -89,10 +82,8 @@ body.premium-theme.s-dark {
     --text-secondary: #94a3b8;
 
     --glass-blur: 20px;
-    /* Balanced for "Premium Vibe" + High Performance */
     --gradient-overlay: radial-gradient(circle at top right, rgba(99, 102, 241, 0.15), transparent 40%);
 
-    /* Dark Mode Premium Shadows */
     --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
     --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4), 0 2px 6px rgba(0, 0, 0, 0.2);
     --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.5), 0 4px 12px rgba(0, 0, 0, 0.3);

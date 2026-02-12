@@ -33,8 +33,6 @@ BASE_PATH="$XUI_ROOT/web"
 ASSETS_PATH="$BASE_PATH/assets"
 HTML_PATH="$BASE_PATH/html"
 
-# Auto-detect branch (main or development)
-# User can override by setting BRANCH env var: BRANCH=development bash install.sh
 if [ -z "$BRANCH" ]; then
     # Try to detect from the URL used to download this script
     # Default to 'main' for stability
