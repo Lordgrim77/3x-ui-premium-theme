@@ -1002,6 +1002,26 @@ body.s-light .progress-container {
     z-index: 5;
 }
 
+body.status-depleted .progress-bar {
+    background:
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 0%, transparent 45%),
+        linear-gradient(90deg, var(--accent) 0%, var(--accent-hover) 50%, var(--accent) 100%);
+    box-shadow:
+        0 0 30px var(--accent-glow),
+        inset 0 3px 6px rgba(255, 255, 255, 0.15),
+        inset 0 -2px 4px rgba(0, 0, 0, 0.2);
+}
+
+body.status-depleted .progress-bar::before {
+    background: var(--accent);
+    opacity: 0.6;
+    box-shadow: 0 0 15px var(--accent);
+}
+
+body.status-depleted .progress-bar::after {
+    opacity: 0.15;
+}
+
 .progress-bar .bloom::before {
     content: '';
     position: absolute;
