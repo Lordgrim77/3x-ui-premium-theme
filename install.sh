@@ -1,13 +1,3 @@
-# 3x-ui Subscription Theme Installer
-# Author: Lordgrim77
-# License: CC BY-NC-SA 4.0
-# Version for cache busting
-
-# 3x-ui Subscription Theme Installer
-# Author: LORD GRIM
-# Repo: https://github.com/Lordgrim77/3x-ui-premium-theme
-# Version for cache busting
-# Version for cache busting
 VERSION="2.0"
 TIMESTAMP=$(date +%s)
 
@@ -27,7 +17,6 @@ if [ "$EUID" -ne 0 ]; then
   exit
 fi
 
-# Define paths
 XUI_ROOT="/usr/local/x-ui"
 BASE_PATH="$XUI_ROOT/web"
 ASSETS_PATH="$BASE_PATH/assets"
@@ -50,13 +39,10 @@ fi
 echo -e "${BLUE}Using branch: ${GREEN}${BRANCH}${NC}"
 REPO_URL="https://raw.githubusercontent.com/Lordgrim77/3x-ui-premium-theme/${BRANCH}"
 
-# Create directories if they don't exist
-echo -e "${BLUE}Ensuring theme directories exist...${NC}"
 mkdir -p "$ASSETS_PATH/js"
 mkdir -p "$ASSETS_PATH/css"
 mkdir -p "$HTML_PATH"
 
-# Backup existing files
 echo -e "${BLUE}Backing up existing files...${NC}"
 [[ -f "$ASSETS_PATH/js/subscription.js" ]] && cp "$ASSETS_PATH/js/subscription.js" "$ASSETS_PATH/js/subscription.js.bak" 2>/dev/null
 [[ -f "$ASSETS_PATH/css/premium.css" ]] && cp "$ASSETS_PATH/css/premium.css" "$ASSETS_PATH/css/premium.css.bak" 2>/dev/null
@@ -131,7 +117,6 @@ JSON_FILE="__STATS_FILE__"
 ISP_CACHE="/usr/local/x-ui/isp_info.json"
 INTERVAL=2
 
-# Detect primary interface
 INTERFACE=$(ip route get 8.8.8.8 2>/dev/null | awk '{print $5; exit}')
 [[ -z "$INTERFACE" ]] && INTERFACE=$(ip -o -4 route show to default | awk '{print $5; exit}')
 
@@ -140,42 +125,33 @@ prev_idle=0
 prev_rx=0
 prev_tx=0
 
-# Infrastructure Detection (Cached)
 detect_infrastructure() {
-    # If cache doesn't exist or is empty, fetch data
     if [ ! -s "$ISP_CACHE" ]; then
-        # Try primary source
         IP_DATA=$(curl -s --max-time 10 http://ip-api.com/json/)
         
-        # Fallback if failed
+ 
         if [[ -z "$IP_DATA" || "$IP_DATA" == *"fail"* ]]; then
             IP_DATA=$(curl -s --max-time 10 https://ipinfo.io/json)
-            # Extract fields for ipinfo format
             ISP=$(echo "$IP_DATA" | grep -oE "\"org\"\s*:\s*\"[^\"]*\"" | sed -E "s/\"org\"\s*:\s*\"//g" | sed 's/"$//g' | sed 's/^AS[0-9]* //')
             REGION=$(echo "$IP_DATA" | grep -oE "\"city\"\s*:\s*\"[^\"]*\"" | sed -E "s/\"city\"\s*:\s*\"//g" | sed 's/"$//g')
         else
-            # Extract fields for ip-api format
             ISP=$(echo "$IP_DATA" | grep -oE "\"isp\"\s*:\s*\"[^\"]*\"" | sed -E "s/\"isp\"\s*:\s*\"//g" | sed 's/"$//g')
             REGION=$(echo "$IP_DATA" | grep -oE "\"city\"\s*:\s*\"[^\"]*\"" | sed -E "s/\"city\"\s*:\s*\"//g" | sed 's/"$//g')
         fi
         
-        # Final Fallback
+ 
         [[ -z "$ISP" ]] && ISP="Unknown Provider"
         [[ -z "$REGION" ]] && REGION="Unknown Region"
         
-        # Save to cache
         echo "{\"isp\":\"$ISP\",\"region\":\"$REGION\"}" > "$ISP_CACHE"
     fi
 }
 
-# Run detection once on start
 detect_infrastructure
 
 while true; do
-    # Read cached infrastructure data
     if [ -f "$ISP_CACHE" ]; then
         ISP_DATA=$(cat "$ISP_CACHE")
-        # Simple extraction to avoid jq dependency
         ISP=$(echo "$ISP_DATA" | grep -oE "\"isp\":\"[^\"]*\"" | cut -d'"' -f4)
         REGION=$(echo "$ISP_DATA" | grep -oE "\"region\":\"[^\"]*\"" | cut -d'"' -f4)
     else
@@ -183,7 +159,6 @@ while true; do
         REGION="..."
     fi
 
-    # CPU Usage
     read cpu a b c idle rest < /proc/stat
     total=$((a+b+c+idle))
     
@@ -202,11 +177,9 @@ while true; do
     prev_total=$total
     prev_idle=$idle
     
-    # RAM Usage
     mem_info=$(free -m | awk 'NR==2{printf "%.1f", $3*100/$2}')
     ram_usage=${mem_info%.*}
 
-    # Network Traffic
     if [ -n "$INTERFACE" ]; then
         read rx tx < <(grep "$INTERFACE" /proc/net/dev | awk '{print $2, $10}')
         if [ "$prev_rx" -gt 0 ]; then
@@ -223,7 +196,6 @@ while true; do
         net_out=0
     fi
     
-    # Write JSON atomically with infrastructure data
     echo "{\"cpu\":$cpu_usage,\"ram\":$ram_usage,\"net_in\":$net_in,\"net_out\":$net_out,\"isp\":\"$ISP\",\"region\":\"$REGION\"}" > "$JSON_FILE.tmp"
     mv "$JSON_FILE.tmp" "$JSON_FILE"
     chmod 644 "$JSON_FILE"

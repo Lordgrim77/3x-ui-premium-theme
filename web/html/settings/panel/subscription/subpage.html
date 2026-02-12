@@ -12,15 +12,14 @@
 <link rel="stylesheet" href="{{ .base_path }}assets/css/premium.css?{{ .cur_ver }}">
 <script>document.body.classList.add('premium-theme');</script>
 <style>
-    /* EMERGENCY LOADING SHIELD - Only for Premium Page */
+ 
     body.premium-theme {
         background: #020617 !important;
         margin: 0;
         padding: 0;
         overflow: auto !important;
-        /* Allow scroll in all directions if needed */
+        overflow: auto !important;
         touch-action: manipulation;
-        /* Enable touch scrolling */
         -webkit-overflow-scrolling: touch;
     }
 
@@ -28,7 +27,7 @@
         display: none !important;
     }
 
-    /* PREMIUM PRELOADER */
+ 
     body.premium-theme #premium-preloader {
         position: fixed;
         inset: 0;
@@ -328,7 +327,7 @@
     </a-layout-content>
 </a-layout>
 
-<!-- Bootstrap data for external JS -->
+ 
 <template id="subscription-data" data-sid="{{ .sId }}" data-sub-url="{{ .subUrl }}" data-subjson-url="{{ .subJsonUrl }}"
     data-download="{{ .download }}" data-upload="{{ .upload }}" data-used="{{ .used }}" data-total="{{ .total }}"
     data-remained="{{ .remained }}" data-expire="{{ .expire }}" data-lastonline="{{ .lastOnline }}"
