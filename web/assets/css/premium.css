@@ -107,19 +107,19 @@ body.premium-theme.s-dark.status-warn {
 }
 
 body.premium-theme.s-dark.status-depleted {
-    --accent: #f43f5e;
-    --accent-glow: rgba(244, 63, 94, 0.3);
-    --accent-hover: #fb7185;
-    --gradient-overlay: radial-gradient(circle at top right, rgba(244, 63, 94, 0.1), transparent 40%);
-    --bg-main: #090202;
-    --bg-card: rgba(20, 5, 5, 0.9);
-    --bg-sec: #120404;
-    --card-bg: rgba(20, 5, 5, 0.75);
-    --card-border: rgba(244, 63, 94, 0.2);
+    --accent: #ff4d6d;
+    --accent-glow: rgba(255, 77, 109, 0.4);
+    --accent-hover: #ff758f;
+    --gradient-overlay: radial-gradient(circle at top right, rgba(255, 77, 109, 0.15), transparent 40%);
+    --bg-main: #0d0103;
+    --bg-card: rgba(32, 7, 9, 0.88);
+    --bg-sec: #1a0507;
+    --card-bg: rgba(32, 7, 9, 0.75);
+    --card-border: rgba(255, 77, 109, 0.35);
     --usage-active: var(--accent);
     --usage-depleted: var(--accent);
-    --node-color: 244, 63, 94;
-    --line-color: 255, 80, 100;
+    --node-color: 255, 77, 109;
+    --line-color: 255, 120, 140;
 }
 
 body.premium-theme.s-dark.status-unlimited {
@@ -203,19 +203,19 @@ body.premium-theme.s-light.status-warn {
 }
 
 body.premium-theme.status-depleted.s-light {
-    --accent: #e11d48;
-    --accent-glow: rgba(225, 29, 72, 0.1);
-    --accent-hover: #be123c;
-    --gradient-overlay: radial-gradient(circle at top right, rgba(225, 29, 72, 0.05), transparent 40%);
-    --bg-main: #fff1f2;
-    --bg-card: rgba(255, 241, 242, 0.95);
-    --bg-sec: #fff1f2;
-    --card-bg: rgba(255, 241, 242, 0.85);
-    --card-border: rgba(225, 29, 72, 0.15);
+    --accent: #ff4d6d;
+    --accent-glow: rgba(255, 77, 109, 0.15);
+    --accent-hover: #ff758f;
+    --gradient-overlay: radial-gradient(circle at top right, rgba(255, 77, 109, 0.08), transparent 40%);
+    --bg-main: #fff5f6;
+    --bg-card: rgba(255, 245, 246, 0.95);
+    --bg-sec: #fff5f6;
+    --card-bg: rgba(255, 245, 246, 0.85);
+    --card-border: rgba(255, 77, 109, 0.2);
     --usage-active: var(--accent);
     --usage-depleted: var(--accent);
-    --node-color: 225, 29, 72;
-    --line-color: 190, 18, 60;
+    --node-color: 255, 77, 109;
+    --line-color: 255, 100, 120;
 }
 
 body.premium-theme.s-light.status-unlimited {
