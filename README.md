@@ -1,4 +1,4 @@
-# 3X-UI Subscription Theme(v2.0.5) 🎨
+# 3X-UI Subscription Theme(v2.0.6) 🎨
 <p align="center">
   <img src="https://raw.githubusercontent.com/Lordgrim77/3x-ui-premium-theme/refs/heads/main/screenshots/screenshot-2.jpg" alt="English UI" width="30%">
   <img src="https://raw.githubusercontent.com/Lordgrim77/3x-ui-premium-theme/refs/heads/main/screenshots/screenshot-1.jpg" alt="Persian UI" width="40%">
