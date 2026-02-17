@@ -23,7 +23,7 @@ Dark/light theme, glassmorphism,smooth transitions, toast notifications, Animate
 
 ## 🚀 Installation
 1. Make sure to take a backup of the system before doing anything.
-2. Make sure U are on the Latest Version of 3X-UI to avoid any incompatibilities.
+2. Make sure you are on the Latest Version of 3X-UI to avoid any incompatibilities.
 3. Run the following command on your 3x-ui server to install or update:
 
 ```bash
