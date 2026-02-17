@@ -8,7 +8,7 @@
 
 > [!WARNING]
 > - This project is for educational purposes only.  
-> - This project is free to use. Do NOT sell it under any circumstances.
+> - This project is free to use. **Do NOT Sell** it under any circumstances.
 > - The author is **not responsible** for any misuse, damage, or loss caused by this software. Use at your own risk.
 
 ## ✨ Features 
