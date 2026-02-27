@@ -1568,10 +1568,18 @@ body.premium-theme .premium-toast.show {
     }
 }
 
-@keyframes shimmer {
-    100% {
-        transform: translateX(100%);
-    }
+@keyframes button-pulse {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(0.9); opacity: 0.7; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.icon-btn-mini.loading {
+    animation: button-pulse 0.8s infinite ease-in-out !important;
+    pointer-events: none;
+    background: var(--accent) !important;
+    color: white !important;
+    box-shadow: 0 0 15px var(--accent-glow) !important;
 }
 
 .custom-footer {
